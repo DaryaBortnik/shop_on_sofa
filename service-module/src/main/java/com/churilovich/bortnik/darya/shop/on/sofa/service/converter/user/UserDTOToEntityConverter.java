@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserDTOToEntityConverter implements Converter<UserDTO, User> {
-    private final Converter<RoleDTO, Role> roleDTOToEntityConverter;
-    private final Converter<UserInformationDTO, UserInformation> userInfoDTOToEntityConverter;
+    private final Converter<RoleDTO, Role> roleConverter;
+    private final Converter<UserInformationDTO, UserInformation> userInformationConverter;
 
-    public UserDTOToEntityConverter(Converter<RoleDTO, Role> roleDTOToEntityConverter,
-                                    Converter<UserInformationDTO, UserInformation> userInfoDTOToEntityConverter) {
-        this.roleDTOToEntityConverter = roleDTOToEntityConverter;
-        this.userInfoDTOToEntityConverter = userInfoDTOToEntityConverter;
+    public UserDTOToEntityConverter(Converter<RoleDTO, Role> roleConverter,
+                                    Converter<UserInformationDTO, UserInformation> userInformationConverter) {
+        this.roleConverter = roleConverter;
+        this.userInformationConverter = userInformationConverter;
     }
 
     @Override
@@ -32,10 +32,10 @@ public class UserDTOToEntityConverter implements Converter<UserDTO, User> {
         String password = userDTO.getPassword();
         user.setPassword(password);
 
-        Role role = roleDTOToEntityConverter.convert(userDTO.getRoleDTO());
+        Role role = roleConverter.convert(userDTO.getRoleDTO());
         user.setRole(role);
 
-        UserInformation userInfo = userInfoDTOToEntityConverter.convert(userDTO.getUserInformationDTO());
+        UserInformation userInfo = userInformationConverter.convert(userDTO.getUserInformationDTO());
         user.setUserInformation(userInfo);
 
         return user;

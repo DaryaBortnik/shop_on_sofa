@@ -24,9 +24,12 @@
             </tr>
             <tr th:each="user:${users}">
                 <td><input type="checkbox" name="deleting_users_id" th:value="${user.id}"/></td>
-                <td th:text="${user.userInformationDTO}">User name</td>
+                <td th:text="${user.userInformationDTO.firstName} + ' ' + ${user.userInformationDTO.middleName} + ' '
+                + ${user.userInformationDTO.lastName}">
+                    User name
+                </td>
                 <td th:text="${user.email}">email</td>
-                <td th:text="${user.roleDTO}">role</td>
+                <td th:text="${user.roleDTO.name}">role</td>
                 <td>
                     <form method="post">
                         <input th:value="${user.id}" th:name="id" hidden/>

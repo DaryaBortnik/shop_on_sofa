@@ -1,5 +1,8 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.model;
 
+import lombok.Data;
+import lombok.ToString;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -11,6 +14,8 @@ import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.Valid
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.ValidationMessageValueConstants.INVALID_LAST_NAME_SIZE;
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.ValidationMessageValueConstants.INVALID_MIDDLE_NAME_SIZE;
 
+@Data
+@ToString(exclude = "id")
 public class UserInformationDTO {
     private Long id;
     @NotNull
@@ -24,41 +29,4 @@ public class UserInformationDTO {
     @Size(min = 1, max = 40, message = INVALID_LAST_NAME_SIZE)
     @Pattern(regexp = LAST_NAME_REGEX_VALUE)
     private String lastName;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @Override
-    public String toString() {
-        return firstName + " " + middleName + " " + lastName;
-    }
 }

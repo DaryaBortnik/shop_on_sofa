@@ -5,5 +5,5 @@ import org.springframework.context.annotation.Configuration;
 
 @EntityScan(basePackages = "com.churilovich.bortnik.darya.shop.on.sofa.repository.model")
 @Configuration
-public class EntityManagerConfig {
+public class EntityConfig {
 }

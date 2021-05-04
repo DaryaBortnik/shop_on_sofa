@@ -52,8 +52,8 @@ public class ReviewServiceImpl implements ReviewService {
         logger.info("Updating shown status for review id [{}] on service level", id);
         Review review = reviewRepository.findById(id);
         if (Objects.nonNull(review)) {
-            boolean shown = review.isShown();
-            review.setShown(!shown);
+            boolean shown = review.getIsShown();
+            review.setIsShown(!shown);
             reviewRepository.merge(review);
         } else {
             throw new ReviewServiceRuntimeException("Can't update review shown status : review id = " + id);

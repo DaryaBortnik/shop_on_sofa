@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService {
                 String password = generationPasswordService.generate();
                 String encodedPassword = generationPasswordService.encode(password);
                 user.setPassword(encodedPassword);
+                user.setIsDeleted(false);
                 userRepository.persist(user);
             } else {
                 throw new UserServiceRuntimeException("Can't add new user on service level because it's null");

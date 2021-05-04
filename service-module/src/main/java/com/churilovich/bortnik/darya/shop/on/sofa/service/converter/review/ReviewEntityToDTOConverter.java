@@ -23,8 +23,8 @@ public class ReviewEntityToDTOConverter implements Converter<Review, ReviewDTO> 
         LocalDate addDate = review.getAddDate();
         reviewDTO.setDate(addDate);
 
-        boolean shown = review.isShown();
-        reviewDTO.setShown(shown);
+        boolean shown = review.getIsShown();
+        reviewDTO.setIsShown(shown);
 
         UserInformationDTO userInformationDTO = getConvertedUserInformation(review);
         reviewDTO.setUserInformationDTO(userInformationDTO);
