@@ -1,7 +1,8 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.GenericRepository;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GenericRepositoryRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.PersistEntityRepositoryException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,6 +23,7 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
     @PersistenceContext
     protected EntityManager entityManager;
 
+    @SuppressWarnings("unchecked")
     public GenericRepositoryImpl() {
         ParameterizedType genericClass = (ParameterizedType) getClass().getGenericSuperclass();
         this.entityClass = (Class<E>) genericClass.getActualTypeArguments()[1];
@@ -34,7 +36,7 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
             entityManager.persist(entity);
         } catch (EntityExistsException e) {
             logger.error(e.getMessage(), e);
-            throw new GenericRepositoryRuntimeException("Can't persist element because of its existing : " +
+            throw new PersistEntityRepositoryException("Can't persist element because of its existing : " +
                     "element = " + entity, e);
         }
     }
@@ -76,8 +78,9 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
             return (I) query.getSingleResult();
         } catch (NoResultException e) {
             logger.error(e.getMessage(), e);
-            throw new GenericRepositoryRuntimeException("Can't get amount of elements on repository level : " +
+            throw new GetEntitiesAmountRepositoryException("Can't get amount of elements on repository level : " +
                     "elements in " + entityClass.getSimpleName(), e);
         }
     }
 }
+

@@ -1,7 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.UserRepositoryRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByUsernameRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +28,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
             return (User) query.getSingleResult();
         } catch (NoResultException e) {
             logger.error(e.getMessage(), e);
-            throw new UserRepositoryRuntimeException("Can't get user by username on repository level : email = "
+            throw new GetUserByUsernameRepositoryException("Can't get user by username on repository level : email = "
                     + email, e);
         }
     }

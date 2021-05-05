@@ -1,11 +1,12 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.ReviewRepository;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GenericRepositoryRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Review;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.ReviewServiceRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetReviewsServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateReviewStatusServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import org.apache.logging.log4j.LogManager;
@@ -56,7 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
             review.setIsShown(!shown);
             reviewRepository.merge(review);
         } else {
-            throw new ReviewServiceRuntimeException("Can't update review shown status : review id = " + id);
+            throw new UpdateReviewStatusServiceException("Can't update review shown status : review id = " + id);
         }
     }
 
@@ -68,9 +69,9 @@ public class ReviewServiceImpl implements ReviewService {
             Long amountOfReviews = reviewRepository.getAmountOfEntities();
             Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfReviews, AMOUNT_ON_ONE_PAGE);
             return buildPageWithReviews(currentPageNumber, amountOfPages);
-        } catch (GenericRepositoryRuntimeException e) {
+        } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new ReviewServiceRuntimeException("Can't get all reviews on current page on service level " +
+            throw new GetReviewsServiceException("Can't get all reviews on current page on service level " +
                     "due to impossibility to get total amount of reviews", e);
         }
     }

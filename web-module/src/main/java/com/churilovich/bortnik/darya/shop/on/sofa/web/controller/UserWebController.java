@@ -2,7 +2,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.RoleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UserServiceRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddUserServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +51,7 @@ public class UserWebController {
             model.addAttribute("roles", roles);
             userDTO.setRoleDTO(new RoleDTO());
             return "get_all_users_page";
-        } catch (UserServiceRuntimeException e) {
+        } catch (AddUserServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -76,7 +77,7 @@ public class UserWebController {
                 userService.add(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (UserServiceRuntimeException e) {
+        } catch (AddUserServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -92,7 +93,7 @@ public class UserWebController {
                 userService.updateRole(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (UserServiceRuntimeException e) {
+        } catch (AddUserServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -105,7 +106,7 @@ public class UserWebController {
                     .filter(Objects::nonNull)
                     .forEach(userService::deleteById);
             return "redirect:/admin/users";
-        } catch (UserServiceRuntimeException e) {
+        } catch (AddUserServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -121,7 +122,7 @@ public class UserWebController {
                 userService.updatePassword(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (UserServiceRuntimeException e) {
+        } catch (AddUserServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }

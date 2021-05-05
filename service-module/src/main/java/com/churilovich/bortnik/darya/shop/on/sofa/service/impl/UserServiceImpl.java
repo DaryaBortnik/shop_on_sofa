@@ -2,15 +2,22 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.RoleRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GenericRepositoryRuntimeException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.UserRepositoryRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByUsernameRepositoryException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.PersistEntityRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Role;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.GenerationPasswordService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.MailService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UserServiceRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddUserServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetUserByUsernameServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetUsersOnPageServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.NullServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdatePasswordServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateRoleServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
@@ -60,9 +67,9 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.getByUsername(username);
             return conversionService.convert(user, UserDTO.class);
-        } catch (UserRepositoryRuntimeException e) {
+        } catch (GetUserByUsernameRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new UserServiceRuntimeException("Can't get user by username on service level : username = "
+            throw new GetUserByUsernameServiceException("Can't get user by username on service level : username = "
                     + username, e);
         }
     }
@@ -81,11 +88,11 @@ public class UserServiceImpl implements UserService {
                 user.setIsDeleted(false);
                 userRepository.persist(user);
             } else {
-                throw new UserServiceRuntimeException("Can't add new user on service level because it's null");
+                throw new NullServiceException("Can't add new user on service level because it's null");
             }
-        } catch (GenericRepositoryRuntimeException e) {
+        } catch (PersistEntityRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new UserServiceRuntimeException("Can't add new user on service level because its existing", e);
+            throw new AddUserServiceException("Can't add new user on service level because its existing", e);
         }
     }
 
@@ -99,7 +106,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             userRepository.merge(user);
         } else {
-            throw new UserServiceRuntimeException("Can't update user role on service level : user = " + userDTO);
+            throw new UpdateRoleServiceException("Can't update user role on service level : user = " + userDTO);
         }
     }
 
@@ -111,7 +118,7 @@ public class UserServiceImpl implements UserService {
         if (Objects.nonNull(user)) {
             userRepository.remove(user);
         } else {
-            throw new UserServiceRuntimeException("Can't delete user by id on service level because can't found user : " +
+            throw new DeleteByIdServiceException("Can't delete user by id on service level because can't found user : " +
                     "id = " + id);
         }
     }
@@ -128,7 +135,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(encodedPassword);
             userRepository.merge(user);
         } else {
-            throw new UserServiceRuntimeException("Can't update user password on service level : user = " + userDTO);
+            throw new UpdatePasswordServiceException("Can't update user password on service level : user = " + userDTO);
         }
     }
 
@@ -140,9 +147,9 @@ public class UserServiceImpl implements UserService {
             Long amountOfUsers = userRepository.getAmountOfEntities();
             Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfUsers, AMOUNT_ON_ONE_PAGE);
             return buildPageWithUsers(currentPageNumber, userDTOLogin, amountOfPages);
-        } catch (GenericRepositoryRuntimeException e) {
+        } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new UserServiceRuntimeException("Can't get all users on current page on service level " +
+            throw new GetUsersOnPageServiceException("Can't get all users on current page on service level " +
                     "due to impossibility to get total amount of users", e);
         }
     }

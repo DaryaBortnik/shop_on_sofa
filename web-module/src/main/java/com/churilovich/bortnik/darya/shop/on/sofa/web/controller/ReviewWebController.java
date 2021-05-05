@@ -1,7 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.ReviewServiceRuntimeException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateReviewStatusServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import org.apache.logging.log4j.LogManager;
@@ -38,7 +38,7 @@ public class ReviewWebController {
             model.addAttribute("reviews", pageWithReviews.getList());
             model.addAttribute("page", pageWithReviews);
             return "get_all_reviews_page";
-        } catch (ReviewServiceRuntimeException e) {
+        } catch (UpdateReviewStatusServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -59,7 +59,7 @@ public class ReviewWebController {
                     .filter(Objects::nonNull)
                     .forEach(reviewService::updateShownStatus);
             return "redirect:/admin/reviews";
-        } catch (ReviewServiceRuntimeException e) {
+        } catch (UpdateReviewStatusServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
