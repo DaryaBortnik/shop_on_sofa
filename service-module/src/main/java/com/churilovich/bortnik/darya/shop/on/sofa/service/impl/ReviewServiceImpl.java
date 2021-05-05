@@ -6,6 +6,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Review;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetReviewsServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.ReviewNotFoundServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateReviewStatusServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
@@ -43,22 +43,21 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void delete(Long id) {
         logger.info("Deleting review by id [{}]", id);
-        Review review = reviewRepository.findById(id);
-        reviewRepository.remove(review);
+        reviewRepository.findById(id)
+                .ifPresentOrElse(reviewRepository::remove, () -> {
+                    throw new ReviewNotFoundServiceException("Review can't delete on service level because review" +
+                            " with this id id not found : id = " + id);
+                });
     }
 
     @Override
     @Transactional
     public void updateShownStatus(Long id) {
         logger.info("Updating shown status for review id [{}] on service level", id);
-        Review review = reviewRepository.findById(id);
-        if (Objects.nonNull(review)) {
-            boolean shown = review.getIsShown();
-            review.setIsShown(!shown);
-            reviewRepository.merge(review);
-        } else {
-            throw new UpdateReviewStatusServiceException("Can't update review shown status : review id = " + id);
-        }
+        reviewRepository.findById(id)
+                .ifPresentOrElse(this::updateStatus, () -> {
+                    throw new UpdateReviewStatusServiceException("Can't update review shown status : review id = " + id);
+                });
     }
 
     @Override
@@ -76,6 +75,11 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
+    private void updateStatus(Review review) {
+        boolean shown = review.getIsShown();
+        review.setIsShown(!shown);
+        reviewRepository.merge(review);
+    }
 
     private PageDTO<ReviewDTO> buildPageWithReviews(Long currentPageNumber, Long amountOfPages) {
         PageDTO<ReviewDTO> page = new PageDTO<>();

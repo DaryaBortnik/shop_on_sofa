@@ -1,8 +1,8 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.GenericRepository;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.PersistEntityRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.PersistEntityRepositoryException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +14,7 @@ import javax.persistence.Query;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Optional;
 
 
 public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I, E> {
@@ -51,9 +52,9 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
     }
 
     @Override
-    public E findById(I id) {
+    public Optional<E> findById(I id) {
         logger.info("Finding [{}] by id [{}] on repository level", entityClass.getSimpleName(), id);
-        return entityManager.find(entityClass, id);
+        return Optional.of(entityManager.find(entityClass, id));
     }
 
     @Override

@@ -100,43 +100,33 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void updateRole(UserDTO userDTO) {
         logger.info("Updating role to [{}] on service level", userDTO.getRoleDTO());
-        User user = userRepository.findById(userDTO.getId());
-        if (Objects.nonNull(user)) {
-            Role role = roleRepository.findById(userDTO.getRoleDTO().getId());
-            user.setRole(role);
-            userRepository.merge(user);
-        } else {
-            throw new UpdateRoleServiceException("Can't update user role on service level : user = " + userDTO);
-        }
+        Role role = getRoleById(userDTO);
+        userRepository.findById(userDTO.getId())
+                .ifPresentOrElse(user -> updateRole(user, role), () -> {
+                    throw new UpdateRoleServiceException("Can't update user role on service level : user = " + userDTO);
+                });
     }
 
     @Override
     @Transactional
     public void deleteById(Long id) {
         logger.info("Deleting user by id [{}] on service level", id);
-        User user = userRepository.findById(id);
-        if (Objects.nonNull(user)) {
-            userRepository.remove(user);
-        } else {
-            throw new DeleteByIdServiceException("Can't delete user by id on service level because can't found user : " +
-                    "id = " + id);
-        }
+        userRepository.findById(id)
+                .ifPresentOrElse(userRepository::remove, () -> {
+                    throw new DeleteByIdServiceException("Can't delete user by id on service level because can't found user : " +
+                            "id = " + id);
+                });
     }
 
     @Override
     @Transactional
     public void updatePassword(UserDTO userDTO) {
         logger.info("Updating password on random way on service level");
-        User user = userRepository.findById(userDTO.getId());
-        if (Objects.nonNull(user)) {
-            String password = generationPasswordService.generate();
-            mailService.sendMessageToEmail(user.getEmail(), password);
-            String encodedPassword = generationPasswordService.encode(password);
-            user.setPassword(encodedPassword);
-            userRepository.merge(user);
-        } else {
-            throw new UpdatePasswordServiceException("Can't update user password on service level : user = " + userDTO);
-        }
+        userRepository.findById(userDTO.getId())
+                .ifPresentOrElse(this::updatePassword, () -> {
+                    throw new UpdatePasswordServiceException("Can't update user password on service level : user = "
+                            + userDTO);
+                });
     }
 
     @Override
@@ -152,6 +142,24 @@ public class UserServiceImpl implements UserService {
             throw new GetUsersOnPageServiceException("Can't get all users on current page on service level " +
                     "due to impossibility to get total amount of users", e);
         }
+    }
+
+    private Role getRoleById(UserDTO userDTO) {
+        return roleRepository.findById(userDTO.getRoleDTO().getId())
+                .orElse(new Role());
+    }
+
+    private void updateRole(User user, Role role) {
+        user.setRole(role);
+        userRepository.merge(user);
+    }
+
+    private void updatePassword(User user) {
+        String password = generationPasswordService.generate();
+        mailService.sendMessageToEmail(user.getEmail(), password);
+        String encodedPassword = generationPasswordService.encode(password);
+        user.setPassword(encodedPassword);
+        userRepository.merge(user);
     }
 
     private PageDTO<UserDTO> buildPageWithUsers(Long currentPageNumber, UserDTOLogin userDTOLogin, Long amountOfPages) {
