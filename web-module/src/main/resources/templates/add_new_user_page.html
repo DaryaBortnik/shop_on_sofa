@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new user</title>
+</head>
+<body>
+<form method="post" th:action="@{/admin/users/new}" th:object="${userDTO}">
+    <table>
+        <tr>
+            <td>Last name</td>
+            <td><input type="text" th:field="*{userInformationDTO.lastName}" required pattern="^[a-zA-Z]{1,40}$"></td>
+            <td th:if="${#fields.hasErrors('userInformationDTO.lastName')}" th:errors="*{userInformationDTO.lastName}">
+                Last name Error
+            </td>
+        </tr>
+        <tr>
+            <td>Middle name</td>
+            <td><input type="text" th:field="*{userInformationDTO.middleName}" required pattern="^[a-zA-Z]{1,40}$"></td>
+            <td th:if="${#fields.hasErrors('userInformationDTO.middleName')}"
+                th:errors="*{userInformationDTO.middleName}">Middle name Error
+            </td>
+        </tr>
+        <tr>
+            <td>First name</td>
+            <td><input type="text" th:field="*{userInformationDTO.firstName}" required pattern="^[a-zA-Z]{1,20}$"></td>
+            <td th:if="${#fields.hasErrors('userInformationDTO.firstName')}"
+                th:errors="*{userInformationDTO.firstName}">First name Error
+            </td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="email" th:field="*{email}" required></td>
+            <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</td>
+        </tr>
+        <tr>
+            <td>Role</td>
+            <td>
+                <select name="role" th:field="*{roleDTO.id}">
+                    <option th:each="role : ${roles}"
+                            th:value="${role.id}"
+                            th:text="${role.name}">role
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit">Add new user</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
