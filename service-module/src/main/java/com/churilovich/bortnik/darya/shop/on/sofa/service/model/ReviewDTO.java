@@ -10,5 +10,5 @@ public class ReviewDTO {
     private String description;
     private LocalDate date;
     private Boolean isShown = false;
-    private UserInformationDTO userInformationDTO;
+    private UserProfileDTO userProfileDTO;
 }

@@ -1,6 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.RoleEnum;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 @Table(name = "role")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

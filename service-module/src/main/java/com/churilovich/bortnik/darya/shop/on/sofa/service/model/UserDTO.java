@@ -21,5 +21,5 @@ public class UserDTO {
     private String email;
     private String password;
     private RoleDTO roleDTO;
-    private UserInformationDTO userInformationDTO;
+    private UserProfileDTO userProfileDTO;
 }

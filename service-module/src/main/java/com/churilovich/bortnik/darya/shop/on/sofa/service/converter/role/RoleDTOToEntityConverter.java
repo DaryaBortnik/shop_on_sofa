@@ -9,18 +9,18 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-public class RoleDTOToEntity implements Converter<RoleDTO, Role> {
+public class RoleDTOToEntityConverter implements Converter<RoleDTO, Role> {
+
     @Override
     public Role convert(RoleDTO roleDTO) {
-        Long id = roleDTO.getId();
         Role role = new Role();
-        role.setId(id);
-        if (Objects.nonNull(roleDTO.getName())) {
-            RoleEnum roleName = RoleEnum.valueOf(roleDTO.getName());
-            role.setName(roleName);
+        role.setId(roleDTO.getId());
+        String name = roleDTO.getName();
+        if (Objects.nonNull(name)) {
+            role.setName(RoleEnum.valueOf(name));
         }
-        if (Objects.nonNull(roleDTO.getDescription())) {
-            String description = roleDTO.getDescription();
+        String description = roleDTO.getDescription();
+        if (Objects.nonNull(description)) {
             role.setDescription(description);
         }
         return role;

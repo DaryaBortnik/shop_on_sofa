@@ -15,9 +15,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
 import static com.churilovich.bortnik.darya.shop.on.sofa.web.constants.RoleValueConstants.ADMINISTRATOR;
+import static com.churilovich.bortnik.darya.shop.on.sofa.web.constants.RoleValueConstants.CUSTOMER_USER;
 
 @Configuration
-@Order(1)
+@Order(2)
 public class AppWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final SuccessLoginHandler successLoginHandler;
@@ -48,6 +49,8 @@ public class AppWebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/admin/**")
                 .hasAuthority(ADMINISTRATOR)
+                .antMatchers("/user/customer/**")
+                .hasAuthority(CUSTOMER_USER)
                 .antMatchers("/login")
                 .permitAll()
                 .and()

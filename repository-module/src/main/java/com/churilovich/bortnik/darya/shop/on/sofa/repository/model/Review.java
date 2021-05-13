@@ -1,5 +1,6 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 @Table(name = "review")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "user")
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

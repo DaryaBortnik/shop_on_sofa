@@ -24,9 +24,9 @@
             </tr>
             <tr th:each="user:${users}">
                 <td><input type="checkbox" name="deleting_users_id" th:value="${user.id}"/></td>
-                <td th:text="${user.userInformationDTO.firstName} + ' ' + ${user.userInformationDTO.middleName} + ' '
-                + ${user.userInformationDTO.lastName}">
-                    User name
+                <td th:text="${user.userProfileDTO != null} ?
+                ${#strings.trim(user.userProfileDTO.firstName)} + ' ' + ${#strings.trim(user.userProfileDTO.lastName)} : ' '">
+                User name
                 </td>
                 <td th:text="${user.email}">email</td>
                 <td th:text="${user.roleDTO.name}">role</td>

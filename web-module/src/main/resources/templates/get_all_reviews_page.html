@@ -20,10 +20,10 @@
             </tr>
             <tr th:each="review:${reviews}">
                 <td><input type="checkbox" name="change_shown_status_review_id" th:value="${review.id}"/></td>
-                <td th:text="${review.userInformationDTO}">User name</td>
+                <td th:text="${review.userProfileDTO}">User name</td>
                 <td th:text="${review.description}">review</td>
                 <td th:text="${review.date}">date</td>
-                <td th:text="${review.shown}">shown</td>
+                <td th:text="${review.isShown}">shown</td>
                 <td>
                     <button type="submit" name="deleting_review_id"
                             th:value="${review.id}"

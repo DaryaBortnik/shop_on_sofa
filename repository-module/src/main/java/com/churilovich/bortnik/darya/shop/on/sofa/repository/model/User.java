@@ -1,5 +1,6 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -23,6 +24,7 @@ import javax.persistence.Table;
 @Where(clause = "is_deleted = 0")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +48,5 @@ public class User {
             mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private UserInformation userInformation;
+    private UserProfile userProfile;
 }

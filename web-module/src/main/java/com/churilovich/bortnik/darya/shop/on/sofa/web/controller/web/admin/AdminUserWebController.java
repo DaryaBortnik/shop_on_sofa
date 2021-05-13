@@ -1,13 +1,17 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.web.controller;
+package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.admin;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.RoleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddUserServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetUsersOnPageServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdatePasswordServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateRoleServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserInformationDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +25,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Objects;
 
 @Controller
 @RequestMapping("/admin")
-public class UserWebController {
+public class AdminUserWebController {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
     private final RoleService roleService;
 
     @Autowired
-    public UserWebController(UserService userService, RoleService roleService) {
+    public AdminUserWebController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -42,7 +45,6 @@ public class UserWebController {
     @GetMapping("/users")
     public String getAllUsers(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                               UserDTO userDTO, @AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
-        logger.info("Getting all users on web controller level");
         try {
             PageDTO<UserDTO> pageWithUsers = userService.getUsersOnPage(currentPageNumber, userDTOLogin);
             model.addAttribute("users", pageWithUsers.getList());
@@ -51,7 +53,7 @@ public class UserWebController {
             model.addAttribute("roles", roles);
             userDTO.setRoleDTO(new RoleDTO());
             return "get_all_users_page";
-        } catch (AddUserServiceException e) {
+        } catch (GetUsersOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -59,17 +61,15 @@ public class UserWebController {
 
     @GetMapping("/users/new")
     public String getNewUserPage(UserDTO userDTO, Model model) {
-        logger.info("Getting new user page on web controller level");
         List<RoleDTO> roles = roleService.findAll();
         model.addAttribute("roles", roles);
         userDTO.setRoleDTO(new RoleDTO());
-        userDTO.setUserInformationDTO(new UserInformationDTO());
+        userDTO.setUserProfileDTO(new UserProfileDTO());
         return "add_new_user_page";
     }
 
     @PostMapping("/users/new")
     public String addNewUser(@Valid UserDTO userDTO, BindingResult result) {
-        logger.info("Adding new user on web controller level");
         try {
             if (result.hasErrors()) {
                 return "add_new_user_page";
@@ -77,7 +77,7 @@ public class UserWebController {
                 userService.add(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (AddUserServiceException e) {
+        } catch (AddServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -85,7 +85,6 @@ public class UserWebController {
 
     @PostMapping("/users/update/role")
     public String updateRole(UserDTO userDTO, BindingResult result) {
-        logger.info("Updating role on web controller level");
         try {
             if (result.hasErrors()) {
                 return "get_all_users_page";
@@ -93,7 +92,7 @@ public class UserWebController {
                 userService.updateRole(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (AddUserServiceException e) {
+        } catch (UpdateRoleServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -106,7 +105,7 @@ public class UserWebController {
                     .filter(Objects::nonNull)
                     .forEach(userService::deleteById);
             return "redirect:/admin/users";
-        } catch (AddUserServiceException e) {
+        } catch (DeleteByIdServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -114,15 +113,14 @@ public class UserWebController {
 
     @PostMapping("/users/update/password")
     public String updatePassword(UserDTO userDTO, BindingResult result) {
-        logger.info("Updating password on web controller level");
         try {
             if (result.hasErrors()) {
                 return "get_all_users_page";
             } else {
-                userService.updatePassword(userDTO);
+                userService.generateNewPassword(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (AddUserServiceException e) {
+        } catch (UpdatePasswordServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }

@@ -41,11 +41,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        logger.info("Deleting review by id [{}]", id);
+    public void deleteById(Long id) {
         reviewRepository.findById(id)
                 .ifPresentOrElse(reviewRepository::remove, () -> {
-                    throw new ReviewNotFoundServiceException("Review can't delete on service level because review" +
+                    throw new ReviewNotFoundServiceException("Review can't deleteById on service level because review" +
                             " with this id id not found : id = " + id);
                 });
     }
@@ -53,7 +52,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void updateShownStatus(Long id) {
-        logger.info("Updating shown status for review id [{}] on service level", id);
         reviewRepository.findById(id)
                 .ifPresentOrElse(this::updateStatus, () -> {
                     throw new UpdateReviewStatusServiceException("Can't update review shown status : review id = " + id);
@@ -63,7 +61,6 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public PageDTO<ReviewDTO> getReviewsOnPage(Long currentPageNumber) {
-        logger.info("Getting all reviews on current page [{}] on service level", currentPageNumber);
         try {
             Long amountOfReviews = reviewRepository.getAmountOfEntities();
             Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfReviews, AMOUNT_ON_ONE_PAGE);

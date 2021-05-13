@@ -20,7 +20,6 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
 
     @Override
     public User getByUsername(String email) {
-        logger.info("Getting user by email [{}] on repository level", email);
         String queryInStringFormat = "from " + entityClass.getName() + " where email =:email and is_deleted = 0";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setParameter(EMAIL_QUERY_PARAMETER, email);
@@ -36,7 +35,6 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     @Override
     @SuppressWarnings("unchecked")
     public List<User> findAll(Long startNumberOnCurrentPage, Long amountOnOnePage) {
-        logger.info("Finding all users on current page : start user number = [{}]", startNumberOnCurrentPage);
         String queryInStringFormat = "from " + entityClass.getName() + " where is_deleted = 0 order by email";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setMaxResults(Math.toIntExact(amountOnOnePage));

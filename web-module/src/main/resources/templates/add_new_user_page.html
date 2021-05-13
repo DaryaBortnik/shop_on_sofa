@@ -9,23 +9,23 @@
     <table>
         <tr>
             <td>Last name</td>
-            <td><input type="text" th:field="*{userInformationDTO.lastName}" required pattern="^[a-zA-Z]{1,40}$"></td>
-            <td th:if="${#fields.hasErrors('userInformationDTO.lastName')}" th:errors="*{userInformationDTO.lastName}">
+            <td><input type="text" th:field="*{userProfileDTO.lastName}" required pattern="^[a-zA-Z]{1,40}$"></td>
+            <td th:if="${#fields.hasErrors('userProfileDTO.lastName')}" th:errors="*{userProfileDTO.lastName}">
                 Last name Error
             </td>
         </tr>
         <tr>
             <td>Middle name</td>
-            <td><input type="text" th:field="*{userInformationDTO.middleName}" required pattern="^[a-zA-Z]{1,40}$"></td>
-            <td th:if="${#fields.hasErrors('userInformationDTO.middleName')}"
-                th:errors="*{userInformationDTO.middleName}">Middle name Error
+            <td><input type="text" th:field="*{userProfileDTO.middleName}" pattern="^[a-zA-Z]{0,40}$"></td>
+            <td th:if="${#fields.hasErrors('userProfileDTO.middleName')}"
+                th:errors="*{userProfileDTO.middleName}">Middle name Error
             </td>
         </tr>
         <tr>
             <td>First name</td>
-            <td><input type="text" th:field="*{userInformationDTO.firstName}" required pattern="^[a-zA-Z]{1,20}$"></td>
-            <td th:if="${#fields.hasErrors('userInformationDTO.firstName')}"
-                th:errors="*{userInformationDTO.firstName}">First name Error
+            <td><input type="text" th:field="*{userProfileDTO.firstName}" required pattern="^[a-zA-Z]{1,20}$"></td>
+            <td th:if="${#fields.hasErrors('userProfileDTO.firstName')}"
+                th:errors="*{userProfileDTO.firstName}">First name Error
             </td>
         </tr>
         <tr>
