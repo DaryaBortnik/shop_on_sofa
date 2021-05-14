@@ -1,7 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.customer;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ArticleService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetArticlesServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +32,7 @@ public class CustomerArticleWebController {
             model.addAttribute("articles", pageWithArticles.getList());
             model.addAttribute("page", pageWithArticles);
             return "get_all_articles_page";
-        } catch (GetArticlesServiceException e) {
+        } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }

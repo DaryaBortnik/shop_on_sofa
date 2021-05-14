@@ -1,5 +1,6 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByUsernameRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
@@ -30,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             UserDTO user = userService.getByUsername(username);
             logger.info("User with username [{}] is found", username);
             return new UserDTOLogin(user);
-        } catch (AddServiceException e) {
+        } catch (GetUserByUsernameRepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new UsernameNotFoundException("User with such username " + username + " is not found");
         }

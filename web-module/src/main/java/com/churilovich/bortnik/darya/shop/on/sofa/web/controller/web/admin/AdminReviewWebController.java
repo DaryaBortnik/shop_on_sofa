@@ -1,9 +1,9 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.admin;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetReviewsServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.ReviewNotFoundServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateReviewStatusServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +39,7 @@ public class AdminReviewWebController {
             model.addAttribute("reviews", pageWithReviews.getList());
             model.addAttribute("page", pageWithReviews);
             return "get_all_reviews_page";
-        } catch (GetReviewsServiceException e) {
+        } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -50,7 +50,7 @@ public class AdminReviewWebController {
         try {
             reviewService.deleteById(id);
             return "redirect:/admin/reviews";
-        } catch (ReviewNotFoundServiceException e) {
+        } catch (DeleteByIdServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -63,7 +63,7 @@ public class AdminReviewWebController {
                     .filter(Objects::nonNull)
                     .forEach(reviewService::updateShownStatus);
             return "redirect:/admin/reviews";
-        } catch (UpdateReviewStatusServiceException e) {
+        } catch (UpdateParameterServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
