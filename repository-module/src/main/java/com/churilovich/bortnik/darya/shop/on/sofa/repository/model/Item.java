@@ -23,8 +23,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String unique_name;
+    @Column(name = "unique_number")
+    private String uniqueNumber;
 
     @Column
     private String name;

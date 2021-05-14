@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Item</title>
+</head>
+<body>
+<form method="get" th:action="@{/user/sale/items/description}" th:object="${item}">
+    <table border="1">
+        <tr>
+            <th>name</th>
+            <th>unique number</th>
+            <th>price</th>
+            <th>description</th>
+        </tr>
+        <tr>
+            <td th:text="${item.name}">name</td>
+            <td th:text="${item.getUniqueNumber}">unique number</td>
+            <td th:text="${item.price}">price</td>
+            <td th:text="${item.description}">description</td>
+        </tr>
+    </table>
+    <br><br>
+</form>
+<form action="/login" method="get">
+    <button type="submit">Back to login page</button>
+</form>
+</body>
+</html>

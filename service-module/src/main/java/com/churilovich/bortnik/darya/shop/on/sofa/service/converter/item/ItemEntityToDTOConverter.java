@@ -13,7 +13,7 @@ public class ItemEntityToDTOConverter implements Converter<Item, ItemDTO> {
         ItemDTO itemDTO = new ItemDTO();
         itemDTO.setId(item.getId());
         itemDTO.setName(item.getName());
-        itemDTO.setUnique_name(item.getUnique_name());
+        itemDTO.setUniqueNumber(item.getUniqueNumber());
         itemDTO.setDescription(item.getDescription());
         itemDTO.setPrice(item.getPrice());
         itemDTO.setCategory(item.getCategory().getName());

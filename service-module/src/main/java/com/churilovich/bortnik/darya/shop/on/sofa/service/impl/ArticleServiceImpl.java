@@ -55,8 +55,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public PageDTO<ArticleDTO> getArticlesOnPage(Long currentPageNumber) {
         try {
-            Long amountOfReviews = articleRepository.getAmountOfEntities();
-            Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfReviews, AMOUNT_ON_ONE_PAGE);
+            Long amountOfArticles = articleRepository.getAmountOfEntities();
+            Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfArticles, AMOUNT_ON_ONE_PAGE);
             return buildPageWithArticles(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
@@ -137,7 +137,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     private List<ArticleDTO> getArticleDTO(List<Article> articles) {
         return articles.stream()
-                .map(oneNews -> conversionService.convert(oneNews, ArticleDTO.class))
+                .map(article -> conversionService.convert(article, ArticleDTO.class))
                 .collect(Collectors.toList());
     }
 

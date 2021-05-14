@@ -6,6 +6,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ public class CustomerArticleWebController {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ArticleService articleService;
 
+    @Autowired
     public CustomerArticleWebController(ArticleService articleService) {
         this.articleService = articleService;
     }
