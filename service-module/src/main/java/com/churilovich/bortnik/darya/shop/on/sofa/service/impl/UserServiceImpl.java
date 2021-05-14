@@ -16,9 +16,8 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetUsersOnPageServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdatePasswordServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateRoleServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
@@ -100,7 +99,7 @@ public class UserServiceImpl implements UserService {
         Role role = getRoleById(userDTO);
         userRepository.findById(userDTO.getId())
                 .ifPresentOrElse(user -> updateRole(user, role), () -> {
-                    throw new UpdateRoleServiceException("Can't update user role on service level : user = " + userDTO);
+                    throw new UpdateParameterServiceException("Can't update user role on service level : user = " + userDTO);
                 });
     }
 
@@ -119,7 +118,7 @@ public class UserServiceImpl implements UserService {
     public void generateNewPassword(UserDTO userDTO) {
         userRepository.findById(userDTO.getId())
                 .ifPresentOrElse(this::giveUserNewPassword, () -> {
-                    throw new UpdatePasswordServiceException("Can't update user password on service level : user = "
+                    throw new UpdateParameterServiceException("Can't update user password on service level : user = "
                             + userDTO);
                 });
     }
@@ -133,7 +132,7 @@ public class UserServiceImpl implements UserService {
             return buildPageWithUsers(currentPageNumber, userDTOLogin, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new GetUsersOnPageServiceException("Can't get all users on current page on service level " +
+            throw new GetOnPageServiceException("Can't get all users on current page on service level " +
                     "due to impossibility to get total amount of users", e);
         }
     }
@@ -169,7 +168,7 @@ public class UserServiceImpl implements UserService {
         Long id = userDTOLog.getUserId();
         userRepository.findById(id)
                 .ifPresentOrElse(user -> generatePassword(user, oldPassword, newPassword), () -> {
-                    throw new UpdatePasswordServiceException("Can't update password, because can't find user with this id");
+                    throw new UpdateParameterServiceException("Can't update password, because can't find user with this id");
                 });
     }
 
@@ -268,7 +267,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(newEncodedPassword);
             userRepository.merge(user);
         } else {
-            throw new UpdatePasswordServiceException("Can't update password, because old password is not mapping with password from database");
+            throw new UpdateParameterServiceException("Can't update password, because old password is not mapping with password from database");
         }
     }
 }

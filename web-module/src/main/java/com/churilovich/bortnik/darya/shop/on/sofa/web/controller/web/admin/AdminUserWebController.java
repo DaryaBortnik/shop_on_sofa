@@ -4,9 +4,8 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.RoleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetUsersOnPageServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdatePasswordServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateRoleServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
@@ -53,7 +52,7 @@ public class AdminUserWebController {
             model.addAttribute("roles", roles);
             userDTO.setRoleDTO(new RoleDTO());
             return "get_all_users_page";
-        } catch (GetUsersOnPageServiceException e) {
+        } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -92,7 +91,7 @@ public class AdminUserWebController {
                 userService.updateRole(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (UpdateRoleServiceException e) {
+        } catch (UpdateParameterServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -120,7 +119,7 @@ public class AdminUserWebController {
                 userService.generateNewPassword(userDTO);
                 return "redirect:/admin/users";
             }
-        } catch (UpdatePasswordServiceException e) {
+        } catch (UpdateParameterServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }

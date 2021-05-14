@@ -12,7 +12,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetArticlesServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.CommentDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
@@ -60,7 +60,7 @@ public class ArticleServiceImpl implements ArticleService {
             return buildPageWithArticles(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new GetArticlesServiceException("Can't get all reviews on current page on service level " +
+            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
                     "due to impossibility to get total amount of reviews", e);
         }
     }
@@ -145,5 +145,4 @@ public class ArticleServiceImpl implements ArticleService {
         article.setUser(user);
         articleRepository.persist(article);
     }
-
 }
