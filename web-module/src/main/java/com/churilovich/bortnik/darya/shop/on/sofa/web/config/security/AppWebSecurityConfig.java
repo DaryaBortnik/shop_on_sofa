@@ -16,6 +16,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 
 import static com.churilovich.bortnik.darya.shop.on.sofa.web.constants.RoleValueConstants.ADMINISTRATOR;
 import static com.churilovich.bortnik.darya.shop.on.sofa.web.constants.RoleValueConstants.CUSTOMER_USER;
+import static com.churilovich.bortnik.darya.shop.on.sofa.web.constants.RoleValueConstants.SALE_USER;
 
 @Configuration
 @Order(2)
@@ -51,6 +52,8 @@ public class AppWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasAuthority(ADMINISTRATOR)
                 .antMatchers("/user/customer/**")
                 .hasAuthority(CUSTOMER_USER)
+                .antMatchers("/user/sale/**")
+                .hasAuthority(SALE_USER)
                 .antMatchers("/login")
                 .permitAll()
                 .and()

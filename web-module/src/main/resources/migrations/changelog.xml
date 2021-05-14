@@ -120,7 +120,46 @@
             </column>
             <column name="article_id" type="BIGINT">
                 <constraints nullable=" false"
-                             foreignKeyName="f_comment_news_id" references="article(id)" deleteCascade="true"/>
+                             foreignKeyName="f_comment_article_id" references="article(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_ITEM_CATEGORY" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="item_category">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_ITEM" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="item">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="unique_name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_category_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_item_category_id" references="item_category(id)" deleteCascade="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_item_user_id" references="user(id)" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>

@@ -115,6 +115,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void generateNewPassword(UserDTO userDTO) {
         userRepository.findById(userDTO.getId())
                 .ifPresentOrElse(this::giveUserNewPassword, () -> {
@@ -211,8 +212,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     String generatePassword(User user) {
-        String newPassword = generateNewPassword();
-        user.setPassword(newPassword);
+        String newPassword = generationPasswordService.generate();
+        String encodedPassword = generationPasswordService.encode(newPassword);
+        user.setPassword(encodedPassword);
         userRepository.merge(user);
         return newPassword;
     }
