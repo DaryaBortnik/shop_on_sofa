@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PaginationServiceImpl implements PaginationService {
+
     @Override
     public Long getElementPosition(Long currentElementNumber, Long elementsAmountOnOnePage) {
         if (currentElementNumber == 0) {

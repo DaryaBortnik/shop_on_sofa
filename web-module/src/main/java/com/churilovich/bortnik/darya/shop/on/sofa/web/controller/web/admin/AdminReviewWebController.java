@@ -1,7 +1,9 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.web.controller;
+package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.admin;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateReviewStatusServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import org.apache.logging.log4j.LogManager;
@@ -20,25 +22,24 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/admin")
-public class ReviewWebController {
+public class AdminReviewWebController {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ReviewService reviewService;
 
     @Autowired
-    public ReviewWebController(ReviewService reviewService) {
+    public AdminReviewWebController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
     @GetMapping("/reviews")
     public String getAllReviews(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                                 Model model) {
-        logger.info("Getting all reviews on web controller level");
         try {
             PageDTO<ReviewDTO> pageWithReviews = reviewService.getReviewsOnPage(currentPageNumber);
             model.addAttribute("reviews", pageWithReviews.getList());
             model.addAttribute("page", pageWithReviews);
             return "get_all_reviews_page";
-        } catch (UpdateReviewStatusServiceException e) {
+        } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }
@@ -46,20 +47,23 @@ public class ReviewWebController {
 
     @PostMapping("/reviews/delete")
     public String deleteReview(@RequestParam("deleting_review_id") Long id) {
-        logger.info("Deleting review with id [{}] on controller level", id);
-        reviewService.delete(id);
-        return "redirect:/admin/reviews";
+        try {
+            reviewService.deleteById(id);
+            return "redirect:/admin/reviews";
+        } catch (DeleteByIdServiceException e) {
+            logger.error(e.getMessage(), e);
+            return "error_page";
+        }
     }
 
     @PostMapping("/reviews/update/shown")
     public String updateShownStatus(@RequestParam("change_shown_status_review_id") List<Long> ids) {
-        logger.info("Updating shown status for reviews with ids [{}] on web controller level", ids);
         try {
             ids.stream()
                     .filter(Objects::nonNull)
                     .forEach(reviewService::updateShownStatus);
             return "redirect:/admin/reviews";
-        } catch (UpdateReviewStatusServiceException e) {
+        } catch (UpdateParameterServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }

@@ -5,9 +5,9 @@ import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntiti
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Review;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetReviewsServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.ReviewNotFoundServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateReviewStatusServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import org.apache.logging.log4j.LogManager;
@@ -41,11 +41,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        logger.info("Deleting review by id [{}]", id);
+    public void deleteById(Long id) {
         reviewRepository.findById(id)
                 .ifPresentOrElse(reviewRepository::remove, () -> {
-                    throw new ReviewNotFoundServiceException("Review can't delete on service level because review" +
+                    throw new DeleteByIdServiceException("Review can't deleteById on service level because review" +
                             " with this id id not found : id = " + id);
                 });
     }
@@ -53,24 +52,22 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional
     public void updateShownStatus(Long id) {
-        logger.info("Updating shown status for review id [{}] on service level", id);
         reviewRepository.findById(id)
                 .ifPresentOrElse(this::updateStatus, () -> {
-                    throw new UpdateReviewStatusServiceException("Can't update review shown status : review id = " + id);
+                    throw new UpdateParameterServiceException("Can't update review shown status : review id = " + id);
                 });
     }
 
     @Override
     @Transactional
     public PageDTO<ReviewDTO> getReviewsOnPage(Long currentPageNumber) {
-        logger.info("Getting all reviews on current page [{}] on service level", currentPageNumber);
         try {
             Long amountOfReviews = reviewRepository.getAmountOfEntities();
             Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfReviews, AMOUNT_ON_ONE_PAGE);
             return buildPageWithReviews(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new GetReviewsServiceException("Can't get all reviews on current page on service level " +
+            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
                     "due to impossibility to get total amount of reviews", e);
         }
     }
