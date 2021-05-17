@@ -2,10 +2,12 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.CommentRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.CommentService;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.CommentDTO;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,5 +27,15 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAllByArticleId(id).stream()
                 .map(comment -> conversionService.convert(comment, CommentDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        commentRepository.findById(id)
+                .ifPresentOrElse(commentRepository::remove, () -> {
+                    throw new DeleteByIdServiceException("Can't deleteById comment by id on service level because can't " +
+                            "found comment with id = " + id);
+                });
     }
 }

@@ -59,7 +59,7 @@ public class AdminUserWebController {
     }
 
     @GetMapping("/users/new")
-    public String getNewUserPage(UserDTO userDTO, Model model) {
+    public String getAddNewUserPage(UserDTO userDTO, Model model) {
         List<RoleDTO> roles = roleService.findAll();
         model.addAttribute("roles", roles);
         userDTO.setRoleDTO(new RoleDTO());

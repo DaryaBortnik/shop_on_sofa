@@ -17,6 +17,8 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.CommentDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.convert.ConversionService;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +34,7 @@ import java.util.stream.Collectors;
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
 
 @Service
+@RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ArticleRepository articleRepository;
@@ -38,18 +42,6 @@ public class ArticleServiceImpl implements ArticleService {
     private final UserService userService;
     private final ConversionService conversionService;
     private final PaginationService paginationService;
-
-    public ArticleServiceImpl(ArticleRepository articleRepository,
-                              CommentService commentService,
-                              UserService userService,
-                              ConversionService conversionService,
-                              PaginationService paginationService) {
-        this.articleRepository = articleRepository;
-        this.commentService = commentService;
-        this.userService = userService;
-        this.conversionService = conversionService;
-        this.paginationService = paginationService;
-    }
 
     @Override
     @Transactional
@@ -116,6 +108,19 @@ public class ArticleServiceImpl implements ArticleService {
         List<CommentDTO> comments = commentService.findAllByArticleId(id);
         article.setComments(comments);
         return article;
+    }
+
+    @Override
+    @Transactional
+    public void addWithUser(ArticleDTO article, UserDTOLogin userDTOLogin) {
+        Long userId = userDTOLogin.getUserId();
+        UserDTO user = userService.findById(userId);
+        String firstName = user.getUserProfileDTO().getFirstName();
+        String lastName = user.getUserProfileDTO().getLastName();
+        article.setUserFirstName(firstName);
+        article.setUserLastName(lastName);
+        article.setDateAdded(LocalDate.now());
+        add(article);
     }
 
     private UserDTO getUserOfArticle(ArticleDTO articleDTO) {

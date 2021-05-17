@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CommentService {
     List<CommentDTO> findAllByArticleId(Long id);
+
+    void deleteById(Long id);
 }

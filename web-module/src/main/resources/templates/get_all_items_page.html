@@ -23,7 +23,7 @@
                 <td th:text="${item.name}">name</td>
                 <td th:text="${item.getUniqueNumber}">unique number</td>
                 <td th:text="${item.price}">price</td>
-                <td th:text="${item.category}">category</td>
+                <td th:text="${item.itemCategoryDTO.name}">category</td>
                 <td th:name="chosen_item" th:value="${item.id}"><a
                         th:href="@{/user/sale/items/description(chosen_item=${item.id})}"
                         th:text="${item.name}">description</a></td>
@@ -35,15 +35,23 @@
                 </td>
             </tr>
         </table>
-        <br><br>
-        <button type="submit" name="deleting_item"
-                form="delete">Delete selected items
-        </button>
         <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
             th:classappend="${page.pagesAmount}==${i}">
             <a th:href="@{/user/sale/items(current_page=${i})}" th:text="${i}"> </a>
         </li>
+        <br><br>
+        <button type="submit" name="deleting_item"
+                form="delete">Delete selected items
+        </button>
+        <br><br>
     </form>
+</form>
+<form th:action="@{/user/sale/items/add}" method="get">
+    <button type="submit">Add new item</button>
+</form>
+<br><br>
+<form th:action="@{/user/sale/items/report}" method="get">
+    <button type="submit">Get item report</button>
 </form>
 <br><br>
 <form action="/login" method="get">

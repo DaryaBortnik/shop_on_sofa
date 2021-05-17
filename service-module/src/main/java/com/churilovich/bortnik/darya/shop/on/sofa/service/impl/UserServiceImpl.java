@@ -22,6 +22,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
@@ -47,23 +49,6 @@ public class UserServiceImpl implements UserService {
     private final GenerationPasswordService generationPasswordService;
     private final MailService mailService;
     private final PaginationService paginationService;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           UserProfileRepository userProfileRepository,
-                           ConversionService conversionService,
-                           GenerationPasswordService generationPasswordService,
-                           MailService mailService,
-                           PaginationService paginationService) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.userProfileRepository = userProfileRepository;
-        this.conversionService = conversionService;
-        this.generationPasswordService = generationPasswordService;
-        this.mailService = mailService;
-        this.paginationService = paginationService;
-    }
 
     @Override
     @Transactional
@@ -108,7 +93,7 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         userRepository.findById(id)
                 .ifPresentOrElse(userRepository::remove, () -> {
-                    throw new DeleteByIdServiceException("Can't deleteById user by id on service level because can't found user : " +
+                    throw new DeleteByIdServiceException("Can't delete user by id on service level because can't found user : " +
                             "id = " + id);
                 });
     }

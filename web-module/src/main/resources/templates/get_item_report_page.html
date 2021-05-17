@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Report</title>
+</head>
+<body>
+<form th:action="@{/user/sale/items/report}" method="get" th:object="${reports}">
+    <table border="1">
+        <tr>
+            <th>name</th>
+            <th>price</th>
+            <th>category</th>
+            <th>amount</th>
+        </tr>
+        <tr th:each="report:${reports}">
+            <td th:text="${report.itemDTO.name}">name</td>
+            <td th:text="${report.itemDTO.price}">price</td>
+            <td th:text="${report.itemDTO.itemCategoryDTO.name}">category</td>
+            <td th:text="0">amount</td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

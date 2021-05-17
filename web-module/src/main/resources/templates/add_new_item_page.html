@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new item</title>
+</head>
+<body>
+<form method="post" th:action="@{/user/sale/items/add}" th:object="${item}">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="text" th:field="*{name}" required></td>
+            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                Name Error
+            </td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td><input type="text" th:field="*{description}" pattern="^[a-zA-Z]{0,40}$"></td>
+            <td th:if="${#fields.hasErrors('description')}"
+                th:errors="*{description}">Description Error
+            </td>
+        </tr>
+        <tr>
+            <td>Price</td>
+            <td><input type="number" th:field="*{price}" required></td>
+            <td th:if="${#fields.hasErrors('price')}"
+                th:errors="*{price}">Price Error
+            </td>
+        </tr>
+        <tr>
+            <td>Category</td>
+            <td>
+                <select name="category" th:field="${item.itemCategoryDTO.id}">
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}">category
+                    </option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit">Add new item</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

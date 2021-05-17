@@ -5,6 +5,7 @@
     <title>Item</title>
 </head>
 <body>
+<form id="update_item_info" th:action="@{/user/sale/items/description/update}" method="get"></form>
 <form method="get" th:action="@{/user/sale/items/description}" th:object="${item}">
     <table border="1">
         <tr>
@@ -12,12 +13,21 @@
             <th>unique number</th>
             <th>price</th>
             <th>description</th>
+            <th>category</th>
+            <th>update item details</th>
         </tr>
         <tr>
             <td th:text="${item.name}">name</td>
             <td th:text="${item.getUniqueNumber}">unique number</td>
             <td th:text="${item.price}">price</td>
             <td th:text="${item.description}">description</td>
+            <td th:text="${item.itemCategoryDTO.name}">category</td>
+            <td>
+                <button type="submit" name="update_item_id"
+                        th:value="${item.id}"
+                        form="update_item_info"> Update item details
+                </button>
+            </td>
         </tr>
     </table>
     <br><br>

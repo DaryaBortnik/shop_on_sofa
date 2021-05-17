@@ -35,7 +35,7 @@ public class Item {
     @Column
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_category_id", nullable = false)
     private ItemCategory category;
 

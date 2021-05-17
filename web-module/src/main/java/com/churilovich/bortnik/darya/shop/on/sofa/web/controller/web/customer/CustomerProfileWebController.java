@@ -38,14 +38,14 @@ public class CustomerProfileWebController {
         model.addAttribute("userProfileDTO", userProfile);
         String newPassword = Strings.EMPTY;
         model.addAttribute("password", newPassword);
-        return "get_update_user_profile_page";
+        return "update_user_profile_page";
     }
 
     @PostMapping("/profile/update/parameters")
     public String updateParameters(@AuthenticationPrincipal UserDTOLogin userDTOLogin, UserProfileDTO userProfileDTO,
                                    BindingResult result) {
         if (result.hasErrors()) {
-            return "get_update_user_profile_page";
+            return "update_user_profile_page";
         } else {
             userService.updateUserProfileParameters(userDTOLogin, userProfileDTO);
             return "redirect:/user/customer/profile";
@@ -56,7 +56,7 @@ public class CustomerProfileWebController {
     public String updatePassword(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @RequestParam("old_password") String oldPassword,
                                  @RequestParam("new_password") String newPassword, BindingResult result) {
         if (result.hasErrors()) {
-            return "get_update_user_profile_page";
+            return "update_user_profile_page";
         } else {
             userService.updateUserPassword(userDTOLogin, oldPassword, newPassword);
             return "redirect:/user/customer/profile";

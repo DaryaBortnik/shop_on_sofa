@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Add article</title>
+</head>
+<body>
+<form method="post" th:action="@{/user/sale/articles/add}" th:object="${article}">
+    <table>
+        <tr>
+            <td>Name</td>
+            <td><input type="text" th:field="*{name}" required></td>
+            <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                Name Error
+            </td>
+        </tr>
+        <tr>
+            <td>Short Description</td>
+            <td><input type="text" th:field="*{shortDescription}" pattern="^[a-zA-Z]{0,40}$"></td>
+            <td th:if="${#fields.hasErrors('shortDescription')}"
+                th:errors="*{shortDescription}">Short Description Error
+            </td>
+        </tr>
+        <tr>
+            <td>Full Description</td>
+            <td><input type="text" th:field="*{fullDescription}" pattern="^[a-zA-Z]{0,40}$"></td>
+            <td th:if="${#fields.hasErrors('fullDescription')}"
+                th:errors="*{fullDescription}">Full Description Error
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit">Add new article</button>
+            </td>
+        </tr>
+    </table>
+</form>
+<br><br>
+<form th:action="@{/user/sale/articles}" method="get">
+    <button type="submit">Back to articles page</button>
+</form>
+<br><br>
+<form th:action="@{/user/sale/start}" method="get">
+    <button type="submit">Back to start page</button>
+</form>
+<br><br>
+</body>
+</html>

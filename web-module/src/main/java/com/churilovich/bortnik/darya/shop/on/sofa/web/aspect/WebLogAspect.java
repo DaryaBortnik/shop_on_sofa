@@ -32,6 +32,10 @@ public class WebLogAspect {
     public void callAtCustomerWebController() {
     }
 
+    @Pointcut("execution(public * com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.sale.*.*(..))")
+    public void callAtSaleWebController() {
+    }
+
     @Before("callAtApiController()")
     public void beforeCallAtApiController(JoinPoint joinPoint) {
         List<String> args = Arrays.stream(joinPoint.getArgs())
@@ -52,6 +56,15 @@ public class WebLogAspect {
 
     @Before("callAtCustomerWebController()")
     public void beforeCallAtCustomerWebController(JoinPoint joinPoint) {
+        List<String> args = Arrays.stream(joinPoint.getArgs())
+                .map(Object::toString)
+                .collect(Collectors.toList());
+        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level" +
+                " with parameters: " + args);
+    }
+
+    @Before("callAtSaleWebController()")
+    public void beforeCallAtSaleWebController(JoinPoint joinPoint) {
         List<String> args = Arrays.stream(joinPoint.getArgs())
                 .map(Object::toString)
                 .collect(Collectors.toList());

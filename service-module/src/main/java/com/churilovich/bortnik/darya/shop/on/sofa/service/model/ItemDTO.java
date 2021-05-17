@@ -11,6 +11,6 @@ public class ItemDTO {
     private String name;
     private BigDecimal price;
     private String description;
-    private String category;
+    private ItemCategoryDTO itemCategoryDTO;
     private Long userId;
 }
