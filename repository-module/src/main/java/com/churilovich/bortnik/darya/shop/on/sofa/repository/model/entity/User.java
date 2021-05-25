@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
+package com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,3 +1,4 @@
+
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -164,6 +165,37 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="CREATE_TABLE_ORDERS" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="order_number" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="add_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_amount" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_order_item_id" references="item(id)" deleteCascade="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_order_user_id" references="user(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <changeSet id="INSERT_ROLE_ADMINISTRATOR" author="darya.bortnik.churilovich@gmail.com">
         <insert tableName="role">
             <column name="name" value="ADMINISTRATOR"/>
@@ -204,6 +236,30 @@
         </insert>
     </changeSet>
 
+    <changeSet id="INSERT_USER_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="sale@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_WITH_CUSTOMER_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="custom@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'CUSTOMER_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_WITH_ SECURE_API_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="secureapi@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SECURE_API_USER')"/>
+        </insert>
+    </changeSet>
+
     <changeSet id="INSERT_USER_INFO_FOR_USER_ADMIN" author="darya.bortnik.churilovich@gmail.com">
         <insert tableName="user_profile">
             <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'admin@ad.com')"/>
@@ -212,6 +268,54 @@
             <column name="last_name" value="test_last_name"/>
             <column name="address" value="test_address"/>
             <column name="phone_number" value="541258855"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_BEAUTY" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="BEAUTY"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_MEN" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="MEN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_WOMEN" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="WOMEN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_KIDS" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="KIDS"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_HOUSE_AND_LIVING" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="HOUSE AND LIVING"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_ELECTRONICS" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="ELECTRONICS"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_SPORT" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="SPORT"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_AUTOMOBILES" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="AUTOMOBILES"/>
         </insert>
     </changeSet>
 

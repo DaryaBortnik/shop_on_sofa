@@ -6,9 +6,9 @@ import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByUsernameRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.PersistEntityRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Role;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.UserProfile;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Role;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.UserProfile;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.GenerationPasswordService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.MailService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
@@ -18,14 +18,13 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdSe
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -65,13 +64,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void add(UserDTO userDTO) {
+    public UserDTO add(UserDTO userDTO) {
         try {
             User user = conversionService.convert(userDTO, User.class);
             Optional.ofNullable(user)
                     .ifPresentOrElse(this::addUser, () -> {
                         throw new AddServiceException("Can't add new user on service level because it's null");
                     });
+            return conversionService.convert(user, UserDTO.class);
         } catch (PersistEntityRepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new AddServiceException("Can't add new user on service level because its existing", e);
@@ -131,13 +131,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserProfileParameters(UserDTOLogin userDTOLogin, UserProfileDTO userProfileDTO) {
+    public UserProfileDTO updateUserProfileParameters(UserDTOLogin userDTOLogin, UserProfileDTO userProfileDTO) {
         Long id = userDTOLogin.getUserId();
-        UserProfile userProfileUpdate = userProfileRepository.findById(id)
-                .map(userProfile -> updateProfile(userProfileDTO, userProfile))
-                .orElseGet(() -> getUpdatedUserProfile(userProfileDTO));
+        userProfileDTO.setId(id);
+        UserProfile userProfileUpdate = userRepository.findById(id)
+                .map(user -> getUpdatedUserProfile(userProfileDTO, user))
+                .orElseGet(() -> {
+                    throw new UpdateParameterServiceException("Can't update user profile because user doesn't exist");
+                });
         userProfileRepository.merge(userProfileUpdate);
+        return conversionService.convert(userProfileUpdate, UserProfileDTO.class);
     }
+
 
     @Override
     @Transactional
@@ -229,7 +234,14 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    private UserProfile getUpdatedUserProfile(UserProfileDTO userProfileDTO, User user) {
+        return userProfileRepository.findByIdIfExist(user.getId())
+                .map(userProfile -> updateProfile(userProfileDTO, userProfile))
+                .orElseGet(() -> fillInUserProfile(userProfileDTO, user));
+    }
+
     private UserProfile updateProfile(UserProfileDTO userProfileDTO, UserProfile userProfile) {
+        userProfile.setId(userProfileDTO.getId());
         userProfile.setPhoneNumber(userProfileDTO.getPhoneNumber());
         userProfile.setAddress(userProfileDTO.getAddress());
         userProfile.setFirstName(userProfileDTO.getFirstName());
@@ -238,10 +250,8 @@ public class UserServiceImpl implements UserService {
         return userProfile;
     }
 
-
-    private UserProfile getUpdatedUserProfile(UserProfileDTO userProfileDTO) {
-        User user = getUser(userProfileDTO.getId());
-        UserProfile userProfile = new UserProfile(userProfileDTO.getId(), user);
+    private UserProfile fillInUserProfile(UserProfileDTO userProfileDTO, User user) {
+        UserProfile userProfile = new UserProfile(user);
         return updateProfile(userProfileDTO, userProfile);
     }
 

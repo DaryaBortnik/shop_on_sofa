@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -66,7 +67,8 @@ public class WebLogAspect {
     @Before("callAtSaleWebController()")
     public void beforeCallAtSaleWebController(JoinPoint joinPoint) {
         List<String> args = Arrays.stream(joinPoint.getArgs())
-                .map(Object::toString)
+                .filter(Objects::nonNull)
+                .map(Objects::toString)
                 .collect(Collectors.toList());
         logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level" +
                 " with parameters: " + args);

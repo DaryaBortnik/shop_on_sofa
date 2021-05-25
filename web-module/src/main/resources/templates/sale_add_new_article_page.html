@@ -9,21 +9,21 @@
     <table>
         <tr>
             <td>Name</td>
-            <td><input type="text" th:field="*{name}" required></td>
+            <td><input type="text" th:field="*{name}" required maxlength="40"></td>
             <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
                 Name Error
             </td>
         </tr>
         <tr>
             <td>Short Description</td>
-            <td><input type="text" th:field="*{shortDescription}" pattern="^[a-zA-Z]{0,40}$"></td>
+            <td><input type="text" th:field="*{shortDescription}" maxlength="200"></td>
             <td th:if="${#fields.hasErrors('shortDescription')}"
                 th:errors="*{shortDescription}">Short Description Error
             </td>
         </tr>
         <tr>
             <td>Full Description</td>
-            <td><input type="text" th:field="*{fullDescription}" pattern="^[a-zA-Z]{0,40}$"></td>
+            <td><input type="text" th:field="*{fullDescription}" maxlength="1000"></td>
             <td th:if="${#fields.hasErrors('fullDescription')}"
                 th:errors="*{fullDescription}">Full Description Error
             </td>

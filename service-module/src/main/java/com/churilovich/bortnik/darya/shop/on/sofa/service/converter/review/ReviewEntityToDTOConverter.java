@@ -1,7 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.converter.review;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Review;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.UserProfile;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Review;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.UserProfile;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.converter.profile.UserProfileEntityToDTOConverter;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;

@@ -1,6 +1,6 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.converter.role;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Role;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Role;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.RoleEnum;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import org.springframework.core.convert.converter.Converter;

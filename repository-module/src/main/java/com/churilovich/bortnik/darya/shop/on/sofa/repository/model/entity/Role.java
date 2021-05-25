@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
+package com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.RoleEnum;
 import lombok.EqualsAndHashCode;

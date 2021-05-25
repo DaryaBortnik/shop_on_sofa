@@ -1,19 +1,15 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.MailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
     private final JavaMailSender mailSender;
-
-    @Autowired
-    public MailServiceImpl(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
 
     @Override
     public void sendMessageToEmail(String email, String message) {

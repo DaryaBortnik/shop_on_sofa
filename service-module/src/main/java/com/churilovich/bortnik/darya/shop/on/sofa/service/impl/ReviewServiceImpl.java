@@ -2,17 +2,17 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.ReviewRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Review;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Review;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -24,20 +24,12 @@ import java.util.stream.Collectors;
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ReviewRepository reviewRepository;
     private final ConversionService conversionService;
     private final PaginationService paginationService;
-
-    @Autowired
-    public ReviewServiceImpl(ReviewRepository reviewRepository,
-                             ConversionService conversionService,
-                             PaginationService paginationService) {
-        this.reviewRepository = reviewRepository;
-        this.conversionService = conversionService;
-        this.paginationService = paginationService;
-    }
 
     @Override
     @Transactional

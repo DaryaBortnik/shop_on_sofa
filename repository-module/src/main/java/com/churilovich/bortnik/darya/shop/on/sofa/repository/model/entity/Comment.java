@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
+package com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,11 +16,11 @@ import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "review")
+@Table(name = "comment")
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "user")
-public class Review {
+@EqualsAndHashCode(exclude = {"user","article","dateAdded"})
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,12 +29,13 @@ public class Review {
     private String description;
 
     @Column(name = "add_date")
-    private LocalDate addDate;
-
-    @Column(name = "is_shown")
-    private Boolean isShown;
+    private LocalDate dateAdded;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id", nullable = false)
+    private Article article;
 }

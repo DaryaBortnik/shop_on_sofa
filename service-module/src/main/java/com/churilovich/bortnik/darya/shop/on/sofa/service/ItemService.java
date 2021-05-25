@@ -1,8 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public interface ItemService {
 
     ItemDTO add(ItemDTO itemDTO);
 
-    void deleteById(Long id);
+    Long deleteById(Long id);
 
     PageDTO<ItemDTO> getItemsOnPage(Long currentPageNumber);
 

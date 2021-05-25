@@ -20,7 +20,7 @@
                 <td><input type="checkbox" name="delete_article_id" th:value="${article.id}"/></td>
                 <td th:text="${article.dateAdded}">date added</td>
                 <td th:text="${article.name}">name</td>
-                <td th:text="${article.userLastName} + ' ' + ${article.userFirstName}">author</td>
+                <td th:text="${article.user.userProfileDTO.lastName} + ' ' + ${article.user.userProfileDTO.firstName}">author</td>
                 <td th:text="${article.shortDescription}">short description</td>
                 <td th:name="chosen_article" th:value="${article.id}"><a
                         th:href="@{/user/sale/articles/description(chosen_article=${article.id})}"

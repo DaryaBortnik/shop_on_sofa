@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Order details</title>
+</head>
+<body>
+<form id="update_order" th:action="@{/user/sale/orders/description/update}" method="get"></form>
+<form method="get" th:action="@{/user/sale/orders/description}" th:object="${order}">
+    <table border="1">
+        <tr>
+            <th>order number</th>
+            <th>status</th>
+            <th>item</th>
+            <th>amount</th>
+            <th>user</th>
+            <th>user phone</th>
+            <th>final price</th>
+            <th>link to description</th>
+        </tr>
+        <tr>
+            <td th:text="${order.number}">number</td>
+            <td th:text="${order.status}">status</td>
+            <td th:text="${order.item.name}">item</td>
+            <td th:text="${order.itemAmount}">item amount</td>
+            <td th:text="${order.user.email}">user</td>
+            <td th:text="${order.user.userProfileDTO.phoneNumber}">user phone</td>
+            <td th:text="${order.price}">final price</td>
+            <td>
+                <button type="submit" name="update_order_id"
+                        th:value="${order.id}"
+                        form="update_order"> Update order details
+                </button>
+            </td>
+        </tr>
+    </table>
+    <br><br>
+</form>
+<form action="/login" method="get">
+    <button type="submit">Back to login page</button>
+</form>
+</body>
+</html>

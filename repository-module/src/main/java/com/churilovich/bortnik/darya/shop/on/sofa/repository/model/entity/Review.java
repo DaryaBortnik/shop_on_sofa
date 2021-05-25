@@ -1,5 +1,6 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
+package com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,32 +13,26 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "item")
+@Table(name = "review")
 @Getter
 @Setter
-public class Item {
+@EqualsAndHashCode(exclude = "user")
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "unique_number")
-    private String uniqueNumber;
-
-    @Column
-    private String name;
-
-    @Column
-    private BigDecimal price;
-
     @Column
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_category_id", nullable = false)
-    private ItemCategory category;
+    @Column(name = "add_date")
+    private LocalDate addDate;
+
+    @Column(name = "is_shown")
+    private Boolean isShown;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

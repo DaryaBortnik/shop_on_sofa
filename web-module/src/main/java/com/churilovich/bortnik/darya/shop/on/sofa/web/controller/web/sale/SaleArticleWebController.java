@@ -2,15 +2,16 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.sale;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ArticleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.CommentService;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.ValidationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,16 +28,12 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/user/sale/articles")
+@RequiredArgsConstructor
 public class SaleArticleWebController {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ArticleService articleService;
     private final CommentService commentService;
-
-    @Autowired
-    public SaleArticleWebController(ArticleService articleService, CommentService commentService) {
-        this.articleService = articleService;
-        this.commentService = commentService;
-    }
+    private final ValidationService validationService;
 
     @GetMapping
     public String getAllArticles(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
@@ -93,17 +90,42 @@ public class SaleArticleWebController {
 
 
     @PostMapping("/add")
-    public String addItem(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid ArticleDTO article, BindingResult result) {
+    public String addArticle(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid ArticleDTO article, BindingResult result) {
         try {
-            if (result.hasErrors()) {
-                return "sale_add_new_article_page";
+            if (validationService.isUserHasFirstAndLastNames(userDTOLogin)) {
+                if (result.hasErrors()) {
+                    return "sale_add_new_article_page";
+                } else {
+                    articleService.add(article, userDTOLogin);
+                    return "redirect:/user/sale/articles";
+                }
             } else {
-                articleService.addWithUser(article, userDTOLogin);
-                return "redirect:/user/sale/articles";
+                return "redirect:/user/profile";
             }
         } catch (AddServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
+        }
+    }
+
+    @GetMapping("/description/update")
+    public String getUpdateArticleDetailsPage(@RequestParam(required = false, name = "update_article_id") Long id,
+                                              Model model) {
+        ArticleDTO article = articleService.findById(id);
+        model.addAttribute("article", article);
+        return "sale_update_article_details_page";
+    }
+
+    @PostMapping("/description/update")
+    public String updateParameters(@RequestParam(required = false, name = "article_id") Long id,
+                                   ArticleDTO article,
+                                   BindingResult result) {
+        if (result.hasErrors()) {
+            return "sale_update_article_details_page";
+        } else {
+            article.setId(id);
+            articleService.updateArticle(article);
+            return "redirect:/user/sale/articles";
         }
     }
 }

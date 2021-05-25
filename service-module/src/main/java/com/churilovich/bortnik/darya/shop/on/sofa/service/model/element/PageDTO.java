@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.service.model;
+package com.churilovich.bortnik.darya.shop.on.sofa.service.model.element;
 
 import lombok.Data;
 

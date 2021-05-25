@@ -1,11 +1,13 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.converter.item;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Item;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.ItemCategory;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Item;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.ItemCategory;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemCategoryDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class ItemDTOToEntityConverter implements Converter<ItemDTO, Item> {
@@ -24,6 +26,7 @@ public class ItemDTOToEntityConverter implements Converter<ItemDTO, Item> {
         item.setDescription(itemDTO.getDescription());
         item.setCategory(categoryConverter.convert(itemDTO.getItemCategoryDTO()));
         item.setPrice(itemDTO.getPrice());
+        item.setUniqueNumber(UUID.randomUUID().toString());
         return item;
     }
 }

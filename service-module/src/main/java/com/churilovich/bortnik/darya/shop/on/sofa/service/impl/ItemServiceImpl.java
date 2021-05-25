@@ -3,8 +3,8 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.ItemRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Item;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.ItemCategory;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Item;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.ItemCategory;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemCategoryService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
@@ -12,10 +12,10 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParamet
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemCategoryDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemRepository itemRepository;
@@ -35,19 +36,6 @@ public class ItemServiceImpl implements ItemService {
     private final ItemCategoryService categoryService;
     private final ConversionService conversionService;
     private final PaginationService paginationService;
-
-    @Autowired
-    public ItemServiceImpl(ItemRepository itemRepository,
-                           UserRepository userRepository,
-                           ItemCategoryService categoryService,
-                           ConversionService conversionService,
-                           PaginationService paginationService) {
-        this.itemRepository = itemRepository;
-        this.userRepository = userRepository;
-        this.categoryService = categoryService;
-        this.conversionService = conversionService;
-        this.paginationService = paginationService;
-    }
 
     @Override
     public List<ItemDTO> findAll() {
@@ -65,19 +53,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDTO add(ItemDTO itemDTO) {
-        Long userId = itemDTO.getUserId();
         Item item = conversionService.convert(itemDTO, Item.class);
-        item.setUniqueNumber(UUID.randomUUID().toString());
-        userRepository.findById(userId).ifPresent(item::setUser);
+        userRepository.findById(itemDTO.getUserId()).ifPresent(item::setUser);
         itemRepository.persist(item);
         return conversionService.convert(item, ItemDTO.class);
     }
 
     @Override
     @Transactional
-    public void deleteById(Long id) {
+    public Long deleteById(Long id) {
         Item item = getItem(id);
         itemRepository.remove(item);
+        return id;
     }
 
     @Override
@@ -89,19 +76,15 @@ public class ItemServiceImpl implements ItemService {
             return buildPageWithItems(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
-            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
-                    "due to impossibility to get total amount of reviews", e);
+            throw new GetOnPageServiceException("Can't get all items on current page on service level " +
+                    "due to impossibility to get total amount of items", e);
         }
     }
 
     @Override
     @Transactional
     public void updateItemDetails(ItemDTO itemDTO) {
-        Long id = itemDTO.getId();
-        Long categoryId = itemDTO.getItemCategoryDTO().getId();
-        ItemCategoryDTO categoryDTO = categoryService.findById(categoryId);
-        itemDTO.setItemCategoryDTO(categoryDTO);
-        Item updatedItem = itemRepository.findById(id)
+        Item updatedItem = itemRepository.findById(itemDTO.getId())
                 .map(item -> updateItem(itemDTO, item))
                 .get();
         itemRepository.merge(updatedItem);
@@ -133,12 +116,12 @@ public class ItemServiceImpl implements ItemService {
         currentPageNumber = paginationService.getCurrentPageNumber(currentPageNumber, amountOfPages);
         Long startNumberOnCurrentPage = paginationService.getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
         List<Item> items = itemRepository.findAllOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
-        List<ItemDTO> itemsDTO = getItemDTO(items);
+        List<ItemDTO> itemsDTO = getItemsDTO(items);
         page.getList().addAll(itemsDTO);
         return page;
     }
 
-    private List<ItemDTO> getItemDTO(List<Item> items) {
+    private List<ItemDTO> getItemsDTO(List<Item> items) {
         return items.stream()
                 .map(item -> conversionService.convert(item, ItemDTO.class))
                 .collect(Collectors.toList());
@@ -148,8 +131,13 @@ public class ItemServiceImpl implements ItemService {
         item.setName(itemDTO.getName());
         item.setDescription(itemDTO.getDescription());
         item.setPrice(itemDTO.getPrice());
-        ItemCategoryDTO itemCategoryDTO = itemDTO.getItemCategoryDTO();
+        ItemCategoryDTO itemCategoryDTO = getCategory(itemDTO);
         item.setCategory(conversionService.convert(itemCategoryDTO, ItemCategory.class));
         return item;
+    }
+
+    private ItemCategoryDTO getCategory(ItemDTO itemDTO) {
+        Long categoryId = itemDTO.getItemCategoryDTO().getId();
+        return categoryService.findById(categoryId);
     }
 }

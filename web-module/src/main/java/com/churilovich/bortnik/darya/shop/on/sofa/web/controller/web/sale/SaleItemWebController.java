@@ -1,19 +1,19 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.sale;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.service.CategoryService;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemCategoryService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReportService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetItemsServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemCategoryDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReportDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.ReportDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,20 +30,12 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/user/sale")
+@RequiredArgsConstructor
 public class SaleItemWebController {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemService itemService;
-    private final CategoryService categoryService;
+    private final ItemCategoryService categoryService;
     private final ReportService reportService;
-
-    @Autowired
-    public SaleItemWebController(ItemService itemService,
-                                 CategoryService categoryService,
-                                 ReportService reportService) {
-        this.itemService = itemService;
-        this.categoryService = categoryService;
-        this.reportService = reportService;
-    }
 
     @GetMapping("/items")
     public String getAllItems(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
@@ -53,7 +45,7 @@ public class SaleItemWebController {
             model.addAttribute("items", pageWithItems.getList());
             model.addAttribute("page", pageWithItems);
             return "get_all_items_page";
-        } catch (GetItemsServiceException e) {
+        } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
         }

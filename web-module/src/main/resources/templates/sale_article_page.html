@@ -5,7 +5,7 @@
     <title>Article</title>
 </head>
 <body>
-<form id="update" th:action="@{/user/sale/articles/description/update}" method="post"></form>
+<form id="update" th:action="@{/user/sale/articles/description/update}" method="get"></form>
 <form id="delete_comments" th:action="@{/user/sale/articles/description/comments/delete}" method="post">
     <form method="get" th:action="@{/user/sale/articles/description}" th:object="${article}">
         <table border="1">
@@ -17,6 +17,7 @@
                 <th>update</th>
             </tr>
             <tr>
+                <td th:text="${article.id}" hidden>id</td>
                 <td th:text="${article.dateAdded}">date added</td>
                 <td th:text="${article.name}">name</td>
                 <td th:text="${article.userFirstName} + ' ' + ${article.userLastName}">author</td>

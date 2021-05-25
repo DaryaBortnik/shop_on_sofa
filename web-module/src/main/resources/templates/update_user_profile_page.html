@@ -5,8 +5,7 @@
     <title>Update profile</title>
 </head>
 <body>
-
-<form method="post" th:action="@{/user/customer/profile/update/parameters}" th:object="${userProfileDTO}">
+<form method="post" th:action="@{/user/profile/update/parameters}" th:object="${userProfileDTO}">
     <table>
         <tr>
             <td th:value="${userProfileDTO.lastName}">Last name</td>
@@ -55,7 +54,7 @@
         </tr>
     </table>
 </form>
-<form method="post" th:action="@{/user/customer/profile/update/password}">
+<form method="post" th:action="@{/user/profile/update/password}">
     <table>
         <tr>
             <td>Old password</td>

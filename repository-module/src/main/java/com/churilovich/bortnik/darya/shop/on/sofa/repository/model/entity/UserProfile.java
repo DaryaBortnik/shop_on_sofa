@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.repository.model;
+package com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,8 +25,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 public class UserProfile {
 
-    public UserProfile(Long id, User user) {
-        this.id = id;
+    public UserProfile(User user) {
         this.user = user;
     }
 

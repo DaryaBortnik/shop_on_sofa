@@ -5,8 +5,8 @@
     <title>User profile</title>
 </head>
 <body>
-<form id="update_profile" th:action="@{/user/customer/profile/update/parameters}" method="get"></form>
-<form method="get" th:action="@{/user/customer/profile}" th:object="${userProfileDTO}">
+<form id="update_profile" th:action="@{/user/profile/update/parameters}" method="get"></form>
+<form method="get" th:action="@{/user/profile}" th:object="${userProfileDTO}">
     <table border="1">
         <tr>
             <th>first name</th>

@@ -1,5 +1,6 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.config.security;
 
+import com.churilovich.bortnik.darya.shop.on.sofa.web.config.security.handler.FailureLoginHandler;
 import com.churilovich.bortnik.darya.shop.on.sofa.web.config.security.handler.SuccessLoginHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,14 +24,16 @@ import static com.churilovich.bortnik.darya.shop.on.sofa.web.constants.RoleValue
 public class AppWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final SuccessLoginHandler successLoginHandler;
+    private final FailureLoginHandler failureLoginHandler;
     private final AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
     public AppWebSecurityConfig(UserDetailsService userDetailsService,
                                 SuccessLoginHandler successLoginHandler,
-                                @Qualifier("webAccessDeniedHandler") AccessDeniedHandler accessDeniedHandler) {
+                                FailureLoginHandler failureLoginHandler, @Qualifier("webAccessDeniedHandler") AccessDeniedHandler accessDeniedHandler) {
         this.userDetailsService = userDetailsService;
         this.successLoginHandler = successLoginHandler;
+        this.failureLoginHandler = failureLoginHandler;
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
@@ -62,6 +65,7 @@ public class AppWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
                 .successHandler(successLoginHandler)
                 .permitAll()
+                .failureHandler(failureLoginHandler)
                 .and()
                 .logout()
                 .permitAll()

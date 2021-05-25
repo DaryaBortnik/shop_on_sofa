@@ -1,6 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -13,6 +14,7 @@ import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.Valid
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.ValidationMessageValueConstants.INVALID_MIDDLE_NAME_SIZE;
 
 @Data
+@NoArgsConstructor
 public class UserProfileDTO {
     private Long id;
     @Size(min = 1, max = 20, message = INVALID_FIRST_NAME_SIZE)
@@ -26,4 +28,8 @@ public class UserProfileDTO {
     private String lastName;
     private String address;
     private String phoneNumber;
+
+    public UserProfileDTO(Long id) {
+        this.id = id;
+    }
 }

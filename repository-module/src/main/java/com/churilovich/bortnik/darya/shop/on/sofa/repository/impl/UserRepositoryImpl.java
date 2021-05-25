@@ -2,7 +2,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByUsernameRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;

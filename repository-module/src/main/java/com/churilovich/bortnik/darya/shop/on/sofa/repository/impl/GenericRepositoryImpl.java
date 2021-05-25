@@ -51,7 +51,7 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
 
     @Override
     public Optional<E> findById(I id) {
-        return Optional.of(entityManager.find(entityClass, id));
+        return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
     @Override

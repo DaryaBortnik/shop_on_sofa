@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.web.controller;
+package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

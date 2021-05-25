@@ -1,9 +1,10 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.customer;
+package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserProfileService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,15 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/user/customer")
-public class CustomerProfileWebController {
+@RequestMapping("/user")
+@RequiredArgsConstructor
+public class ProfileWebController {
     private final UserService userService;
     private final UserProfileService profileService;
-
-    public CustomerProfileWebController(UserService userService, UserProfileService profileService) {
-        this.userService = userService;
-        this.profileService = profileService;
-    }
 
     @GetMapping("/profile")
     public String getUserProfilePage(@AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
@@ -48,7 +45,7 @@ public class CustomerProfileWebController {
             return "update_user_profile_page";
         } else {
             userService.updateUserProfileParameters(userDTOLogin, userProfileDTO);
-            return "redirect:/user/customer/profile";
+            return "redirect:/user/profile";
         }
     }
 
@@ -59,7 +56,7 @@ public class CustomerProfileWebController {
             return "update_user_profile_page";
         } else {
             userService.updateUserPassword(userDTOLogin, oldPassword, newPassword);
-            return "redirect:/user/customer/profile";
+            return "redirect:/user/profile";
         }
     }
 }

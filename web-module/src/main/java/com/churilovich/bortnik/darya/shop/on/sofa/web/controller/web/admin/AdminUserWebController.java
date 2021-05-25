@@ -6,14 +6,14 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceEx
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,16 +30,11 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminUserWebController {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
     private final RoleService roleService;
-
-    @Autowired
-    public AdminUserWebController(UserService userService, RoleService roleService) {
-        this.userService = userService;
-        this.roleService = roleService;
-    }
 
     @GetMapping("/users")
     public String getAllUsers(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,

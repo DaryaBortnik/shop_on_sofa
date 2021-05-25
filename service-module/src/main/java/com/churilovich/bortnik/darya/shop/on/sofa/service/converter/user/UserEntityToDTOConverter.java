@@ -1,8 +1,8 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.converter.user;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Role;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.UserProfile;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Role;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.UserProfile;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;

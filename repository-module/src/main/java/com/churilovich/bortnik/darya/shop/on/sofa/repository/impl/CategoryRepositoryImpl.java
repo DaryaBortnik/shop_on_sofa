@@ -1,7 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.CategoryRepository;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.ItemCategory;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.ItemCategory;
 import org.springframework.stereotype.Repository;
 
 @Repository

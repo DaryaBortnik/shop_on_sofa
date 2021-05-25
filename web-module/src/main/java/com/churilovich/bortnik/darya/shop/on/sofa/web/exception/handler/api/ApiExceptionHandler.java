@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.web.exception.handler;
+package com.churilovich.bortnik.darya.shop.on.sofa.web.exception.handler.api;
 
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @ControllerAdvice
-public class GlobalApiExceptionHandler extends DefaultErrorAttributes {
+public class ApiExceptionHandler extends DefaultErrorAttributes {
 
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
@@ -17,6 +17,7 @@ public class GlobalApiExceptionHandler extends DefaultErrorAttributes {
         Throwable error = getError(webRequest);
         if (Objects.nonNull(error)) {
             errorAttributes.put("message", error.getMessage());
+            errorAttributes.remove("trace");
         }
         return errorAttributes;
     }

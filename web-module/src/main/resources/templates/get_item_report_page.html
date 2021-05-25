@@ -14,12 +14,20 @@
             <th>amount</th>
         </tr>
         <tr th:each="report:${reports}">
-            <td th:text="${report.itemDTO.name}">name</td>
-            <td th:text="${report.itemDTO.price}">price</td>
-            <td th:text="${report.itemDTO.itemCategoryDTO.name}">category</td>
-            <td th:text="0">amount</td>
+            <td th:text="${report.name}">name</td>
+            <td th:text="${report.price}">price</td>
+            <td th:text="${report.category}">category</td>
+            <td th:text="${report.amount}">amount</td>
         </tr>
     </table>
+</form>
+<br><br>
+<form th:action="@{/user/sale/items}" method="get">
+    <button type="submit">Catalog of items</button>
+</form>
+<br><br>
+<form action="/login" method="get">
+    <button type="submit">Back to login page</button>
 </form>
 </body>
 </html>

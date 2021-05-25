@@ -2,7 +2,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.api;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,18 +14,14 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1")
+@RequiredArgsConstructor
 public class SecureApiUserController {
     private final UserService userService;
 
-    @Autowired
-    public SecureApiUserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping("/users")
-    public ResponseEntity<String> addUser(@Valid @RequestBody UserDTO userDTO) {
-        userService.add(userDTO);
-        return new ResponseEntity<>("add successfully", HttpStatus.OK);
+    public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
+        UserDTO addedUser = userService.add(userDTO);
+        return new ResponseEntity<>(addedUser, HttpStatus.CREATED);
     }
 }
 
