@@ -19,4 +19,6 @@ public interface ItemService {
     void updateItemDetails(ItemDTO item);
 
     void copy(Long id);
+
+    List<ItemDTO> findByCategoryId(Long id);
 }

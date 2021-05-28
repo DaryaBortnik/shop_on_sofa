@@ -3,6 +3,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.model;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 public class OrderDTO {
@@ -12,5 +13,6 @@ public class OrderDTO {
     private ItemDTO item;
     private Long itemAmount;
     private BigDecimal price;
+    private LocalDate dateAdded;
     private UserDTO user;
 }

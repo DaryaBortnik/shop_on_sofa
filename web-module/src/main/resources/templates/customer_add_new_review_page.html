@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Send review</title>
+</head>
+<body>
+<form method="post" th:action="@{/user/customer/reviews/add}" th:object="${review}">
+    <table>
+        <tr>
+            <td>Review</td>
+            <td><input type="text" th:field="${review.description}" required maxlength="1000"></td>
+            <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                Description Error
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit">Send review</button>
+            </td>
+        </tr>
+    </table>
+</form>
+<br><br>
+</body>
+</html>

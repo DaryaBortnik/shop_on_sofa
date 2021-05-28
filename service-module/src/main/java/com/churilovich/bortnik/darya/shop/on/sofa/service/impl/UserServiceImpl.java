@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.RoleEnum.SALE_USER;
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
 
 @Service
@@ -160,6 +161,16 @@ public class UserServiceImpl implements UserService {
                 .ifPresentOrElse(user -> generatePassword(user, oldPassword, newPassword), () -> {
                     throw new UpdateParameterServiceException("Can't update password, because can't find user with this id");
                 });
+    }
+
+    @Override
+    public List<UserDTO> findAllSales() {
+        Role role = roleRepository.findByName(SALE_USER);
+        Long roleId = role.getId();
+        List<User> users = userRepository.findByRoleId(roleId);
+        return users.stream()
+                .map(user -> conversionService.convert(user, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     private void addUser(User user) {

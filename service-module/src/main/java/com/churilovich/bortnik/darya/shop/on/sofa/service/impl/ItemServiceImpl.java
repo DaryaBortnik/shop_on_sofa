@@ -104,6 +104,14 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.persist(copiedItem);
     }
 
+    @Override
+    public List<ItemDTO> findByCategoryId(Long id) {
+        List<Item> itemsWithCategory = itemRepository.findByCategoryId(id);
+        return itemsWithCategory.stream()
+                .map(item -> conversionService.convert(item, ItemDTO.class))
+                .collect(Collectors.toList());
+    }
+
     private Item getItem(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() ->

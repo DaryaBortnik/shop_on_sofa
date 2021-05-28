@@ -45,11 +45,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public PageDTO<ArticleDTO> getArticlesOnPage(Long currentPageNumber) {
+    public PageDTO<ArticleDTO> getArticlesOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
         try {
             Long amountOfArticles = articleRepository.getAmountOfEntities();
             Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfArticles, AMOUNT_ON_ONE_PAGE);
-            return buildPageWithArticles(currentPageNumber, amountOfPages);
+            UserDTO user = userService.findById(userDTOLogin.getUserId());
+            return buildPageWithArticles(currentPageNumber, amountOfPages, user);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
@@ -101,7 +102,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDTO getWithComments(Long id) {
         ArticleDTO article = findById(id);
         List<CommentDTO> comments = commentService.findAllByArticleId(id);
-        article.setComments(comments);
+        article.getComments().addAll(comments);
         return article;
     }
 
@@ -119,20 +120,39 @@ public class ArticleServiceImpl implements ArticleService {
         return conversionService.convert(updatedMergedArticle, ArticleDTO.class);
     }
 
-    private PageDTO<ArticleDTO> buildPageWithArticles(Long currentPageNumber, Long amountOfPages) {
+    @Override
+    public List<ArticleDTO> findLatest() {
+        List<Article> articles = articleRepository.findLatest();
+        return articles.stream()
+                .map(article -> conversionService.convert(article, ArticleDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ArticleDTO> findAllByUserId(Long userId) {
+        List<Article> articles = articleRepository.findAllByUserId(userId);
+        UserDTO user = userService.findById(userId);
+        return articles.stream()
+                .map(article -> conversionService.convert(article, ArticleDTO.class))
+                .peek(articleDTO -> articleDTO.setUser(user))
+                .collect(Collectors.toList());
+    }
+
+    private PageDTO<ArticleDTO> buildPageWithArticles(Long currentPageNumber, Long amountOfPages, UserDTO user) {
         PageDTO<ArticleDTO> page = new PageDTO<>();
         page.setPagesAmount(amountOfPages);
         currentPageNumber = paginationService.getCurrentPageNumber(currentPageNumber, amountOfPages);
         Long startNumberOnCurrentPage = paginationService.getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
-        List<Article> articles = articleRepository.findAll(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
-        List<ArticleDTO> articleDTO = getArticleDTO(articles);
-        page.getList().addAll(articleDTO);
+        List<Article> articles = articleRepository.findOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
+        List<ArticleDTO> articlesDTO = getArticleDTO(articles, user);
+        page.getList().addAll(articlesDTO);
         return page;
     }
 
-    private List<ArticleDTO> getArticleDTO(List<Article> articles) {
+    private List<ArticleDTO> getArticleDTO(List<Article> articles, UserDTO user) {
         return articles.stream()
                 .map(article -> conversionService.convert(article, ArticleDTO.class))
+                .peek(articleDTO -> articleDTO.setUser(user))
                 .collect(Collectors.toList());
     }
 

@@ -25,9 +25,27 @@ public class ValidationServiceImpl implements ValidationService {
                 });
     }
 
+    @Override
+    public boolean isUserHasPhoneNumberAndFirstName(UserDTOLogin userDTOLogin) {
+        Long id = userDTOLogin.getUserId();
+        return userProfileRepository.findByIdIfExist(id)
+                .map(this::isPhoneNumberAndFirstNameExist)
+                .orElseGet(() -> {
+                    throw new ValidationServiceException("User profile doesn't exist");
+                });
+
+    }
+
     private Boolean isFirstAndLastNamesExist(UserProfile userProfile) {
         boolean isFirstNameExist = Objects.nonNull(userProfile.getFirstName());
         boolean isLastNameExist = Objects.nonNull(userProfile.getLastName());
         return isFirstNameExist && isLastNameExist;
+    }
+
+
+    private Boolean isPhoneNumberAndFirstNameExist(UserProfile userProfile) {
+        boolean isFirstNameExist = Objects.nonNull(userProfile.getFirstName());
+        boolean isPhoneNumberExist = Objects.nonNull(userProfile.getPhoneNumber());
+        return isFirstNameExist && isPhoneNumberExist;
     }
 }

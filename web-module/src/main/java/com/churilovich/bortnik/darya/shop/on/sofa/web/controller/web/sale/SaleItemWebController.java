@@ -44,7 +44,7 @@ public class SaleItemWebController {
             PageDTO<ItemDTO> pageWithItems = itemService.getItemsOnPage(currentPageNumber);
             model.addAttribute("items", pageWithItems.getList());
             model.addAttribute("page", pageWithItems);
-            return "get_all_items_page";
+            return "sale_get_all_items_page";
         } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
@@ -55,7 +55,7 @@ public class SaleItemWebController {
     public String getChosenItemPage(@RequestParam(required = false, name = "chosen_item") Long id, Model model) {
         ItemDTO item = itemService.findById(id);
         model.addAttribute("item", item);
-        return "get_item_page";
+        return "sale_get_item_page";
     }
 
     @GetMapping("/items/description/update")
@@ -65,7 +65,7 @@ public class SaleItemWebController {
         model.addAttribute("item", item);
         List<ItemCategoryDTO> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
-        return "update_item_details_page";
+        return "sale_update_item_details_page";
     }
 
     @PostMapping("/items/description/update")
@@ -73,7 +73,7 @@ public class SaleItemWebController {
                                    ItemDTO item,
                                    BindingResult result) {
         if (result.hasErrors()) {
-            return "update_item_details_page";
+            return "sale_update_item_details_page";
         } else {
             item.setId(id);
             itemService.updateItemDetails(item);
@@ -106,7 +106,7 @@ public class SaleItemWebController {
         model.addAttribute("categories", categories);
         item.setItemCategoryDTO(new ItemCategoryDTO());
         model.addAttribute("item", new ItemDTO());
-        return "add_new_item_page";
+        return "sale_add_new_item_page";
     }
 
 
@@ -114,7 +114,7 @@ public class SaleItemWebController {
     public String addItem(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid ItemDTO item, BindingResult result) {
         try {
             if (result.hasErrors()) {
-                return "add_new_item_page";
+                return "sale_add_new_item_page";
             } else {
                 item.setUserId(userDTOLogin.getUserId());
                 itemService.add(item);
@@ -130,6 +130,6 @@ public class SaleItemWebController {
     public String getReport(Model model) {
         List<ReportDTO> reports = reportService.get();
         model.addAttribute("reports", reports);
-        return "get_item_report_page";
+        return "sale_get_item_report_page";
     }
 }

@@ -58,6 +58,7 @@ public class WebLogAspect {
     @Before("callAtCustomerWebController()")
     public void beforeCallAtCustomerWebController(JoinPoint joinPoint) {
         List<String> args = Arrays.stream(joinPoint.getArgs())
+                .filter(Objects::nonNull)
                 .map(Object::toString)
                 .collect(Collectors.toList());
         logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level" +

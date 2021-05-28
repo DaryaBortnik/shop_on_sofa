@@ -31,7 +31,10 @@ public class OrderEntityToDTOConverter implements Converter<Order, OrderDTO> {
 
     private ItemDTO getConvertedItem(Order order) {
         Item item = order.getItem();
-        return itemConverter.convert(item);
+        Long userId = order.getItem().getUser().getId();
+        ItemDTO itemDTO = itemConverter.convert(item);
+        itemDTO.setUserId(userId);
+        return itemDTO;
     }
 
 

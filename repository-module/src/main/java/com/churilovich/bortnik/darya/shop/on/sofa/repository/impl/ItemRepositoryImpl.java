@@ -26,4 +26,13 @@ public class ItemRepositoryImpl extends GenericRepositoryImpl<Long, Item> implem
         Query getReportQuery = entityManager.createNamedQuery("getReport");
         return getReportQuery.getResultList();
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Item> findByCategoryId(Long id) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where item_category_id=:id order by name, price";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("id", id);
+        return query.getResultList();
+    }
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Items</title>
+</head>
+<body>
+<form id="add_item" th:action="@{/user/customer/orders/create}" method="post">
+    <form th:action="@{/user/customer/items}" method="get" th:object="${items}">
+        <table border="1">
+            <tr>
+                <th>chosen item</th>
+                <th>name</th>
+                <th>unique number</th>
+                <th>price</th>
+                <th>category</th>
+                <th>link to description</th>
+            </tr>
+            <tr th:each="item:${items}">
+                <td><input type="checkbox" name="added_item" th:value="${item.id}"/></td>
+                <td th:text="${item.userId}" hidden></td>
+                <td th:text="${item.name}">name</td>
+                <td th:text="${item.getUniqueNumber}">unique number</td>
+                <td th:text="${item.price}">price</td>
+                <td th:text="${item.itemCategoryDTO.name}">category</td>
+                <td th:name="chosen_item" th:value="${item.id}"><a
+                        th:href="@{/user/customer/items/description(chosen_item=${item.id})}"
+                        th:text="${item.name}">description</a></td>
+            </tr>
+        </table>
+        <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
+            th:classappend="${page.pagesAmount}==${i}">
+            <a th:href="@{/user/sale/items(current_page=${i})}" th:text="${i}"> </a>
+        </li>
+        <br><br>
+        <button type="submit" name="added_item"
+                form="add_item">Add selected items
+        </button>
+        <br><br>
+    </form>
+</form>
+<br><br>
+<form action="/login" method="get">
+    <button type="submit">Back to login page</button>
+</form>
+</body>
+</html>

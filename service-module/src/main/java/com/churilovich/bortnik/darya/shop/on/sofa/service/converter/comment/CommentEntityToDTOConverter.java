@@ -18,6 +18,7 @@ public class CommentEntityToDTOConverter implements Converter<Comment, CommentDT
         UserProfile userProfile = comment.getUser().getUserProfile();
         commentDTO.setUserFirstName(userProfile.getFirstName());
         commentDTO.setUserLastName(userProfile.getLastName());
+        commentDTO.setArticleId(comment.getArticle().getId());
         return commentDTO;
     }
 }

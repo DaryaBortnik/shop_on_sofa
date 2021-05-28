@@ -20,7 +20,7 @@
                 <td th:text="${article.id}" hidden>id</td>
                 <td th:text="${article.dateAdded}">date added</td>
                 <td th:text="${article.name}">name</td>
-                <td th:text="${article.userFirstName} + ' ' + ${article.userLastName}">author</td>
+                <td th:text="${article.user.userProfileDTO.firstName} + ' ' + ${article.user.userProfileDTO.lastName}">author</td>
                 <td th:text="${article.fullDescription}">full description</td>
                 <td>
                     <button type="submit" name="update_article_id"

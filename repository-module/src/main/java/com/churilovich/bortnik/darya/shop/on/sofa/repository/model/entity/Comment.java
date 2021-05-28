@@ -31,7 +31,7 @@ public class Comment {
     @Column(name = "add_date")
     private LocalDate dateAdded;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

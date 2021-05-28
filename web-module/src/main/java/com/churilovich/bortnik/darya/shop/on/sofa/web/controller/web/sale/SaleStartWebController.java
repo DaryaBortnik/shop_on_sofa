@@ -2,7 +2,9 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.sale;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ArticleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +19,8 @@ public class SaleStartWebController {
     private final ArticleService articleService;
 
     @GetMapping("/start")
-    public String getAllItems(Model model) {
-        List<ArticleDTO> articles = articleService.findAll();
+    public String getAllItems(@AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
+        List<ArticleDTO> articles = articleService.findAllByUserId(userDTOLogin.getUserId());
         model.addAttribute("articles", articles);
         return "sale_start_page";
     }

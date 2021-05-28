@@ -9,4 +9,6 @@ public interface ItemRepository extends GenericRepository<Long, Item> {
     List<Item> findAllOnPage(Long startNumberOnCurrentPage, long amountOnOnePage);
 
     List<Report> findAllReportGroupByNameAndPrice();
+
+    List<Item> findByCategoryId(Long id);
 }

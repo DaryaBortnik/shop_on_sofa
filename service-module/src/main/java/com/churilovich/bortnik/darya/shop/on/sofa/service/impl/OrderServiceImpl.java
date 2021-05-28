@@ -4,12 +4,17 @@ import com.churilovich.bortnik.darya.shop.on.sofa.repository.OrderRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Order;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.OrderStatusEnum;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.OrderService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.OrderDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +35,8 @@ import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.Pagin
 public class OrderServiceImpl implements OrderService {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final OrderRepository orderRepository;
+    private final ItemService itemService;
+    private final UserService userService;
     private final ConversionService conversionService;
     private final PaginationService paginationService;
 
@@ -74,6 +82,25 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAll().stream()
                 .map(order -> conversionService.convert(order, OrderDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public OrderDTO add(Long id, UserDTOLogin userDTOLogin) {
+        OrderDTO orderDTO = new OrderDTO();
+        ItemDTO item = itemService.findById(id);
+        orderDTO.setItem(item);
+        orderDTO.setItemAmount(1L);
+        orderDTO.setStatus("NEW");
+        orderDTO.setPrice(item.getPrice());
+        orderDTO.setNumber(id);
+        Long userId = userDTOLogin.getUserId();
+        UserDTO user = userService.findById(userId);
+        orderDTO.setUser(user);
+        orderDTO.setDateAdded(LocalDate.now());
+        Order order = conversionService.convert(orderDTO, Order.class);
+        orderRepository.persist(order);
+        return conversionService.convert(order, OrderDTO.class);
     }
 
     private PageDTO<OrderDTO> buildPageWithOrders(Long currentPageNumber, Long amountOfPages) {

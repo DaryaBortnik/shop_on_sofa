@@ -46,7 +46,7 @@ public class AdminUserWebController {
             List<RoleDTO> roles = roleService.findAll();
             model.addAttribute("roles", roles);
             userDTO.setRoleDTO(new RoleDTO());
-            return "get_all_users_page";
+            return "admin_get_all_users_page";
         } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";
@@ -59,14 +59,14 @@ public class AdminUserWebController {
         model.addAttribute("roles", roles);
         userDTO.setRoleDTO(new RoleDTO());
         userDTO.setUserProfileDTO(new UserProfileDTO());
-        return "add_new_user_page";
+        return "admin_add_new_user_page";
     }
 
     @PostMapping("/users/new")
     public String addNewUser(@Valid UserDTO userDTO, BindingResult result) {
         try {
             if (result.hasErrors()) {
-                return "add_new_user_page";
+                return "admin_add_new_user_page";
             } else {
                 userService.add(userDTO);
                 return "redirect:/admin/users";
@@ -81,7 +81,7 @@ public class AdminUserWebController {
     public String updateRole(UserDTO userDTO, BindingResult result) {
         try {
             if (result.hasErrors()) {
-                return "get_all_users_page";
+                return "admin_get_all_users_page";
             } else {
                 userService.updateRole(userDTO);
                 return "redirect:/admin/users";
@@ -109,7 +109,7 @@ public class AdminUserWebController {
     public String updatePassword(UserDTO userDTO, BindingResult result) {
         try {
             if (result.hasErrors()) {
-                return "get_all_users_page";
+                return "admin_get_all_users_page";
             } else {
                 userService.generateNewPassword(userDTO);
                 return "redirect:/admin/users";

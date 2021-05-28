@@ -4,4 +4,6 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 
 public interface ValidationService {
     boolean isUserHasFirstAndLastNames(UserDTOLogin userDTOLogin);
+
+    boolean isUserHasPhoneNumberAndFirstName(UserDTOLogin userDTOLogin);
 }

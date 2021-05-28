@@ -26,7 +26,7 @@ public class ProfileWebController {
     public String getUserProfilePage(@AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
         UserProfileDTO userProfileDTO = profileService.getUserProfile(userDTOLogin);
         model.addAttribute("userProfileDTO", userProfileDTO);
-        return "get_user_profile_page";
+        return "common_get_user_profile_page";
     }
 
     @GetMapping("/profile/update/parameters")
@@ -35,14 +35,14 @@ public class ProfileWebController {
         model.addAttribute("userProfileDTO", userProfile);
         String newPassword = Strings.EMPTY;
         model.addAttribute("password", newPassword);
-        return "update_user_profile_page";
+        return "common_update_user_profile_page";
     }
 
     @PostMapping("/profile/update/parameters")
     public String updateParameters(@AuthenticationPrincipal UserDTOLogin userDTOLogin, UserProfileDTO userProfileDTO,
                                    BindingResult result) {
         if (result.hasErrors()) {
-            return "update_user_profile_page";
+            return "common_update_user_profile_page";
         } else {
             userService.updateUserProfileParameters(userDTOLogin, userProfileDTO);
             return "redirect:/user/profile";
@@ -53,7 +53,7 @@ public class ProfileWebController {
     public String updatePassword(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @RequestParam("old_password") String oldPassword,
                                  @RequestParam("new_password") String newPassword, BindingResult result) {
         if (result.hasErrors()) {
-            return "update_user_profile_page";
+            return "common_update_user_profile_page";
         } else {
             userService.updateUserPassword(userDTOLogin, oldPassword, newPassword);
             return "redirect:/user/profile";

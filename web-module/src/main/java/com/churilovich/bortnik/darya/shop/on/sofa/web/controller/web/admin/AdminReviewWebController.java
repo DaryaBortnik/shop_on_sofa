@@ -34,7 +34,7 @@ public class AdminReviewWebController {
             PageDTO<ReviewDTO> pageWithReviews = reviewService.getReviewsOnPage(currentPageNumber);
             model.addAttribute("reviews", pageWithReviews.getList());
             model.addAttribute("page", pageWithReviews);
-            return "get_all_reviews_page";
+            return "admin_get_all_reviews_page";
         } catch (GetOnPageServiceException e) {
             logger.error(e.getMessage(), e);
             return "error_page";

@@ -7,8 +7,8 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceEx
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,9 +37,10 @@ public class SaleArticleWebController {
 
     @GetMapping
     public String getAllArticles(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
+                                 @AuthenticationPrincipal UserDTOLogin userDTOLogin,
                                  Model model) {
         try {
-            PageDTO<ArticleDTO> pageWithArticles = articleService.getArticlesOnPage(currentPageNumber);
+            PageDTO<ArticleDTO> pageWithArticles = articleService.getArticlesOnPage(currentPageNumber, userDTOLogin);
             model.addAttribute("articles", pageWithArticles.getList());
             model.addAttribute("page", pageWithArticles);
             return "sale_all_articles_page";

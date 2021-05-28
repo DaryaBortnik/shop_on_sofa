@@ -41,4 +41,13 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
         query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
         return query.getResultList();
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<User> findByRoleId(Long roleId) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where is_deleted = 0 and role_id=:roleId";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("roleId", roleId);
+        return query.getResultList();
+    }
 }

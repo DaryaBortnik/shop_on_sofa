@@ -8,4 +8,6 @@ public interface UserRepository extends GenericRepository<Long, User> {
     User getByUsername(String username);
 
     List<User> findAll(Long startNumberOnCurrentPage, Long amountOnOnePage);
+
+    List<User> findByRoleId(Long roleId);
 }

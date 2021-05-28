@@ -12,11 +12,29 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Article> findAll(Long startNumberOnCurrentPage, long amountOnOnePage) {
+    public List<Article> findOnPage(Long startNumberOnCurrentPage, long amountOnOnePage) {
         String queryInStringFormat = "from " + entityClass.getName() + " order by dateAdded desc";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setMaxResults(Math.toIntExact(amountOnOnePage));
         query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Article> findLatest() {
+        String queryInStringFormat = "from " + entityClass.getName() + " order by dateAdded desc";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setMaxResults(2);
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Article> findAllByUserId(Long userId) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where user_id=:id order by dateAdded desc";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("id", userId);
         return query.getResultList();
     }
 }

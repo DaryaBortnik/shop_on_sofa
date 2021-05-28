@@ -66,7 +66,7 @@ public class Item {
     @JoinColumn(name = "item_category_id", nullable = false)
     private ItemCategory category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
