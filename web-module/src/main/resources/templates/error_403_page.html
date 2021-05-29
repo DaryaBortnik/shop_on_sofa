@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <title>Error 403</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-You cannot view this page because you don't have permission to access this page.
-<br>
-Please, go back!
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    You cannot view this page because you don't have permission to access this page.
+    <br>
+    Please, go back!
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

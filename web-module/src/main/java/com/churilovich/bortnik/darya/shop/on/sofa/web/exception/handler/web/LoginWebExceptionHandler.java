@@ -4,6 +4,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParamet
 import com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.LoginWebController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
@@ -14,8 +15,8 @@ import java.lang.invoke.MethodHandles;
 public class LoginWebExceptionHandler extends ExceptionHandlerExceptionResolver {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
-    @ExceptionHandler({GetByParameterServiceException.class})
-    public final String notFoundUserExceptionHandling(GetByParameterServiceException e) {
+    @ExceptionHandler({GetByParameterServiceException.class, UsernameNotFoundException.class})
+    public final String notFoundUserExceptionHandling(UsernameNotFoundException e) {
         logger.error("Error:= {} ", e.getMessage());
         return "error_page";
     }

@@ -7,7 +7,11 @@ import java.util.List;
 public interface ArticleRepository extends GenericRepository<Long, Article> {
     List<Article> findOnPage(Long startNumberOnCurrentPage, long amountOnOnePage);
 
+    List<Article> findOnPageByUserId(Long startNumberOnCurrentPage, long amountOnOnePage, Long id);
+
     List<Article> findLatest();
 
-    List<Article> findAllByUserId(Long userId);
+    List<Article> findLatestBySaleUserId(Long userId);
+
+    List<Article> getByUserSaleId(Long userSaleId);
 }

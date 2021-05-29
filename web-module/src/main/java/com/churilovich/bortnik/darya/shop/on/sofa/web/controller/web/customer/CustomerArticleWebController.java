@@ -28,7 +28,7 @@ public class CustomerArticleWebController {
     public String getAllArticles(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                                  Model model) {
         try {
-            PageDTO<ArticleDTO> pageWithArticles = articleService.getArticlesOnPage(currentPageNumber, null);
+            PageDTO<ArticleDTO> pageWithArticles = articleService.getAllOnPage(currentPageNumber);
             model.addAttribute("articles", pageWithArticles.getList());
             model.addAttribute("page", pageWithArticles);
             return "customer_get_all_articles_page";

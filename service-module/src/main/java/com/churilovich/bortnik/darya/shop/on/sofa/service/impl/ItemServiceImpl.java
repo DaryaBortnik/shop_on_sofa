@@ -12,6 +12,8 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParamet
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemCategoryDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ShopDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final ItemCategoryService categoryService;
     private final ConversionService conversionService;
-    private final PaginationService paginationService;
+    private final PaginationService<ItemRepository> paginationService;
 
     @Override
     public List<ItemDTO> findAll() {
@@ -69,10 +71,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public PageDTO<ItemDTO> getItemsOnPage(Long currentPageNumber) {
+    public PageDTO<ItemDTO> getAllOnPage(Long currentPageNumber) {
         try {
-            Long amountOfItems = itemRepository.getAmountOfEntities();
-            Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfItems, AMOUNT_ON_ONE_PAGE);
+            Long amountOfPages = paginationService.getAmountOfPages(itemRepository);
             return buildPageWithItems(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
@@ -112,6 +113,31 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public PageDTO<ItemDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
+        try {
+            Long amountOfPages = paginationService.getAmountOfPages(itemRepository);
+            return buildPageWithItemsByUserId(currentPageNumber, amountOfPages, userDTOLogin);
+        } catch (GetEntitiesAmountRepositoryException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetOnPageServiceException("Can't get all items on current page on service level " +
+                    "due to impossibility to get total amount of items", e);
+        }
+    }
+
+    @Override
+    public List<ItemDTO> findInShop(ShopDTO shop) {
+        Long userSaleId = shop.getUserDTO().getId();
+        return getItemsBySaleId(userSaleId);
+    }
+
+    private List<ItemDTO> getItemsBySaleId(Long userSaleId) {
+        List<Item> items = itemRepository.getItemsBySaleId(userSaleId);
+        return items.stream()
+                .map(item -> conversionService.convert(item, ItemDTO.class))
+                .collect(Collectors.toList());
+    }
+
     private Item getItem(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() ->
@@ -119,17 +145,25 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private PageDTO<ItemDTO> buildPageWithItems(Long currentPageNumber, Long amountOfPages) {
-        PageDTO<ItemDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
-        currentPageNumber = paginationService.getCurrentPageNumber(currentPageNumber, amountOfPages);
-        Long startNumberOnCurrentPage = paginationService.getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
+        PageDTO<ItemDTO> page = getPageWithItems(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
         List<Item> items = itemRepository.findAllOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
-        List<ItemDTO> itemsDTO = getItemsDTO(items);
-        page.getList().addAll(itemsDTO);
+        addItemsToPage(page, items);
         return page;
     }
 
-    private List<ItemDTO> getItemsDTO(List<Item> items) {
+    private PageDTO<ItemDTO> getPageWithItems(Long amountOfPages) {
+        PageDTO<ItemDTO> page = new PageDTO<>();
+        page.setPagesAmount(amountOfPages);
+        return page;
+    }
+
+    private void addItemsToPage(PageDTO<ItemDTO> page, List<Item> items) {
+        List<ItemDTO> itemsDTO = getItems(items);
+        page.getList().addAll(itemsDTO);
+    }
+
+    private List<ItemDTO> getItems(List<Item> items) {
         return items.stream()
                 .map(item -> conversionService.convert(item, ItemDTO.class))
                 .collect(Collectors.toList());
@@ -147,5 +181,13 @@ public class ItemServiceImpl implements ItemService {
     private ItemCategoryDTO getCategory(ItemDTO itemDTO) {
         Long categoryId = itemDTO.getItemCategoryDTO().getId();
         return categoryService.findById(categoryId);
+    }
+
+    private PageDTO<ItemDTO> buildPageWithItemsByUserId(Long currentPageNumber, Long amountOfPages, UserDTOLogin userDTOLogin) {
+        PageDTO<ItemDTO> page = getPageWithItems(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
+        List<Item> items = itemRepository.findAllByUserIdOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE, userDTOLogin.getUserId());
+        addItemsToPage(page, items);
+        return page;
     }
 }

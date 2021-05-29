@@ -6,21 +6,17 @@ import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.UserPr
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class UserEntityToDTOConverter implements Converter<User, UserDTO> {
     private final Converter<Role, RoleDTO> roleConverter;
     private final Converter<UserProfile, UserProfileDTO> userProfileConverter;
-
-    public UserEntityToDTOConverter(Converter<Role, RoleDTO> roleConverter,
-                                    Converter<UserProfile, UserProfileDTO> userProfileConverter) {
-        this.roleConverter = roleConverter;
-        this.userProfileConverter = userProfileConverter;
-    }
 
     @Override
     public UserDTO convert(User user) {

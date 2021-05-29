@@ -1,0 +1,69 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<header th:fragment="header">
+    <div class="theme--reversed">
+        <div class="container container--wide top">
+            <div class="heading">Shop on sofa</div>
+            <form class="" th:action="@{/logout}" method="get">
+                <button type="submit">logout</button>
+            </form>
+        </div>
+    </div>
+    <nav>
+        <ul class="container container--wide">
+            <th:block sec:authorize="hasAuthority('ADMINISTRATOR')">
+                <li>
+                    <a href="/admin/users">Users</a>
+                </li>
+                <li>
+                    <a href="/admin/reviews">Reviews</a>
+                </li>
+            </th:block>
+
+            <th:block sec:authorize="hasAuthority('CUSTOMER_USER')">
+                <li>
+                    <a href="/user/profile">Profile</a>
+                </li>
+                <li>
+                    <a href=/user/customer/articles>Articles</a>
+                </li>
+                <li>
+                    <a href=/user/customer/items>Items</a>
+                </li>
+                <li>
+                    <a href=/user/customer/orders>Orders</a>
+                </li>
+                <li>
+                    <a href=/user/customer/reviews/add>Add review</a>
+                </li>
+                <li>
+                    <a href=/user/customer/start>Start page</a>
+                </li>
+            </th:block>
+
+            <th:block sec:authorize="hasAuthority('SALE_USER')">
+                <li>
+                    <a href=/user/sale/articles>Articles</a>
+                </li>
+                <li>
+                    <a href=/user/sale/items>Items</a>
+                </li>
+                <li>
+                    <a href=/user/sale/orders>Orders</a>
+                </li>
+                <li>
+                    <a href=/user/sale/start>Start page</a>
+                </li>
+            </th:block>
+        </ul>
+
+
+        <!--        <span>-->
+        <!--           <span sec:authorize="isAuthenticated()">-->
+        <!--             <p style="color: #ff6749" sec:authentication="name"> </p>-->
+        <!--               </span>-->
+        <!--         </span>-->
+
+    </nav>
+</header>

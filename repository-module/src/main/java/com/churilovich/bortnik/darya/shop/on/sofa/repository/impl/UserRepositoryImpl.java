@@ -20,7 +20,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
 
     @Override
     public User getByUsername(String email) {
-        String queryInStringFormat = "from " + entityClass.getName() + " where email =:email and is_deleted = 0";
+        String queryInStringFormat = "from " + entityClass.getName() + " where email =:email";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setParameter(EMAIL_QUERY_PARAMETER, email);
         try {
@@ -35,7 +35,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     @Override
     @SuppressWarnings("unchecked")
     public List<User> findAll(Long startNumberOnCurrentPage, Long amountOnOnePage) {
-        String queryInStringFormat = "from " + entityClass.getName() + " where is_deleted = 0 order by email";
+        String queryInStringFormat = "from " + entityClass.getName() + " where order by email";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setMaxResults(Math.toIntExact(amountOnOnePage));
         query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
@@ -45,7 +45,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     @Override
     @SuppressWarnings("unchecked")
     public List<User> findByRoleId(Long roleId) {
-        String queryInStringFormat = "from " + entityClass.getName() + " where is_deleted = 0 and role_id=:roleId";
+        String queryInStringFormat = "from " + entityClass.getName() + " where role_id=:roleId";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setParameter("roleId", roleId);
         return query.getResultList();

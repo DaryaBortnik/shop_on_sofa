@@ -15,6 +15,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageSer
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.CommentDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ShopDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
@@ -41,16 +42,14 @@ public class ArticleServiceImpl implements ArticleService {
     private final CommentService commentService;
     private final UserService userService;
     private final ConversionService conversionService;
-    private final PaginationService paginationService;
+    private final PaginationService<ArticleRepository> paginationService;
 
     @Override
     @Transactional
-    public PageDTO<ArticleDTO> getArticlesOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
+    public PageDTO<ArticleDTO> getAllOnPage(Long currentPageNumber) {
         try {
-            Long amountOfArticles = articleRepository.getAmountOfEntities();
-            Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfArticles, AMOUNT_ON_ONE_PAGE);
-            UserDTO user = userService.findById(userDTOLogin.getUserId());
-            return buildPageWithArticles(currentPageNumber, amountOfPages, user);
+            Long amountOfPages = paginationService.getAmountOfPages(articleRepository);
+            return buildPageWithArticles(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
@@ -59,12 +58,30 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public List<ArticleDTO> findByShop(ShopDTO shop) {
+        Long userSaleId = shop.getUserDTO().getId();
+        return getArticlesByUserSaleId(userSaleId);
+    }
+
+    private List<ArticleDTO> getArticlesByUserSaleId(Long userSaleId) {
+        List<Article> articles = articleRepository.getByUserSaleId(userSaleId);
+        return articles.stream()
+                .map(article -> conversionService.convert(article, ArticleDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
-    public ArticleDTO findById(Long id) {
-        Article article = articleRepository.findById(id)
-                .orElseThrow(() ->
-                        new GetByParameterServiceException("Can't get article with id on service level : id = " + id));
-        return conversionService.convert(article, ArticleDTO.class);
+    public PageDTO<ArticleDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
+        try {
+            Long amountOfPages = paginationService.getAmountOfPages(articleRepository);
+            Long userId = userDTOLogin.getUserId();
+            return buildPageWithArticlesByUserId(currentPageNumber, amountOfPages, userId);
+        } catch (GetEntitiesAmountRepositoryException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
+                    "due to impossibility to get total amount of reviews", e);
+        }
     }
 
     @Override
@@ -76,6 +93,14 @@ public class ArticleServiceImpl implements ArticleService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public ArticleDTO findById(Long id) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() ->
+                        new GetByParameterServiceException("Can't get article with id on service level : id = " + id));
+        return conversionService.convert(article, ArticleDTO.class);
+    }
 
     @Override
     @Transactional
@@ -99,6 +124,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public ArticleDTO getWithComments(Long id) {
         ArticleDTO article = findById(id);
         List<CommentDTO> comments = commentService.findAllByArticleId(id);
@@ -121,38 +147,56 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDTO> findLatest() {
-        List<Article> articles = articleRepository.findLatest();
-        return articles.stream()
+    @Transactional
+    public List<ArticleDTO> findLatestFromEachSaleUser() {
+        List<UserDTO> saleUsers = userService.findAllSales();
+        return saleUsers.stream()
+                .map(UserDTO::getId)
+                .map(articleRepository::findLatestBySaleUserId)
                 .map(article -> conversionService.convert(article, ArticleDTO.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ArticleDTO> findAllByUserId(Long userId) {
-        List<Article> articles = articleRepository.findAllByUserId(userId);
-        UserDTO user = userService.findById(userId);
+    @Transactional
+    public List<ArticleDTO> findLatestBySaleUserId(UserDTOLogin userDTOLogin) {
+        Long userId = userDTOLogin.getUserId();
+        List<Article> articles = articleRepository.findLatestBySaleUserId(userId);
         return articles.stream()
                 .map(article -> conversionService.convert(article, ArticleDTO.class))
-                .peek(articleDTO -> articleDTO.setUser(user))
                 .collect(Collectors.toList());
     }
 
-    private PageDTO<ArticleDTO> buildPageWithArticles(Long currentPageNumber, Long amountOfPages, UserDTO user) {
-        PageDTO<ArticleDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
-        currentPageNumber = paginationService.getCurrentPageNumber(currentPageNumber, amountOfPages);
-        Long startNumberOnCurrentPage = paginationService.getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
-        List<Article> articles = articleRepository.findOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
-        List<ArticleDTO> articlesDTO = getArticleDTO(articles, user);
-        page.getList().addAll(articlesDTO);
+    private PageDTO<ArticleDTO> buildPageWithArticlesByUserId(Long currentPageNumber, Long amountOfPages, Long userId) {
+        PageDTO<ArticleDTO> page = getPageWithArticles(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
+        List<Article> articles = articleRepository.findOnPageByUserId(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE, userId);
+        addArticlesToPage(page, articles);
         return page;
     }
 
-    private List<ArticleDTO> getArticleDTO(List<Article> articles, UserDTO user) {
+    private PageDTO<ArticleDTO> buildPageWithArticles(Long currentPageNumber, Long amountOfPages) {
+        PageDTO<ArticleDTO> page = getPageWithArticles(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
+        List<Article> articles = articleRepository.findOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
+        addArticlesToPage(page, articles);
+        return page;
+    }
+
+    private PageDTO<ArticleDTO> getPageWithArticles(Long amountOfPages) {
+        PageDTO<ArticleDTO> page = new PageDTO<>();
+        page.setPagesAmount(amountOfPages);
+        return page;
+    }
+
+    private void addArticlesToPage(PageDTO<ArticleDTO> page, List<Article> articles) {
+        List<ArticleDTO> articlesDTO = getArticle(articles);
+        page.getList().addAll(articlesDTO);
+    }
+
+    private List<ArticleDTO> getArticle(List<Article> articles) {
         return articles.stream()
                 .map(article -> conversionService.convert(article, ArticleDTO.class))
-                .peek(articleDTO -> articleDTO.setUser(user))
                 .collect(Collectors.toList());
     }
 
@@ -179,5 +223,4 @@ public class ArticleServiceImpl implements ArticleService {
         article.setDateAdded(LocalDate.now());
         return article;
     }
-
 }

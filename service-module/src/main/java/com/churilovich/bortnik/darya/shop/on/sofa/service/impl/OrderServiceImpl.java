@@ -2,6 +2,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.OrderRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Item;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Order;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.OrderStatusEnum;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
@@ -19,6 +20,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -38,14 +40,13 @@ public class OrderServiceImpl implements OrderService {
     private final ItemService itemService;
     private final UserService userService;
     private final ConversionService conversionService;
-    private final PaginationService paginationService;
+    private final PaginationService<OrderRepository> paginationService;
 
     @Override
     @Transactional
     public PageDTO<OrderDTO> getOrdersOnPage(Long currentPageNumber) {
         try {
-            Long amountOfOrders = orderRepository.getAmountOfEntities();
-            Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfOrders, AMOUNT_ON_ONE_PAGE);
+            Long amountOfPages = paginationService.getAmountOfPages(orderRepository);
             return buildPageWithOrders(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
@@ -104,17 +105,25 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private PageDTO<OrderDTO> buildPageWithOrders(Long currentPageNumber, Long amountOfPages) {
-        PageDTO<OrderDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
-        currentPageNumber = paginationService.getCurrentPageNumber(currentPageNumber, amountOfPages);
-        Long startNumberOnCurrentPage = paginationService.getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
+        PageDTO<OrderDTO> page = getPageWithOrders(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
         List<Order> orders = orderRepository.findAllOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
-        List<OrderDTO> ordersDTO = getOrdersDTO(orders);
-        page.getList().addAll(ordersDTO);
+        addOrdersToPage(page, orders);
         return page;
     }
 
-    private List<OrderDTO> getOrdersDTO(List<Order> orders) {
+    private PageDTO<OrderDTO> getPageWithOrders(Long amountOfPages) {
+        PageDTO<OrderDTO> page = new PageDTO<>();
+        page.setPagesAmount(amountOfPages);
+        return page;
+    }
+
+    private void addOrdersToPage(PageDTO<OrderDTO> page, List<Order> orders) {
+        List<OrderDTO> ordersDTO = getOrders(orders);
+        page.getList().addAll(ordersDTO);
+    }
+
+    private List<OrderDTO> getOrders(List<Order> orders) {
         return orders.stream()
                 .map(order -> conversionService.convert(order, OrderDTO.class))
                 .collect(Collectors.toList());

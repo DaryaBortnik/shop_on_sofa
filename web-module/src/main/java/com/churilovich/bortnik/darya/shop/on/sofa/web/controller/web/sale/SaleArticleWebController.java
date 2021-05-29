@@ -40,7 +40,7 @@ public class SaleArticleWebController {
                                  @AuthenticationPrincipal UserDTOLogin userDTOLogin,
                                  Model model) {
         try {
-            PageDTO<ArticleDTO> pageWithArticles = articleService.getArticlesOnPage(currentPageNumber, userDTOLogin);
+            PageDTO<ArticleDTO> pageWithArticles = articleService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
             model.addAttribute("articles", pageWithArticles.getList());
             model.addAttribute("page", pageWithArticles);
             return "sale_all_articles_page";

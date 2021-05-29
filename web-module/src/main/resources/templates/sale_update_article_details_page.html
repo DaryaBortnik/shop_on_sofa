@@ -3,40 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Update Article</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form method="post" th:action="@{/user/sale/articles/description/update}" th:object="${article}">
-    <table>
-        <tr>
-            <td th:value="${article.id}" hidden></td>
-        </tr>
-        <tr>
-            <td th:value="${article.name}">Name</td>
-            <td><input type="text" th:field="*{name}" maxlength="40"></td>
-            <td th:if="${#fields.hasErrors('name')}"
-                th:errors="*{name}"> Name Error
-            </td>
-        </tr>
-        <tr>
-            <td th:value="${article.shortDescription}">Short description</td>
-            <td><input type="text" th:field="*{shortDescription}" maxlength="200"></td>
-            <td th:if="${#fields.hasErrors('shortDescription')}"
-                th:errors="*{shortDescription}">Short description Error
-            </td>
-        </tr>
-        <tr>
-            <td th:value="${article.fullDescription}">Full description</td>
-            <td><input type="text" th:field="*{fullDescription}"></td>
-            <td th:if="${#fields.hasErrors('fullDescription')}"
-                th:errors="*{fullDescription}">Full description Error
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button type="submit" name="article_id" th:value="${article.id}">Update article details</button>
-            </td>
-        </tr>
-    </table>
-</form>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form method="post" th:action="@{/user/sale/articles/description/update}" th:object="${article}">
+        <table>
+            <tr>
+                <td th:value="${article.id}" hidden></td>
+            </tr>
+            <tr>
+                <td th:value="${article.name}">Name</td>
+                <td><input type="text" th:field="*{name}" maxlength="40"></td>
+                <td th:if="${#fields.hasErrors('name')}"
+                    th:errors="*{name}"> Name Error
+                </td>
+            </tr>
+            <tr>
+                <td th:value="${article.shortDescription}">Short description</td>
+                <td><input type="text" th:field="*{shortDescription}" maxlength="200"></td>
+                <td th:if="${#fields.hasErrors('shortDescription')}"
+                    th:errors="*{shortDescription}">Short description Error
+                </td>
+            </tr>
+            <tr>
+                <td th:value="${article.fullDescription}">Full description</td>
+                <td><input type="text" th:field="*{fullDescription}"></td>
+                <td th:if="${#fields.hasErrors('fullDescription')}"
+                    th:errors="*{fullDescription}">Full description Error
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit" name="article_id" th:value="${article.id}">Update article details</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

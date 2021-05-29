@@ -39,9 +39,9 @@ public class SaleItemWebController {
 
     @GetMapping("/items")
     public String getAllItems(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
-                              Model model) {
+                              @AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
         try {
-            PageDTO<ItemDTO> pageWithItems = itemService.getItemsOnPage(currentPageNumber);
+            PageDTO<ItemDTO> pageWithItems = itemService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
             model.addAttribute("items", pageWithItems.getList());
             model.addAttribute("page", pageWithItems);
             return "sale_get_all_items_page";

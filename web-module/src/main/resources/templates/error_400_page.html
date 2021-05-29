@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <title>Error 400</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-Invalid request!
-<br>
-Please, go back and recheck what you enter!
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    Invalid request!
+    <br>
+    Please, go back and recheck what you enter!
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

@@ -3,37 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Orders</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form th:action="@{/user/customer/orders}" method="get" th:object="${orders}">
-    <table border="1">
-        <tr>
-            <th>order number</th>
-            <th>status</th>
-            <th>item</th>
-            <th>amount</th>
-            <th>final price</th>
-            <th>link to description</th>
-        </tr>
-        <tr th:each="order:${orders}">
-            <td th:text="${order.number}">order number</td>
-            <td th:text="${order.status}">status</td>
-            <td th:text="${order.item.name}">item</td>
-            <td th:text="${order.itemAmount}">amount</td>
-            <td th:text="${order.price}">final price</td>
-            <td th:name="chosen_item" th:value="${order.item.id}"><a
-                    th:href="@{/user/customer/items/description(chosen_item=${order.item.id})}"
-                    th:text="${order.item.name}">description</a></td>
-        </tr>
-    </table>
-    <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
-        th:classappend="${page.pagesAmount}==${i}?'active':''">
-        <a th:href="@{/user/customer/orders(current_page=${i})}" th:text="${i}"> </a>
-    </li>
-    <br><br>
-</form>
-<form action="/login" method="get">
-    <button type="submit">Back to login page</button>
-</form>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form th:action="@{/user/customer/orders}" method="get" th:object="${orders}">
+        <table border="1">
+            <tr>
+                <th>order number</th>
+                <th>status</th>
+                <th>item</th>
+                <th>amount</th>
+                <th>final price</th>
+                <th>link to description</th>
+            </tr>
+            <tr th:each="order:${orders}">
+                <td th:text="${order.number}">order number</td>
+                <td th:text="${order.status}">status</td>
+                <td th:text="${order.item.name}">item</td>
+                <td th:text="${order.itemAmount}">amount</td>
+                <td th:text="${order.price}">final price</td>
+                <td th:name="chosen_item" th:value="${order.item.id}"><a
+                        th:href="@{/user/customer/items/description(chosen_item=${order.item.id})}"
+                        th:text="${order.item.name}">description</a></td>
+            </tr>
+        </table>
+        <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
+            th:classappend="${page.pagesAmount}==${i}?'active':''">
+            <a th:href="@{/user/customer/orders(current_page=${i})}" th:text="${i}"> </a>
+        </li>
+        <br><br>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

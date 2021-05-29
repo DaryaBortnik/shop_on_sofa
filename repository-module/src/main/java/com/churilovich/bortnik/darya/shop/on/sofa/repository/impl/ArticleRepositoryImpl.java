@@ -22,6 +22,17 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
 
     @Override
     @SuppressWarnings("unchecked")
+    public List<Article> findOnPageByUserId(Long startNumberOnCurrentPage, long amountOnOnePage, Long id) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where user_id=:id order by dateAdded desc";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("id", id);
+        query.setMaxResults(Math.toIntExact(amountOnOnePage));
+        query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public List<Article> findLatest() {
         String queryInStringFormat = "from " + entityClass.getName() + " order by dateAdded desc";
         Query query = entityManager.createQuery(queryInStringFormat);
@@ -31,10 +42,21 @@ public class ArticleRepositoryImpl extends GenericRepositoryImpl<Long, Article> 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Article> findAllByUserId(Long userId) {
+    public List<Article> findLatestBySaleUserId(Long userId) {
         String queryInStringFormat = "from " + entityClass.getName() + " where user_id=:id order by dateAdded desc";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setParameter("id", userId);
+        query.setMaxResults(1);
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Article> getByUserSaleId(Long userSaleId) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where user_id=:id order by dateAdded desc";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("id", userSaleId);
+        query.setMaxResults(1);
         return query.getResultList();
     }
 }

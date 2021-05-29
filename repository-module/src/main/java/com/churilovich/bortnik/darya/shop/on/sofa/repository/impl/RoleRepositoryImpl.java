@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @Repository
 public class RoleRepositoryImpl extends GenericRepositoryImpl<Long, Role> implements RoleRepository {
@@ -28,5 +29,13 @@ public class RoleRepositoryImpl extends GenericRepositoryImpl<Long, Role> implem
             throw new GetRoleByNameRepositoryException("Can't get role by name on repository level : name = "
                     + name, e);
         }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Role> findForRegistration() {
+        String queryInStringFormat = "from " + entityClass.getName() + " where name not in ('ADMINISTRATOR','SECURE_API_USER')";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        return query.getResultList();
     }
 }

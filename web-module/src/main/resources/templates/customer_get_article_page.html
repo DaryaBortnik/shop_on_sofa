@@ -3,65 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <title>Article</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form method="get" th:action="@{/user/customer/articles/description}" th:object="${article}">
-    <table border="1">
-        Article:
-        <tr>
-            <th>date added</th>
-            <th>name</th>
-            <th>author</th>
-            <th>full description</th>
-        </tr>
-        <tr>
-            <td th:text="${article.dateAdded}">date added</td>
-            <td th:text="${article.name}">name</td>
-            <td th:text="${article.user.userProfileDTO.firstName} + ' ' + ${article.user.userProfileDTO.lastName}">
-                author
-            </td>
-            <td th:text="${article.fullDescription}">full description</td>
-        </tr>
-    </table>
-    <br><br>
-    <div th:if="${!#lists.isEmpty(article.comments)}">
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form method="get" th:action="@{/user/customer/articles/description}" th:object="${article}">
         <table border="1">
-            Comments:
+            Article:
             <tr>
                 <th>date added</th>
+                <th>name</th>
                 <th>author</th>
-                <th>description</th>
+                <th>full description</th>
             </tr>
-            <tr th:each="comment:${comments}">
-                <div th:if="${comment != null}">
-                    <td th:text="${comment.dateAdded}">date added</td>
-                    <td th:text="${comment.userFirstName} + ' ' + ${comment.userLastName}"> author</td>
-                    <td th:text="${comment.description}">description</td>
-                </div>
+            <tr>
+                <td th:text="${article.dateAdded}">date added</td>
+                <td th:text="${article.name}">name</td>
+                <td th:text="${article.user.userProfileDTO.firstName} + ' ' + ${article.user.userProfileDTO.lastName}">
+                    author
+                </td>
+                <td th:text="${article.fullDescription}">full description</td>
             </tr>
         </table>
-    </div>
-</form>
-<br><br>
-<form th:action="@{/user/customer/comments/add}" method="post" th:object="${comment}">
-    <table>
-        <tr>
-            <td>Comment</td>
-            <td><input type="text" th:field="${comment.description}" maxlength="200"></td>
-            <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
-                Comment Error
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button name="chosen_article_id" th:value="${article.id}" type="submit">Add new comment</button>
-            </td>
-        </tr>
-    </table>
-</form>
-<br><br>
-<form action="/login" method="get">
-    <button type="submit">Back to login page</button>
-</form>
+        <br><br>
+        <div th:if="${!#lists.isEmpty(article.comments)}">
+            <table border="1">
+                Comments:
+                <tr>
+                    <th>date added</th>
+                    <th>author</th>
+                    <th>description</th>
+                </tr>
+                <tr th:each="comment:${comments}">
+                    <div th:if="${comment != null}">
+                        <td th:text="${comment.dateAdded}">date added</td>
+                        <td th:text="${comment.userFirstName} + ' ' + ${comment.userLastName}"> author</td>
+                        <td th:text="${comment.description}">description</td>
+                    </div>
+                </tr>
+            </table>
+        </div>
+    </form>
+    <br><br>
+    <form th:action="@{/user/customer/comments/add}" method="post" th:object="${comment}">
+        <table>
+            <tr>
+                <td>Comment</td>
+                <td><input type="text" th:field="${comment.description}" maxlength="200"></td>
+                <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                    Comment Error
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button name="chosen_article_id" th:value="${article.id}" type="submit">Add new comment</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <br><br>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

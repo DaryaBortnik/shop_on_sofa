@@ -19,8 +19,8 @@ public class SaleStartWebController {
     private final ArticleService articleService;
 
     @GetMapping("/start")
-    public String getAllItems(@AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
-        List<ArticleDTO> articles = articleService.findAllByUserId(userDTOLogin.getUserId());
+    public String getLatestArticles(@AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
+        List<ArticleDTO> articles = articleService.findLatestBySaleUserId(userDTOLogin);
         model.addAttribute("articles", articles);
         return "sale_start_page";
     }

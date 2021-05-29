@@ -3,59 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <title>Items</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form id="copy" th:action="@{/user/sale/items/copy}" method="post"></form>
-<form id="delete" th:action="@{/user/sale/items/delete}" method="post">
-    <form th:action="@{/user/sale/items}" method="get" th:object="${items}">
-        <table border="1">
-            <tr>
-                <th></th>
-                <th>name</th>
-                <th>unique number</th>
-                <th>price</th>
-                <th>category</th>
-                <th>link to description</th>
-                <th>copy</th>
-            </tr>
-            <tr th:each="item:${items}">
-                <td><input type="checkbox" name="deleting_item" th:value="${item.id}"/></td>
-                <td th:text="${item.name}">name</td>
-                <td th:text="${item.getUniqueNumber}">unique number</td>
-                <td th:text="${item.price}">price</td>
-                <td th:text="${item.itemCategoryDTO.name}">category</td>
-                <td th:name="chosen_item" th:value="${item.id}"><a
-                        th:href="@{/user/sale/items/description(chosen_item=${item.id})}"
-                        th:text="${item.name}">description</a></td>
-                <td>
-                    <button type="submit" name="copy_item_id"
-                            th:value="${item.id}"
-                            form="copy">Copy item
-                    </button>
-                </td>
-            </tr>
-        </table>
-        <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
-            th:classappend="${page.pagesAmount}==${i}">
-            <a th:href="@{/user/sale/items(current_page=${i})}" th:text="${i}"> </a>
-        </li>
-        <br><br>
-        <button type="submit" name="deleting_item"
-                form="delete">Delete selected items
-        </button>
-        <br><br>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form id="copy" th:action="@{/user/sale/items/copy}" method="post"></form>
+    <form id="delete" th:action="@{/user/sale/items/delete}" method="post">
+        <form th:action="@{/user/sale/items}" method="get" th:object="${items}">
+            <table border="1">
+                <tr>
+                    <th></th>
+                    <th>name</th>
+                    <th>unique number</th>
+                    <th>price</th>
+                    <th>category</th>
+                    <th>link to description</th>
+                    <th>copy</th>
+                </tr>
+                <tr th:each="item:${items}">
+                    <td><input type="checkbox" name="deleting_item" th:value="${item.id}"/></td>
+                    <td th:text="${item.name}">name</td>
+                    <td th:text="${item.getUniqueNumber}">unique number</td>
+                    <td th:text="${item.price}">price</td>
+                    <td th:text="${item.itemCategoryDTO.name}">category</td>
+                    <td th:name="chosen_item" th:value="${item.id}"><a
+                            th:href="@{/user/sale/items/description(chosen_item=${item.id})}"
+                            th:text="${item.name}">description</a></td>
+                    <td>
+                        <button type="submit" name="copy_item_id"
+                                th:value="${item.id}"
+                                form="copy">Copy item
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
+                th:classappend="${page.pagesAmount}==${i}">
+                <a th:href="@{/user/sale/items(current_page=${i})}" th:text="${i}"> </a>
+            </li>
+            <br><br>
+            <button type="submit" name="deleting_item"
+                    form="delete">Delete selected items
+            </button>
+            <br><br>
+        </form>
     </form>
-</form>
-<form th:action="@{/user/sale/items/add}" method="get">
-    <button type="submit">Add new item</button>
-</form>
-<br><br>
-<form th:action="@{/user/sale/items/report}" method="get">
-    <button type="submit">Get item report</button>
-</form>
-<br><br>
-<form action="/login" method="get">
-    <button type="submit">Back to login page</button>
-</form>
+    <form th:action="@{/user/sale/items/add}" method="get">
+        <button type="submit">Add new item</button>
+    </form>
+    <br><br>
+    <form th:action="@{/user/sale/items/report}" method="get">
+        <button type="submit">Get item report</button>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

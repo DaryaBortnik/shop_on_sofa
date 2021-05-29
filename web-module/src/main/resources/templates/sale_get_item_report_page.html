@@ -3,31 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Item Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form th:action="@{/user/sale/items/report}" method="get" th:object="${reports}">
-    <table border="1">
-        <tr>
-            <th>name</th>
-            <th>price</th>
-            <th>category</th>
-            <th>amount</th>
-        </tr>
-        <tr th:each="report:${reports}">
-            <td th:text="${report.name}">name</td>
-            <td th:text="${report.price}">price</td>
-            <td th:text="${report.category}">category</td>
-            <td th:text="${report.amount}">amount</td>
-        </tr>
-    </table>
-</form>
-<br><br>
-<form th:action="@{/user/sale/items}" method="get">
-    <button type="submit">Catalog of items</button>
-</form>
-<br><br>
-<form action="/login" method="get">
-    <button type="submit">Back to login page</button>
-</form>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form th:action="@{/user/sale/items/report}" method="get" th:object="${reports}">
+        <table border="1">
+            <tr>
+                <th>name</th>
+                <th>price</th>
+                <th>category</th>
+                <th>amount</th>
+            </tr>
+            <tr th:each="report:${reports}">
+                <td th:text="${report.name}">name</td>
+                <td th:text="${report.price}">price</td>
+                <td th:text="${report.category}">category</td>
+                <td th:text="${report.amount}">amount</td>
+            </tr>
+        </table>
+    </form>
+    <br><br>
+    <form th:action="@{/user/sale/items}" method="get">
+        <button type="submit">Catalog of items</button>
+    </form>
+    <br><br>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

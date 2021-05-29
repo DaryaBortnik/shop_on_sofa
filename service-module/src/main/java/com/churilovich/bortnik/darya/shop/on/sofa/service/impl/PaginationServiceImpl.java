@@ -1,21 +1,43 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.impl.GenericRepositoryImpl;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import org.springframework.stereotype.Service;
 
+import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
+
 @Service
-public class PaginationServiceImpl implements PaginationService {
+public class PaginationServiceImpl<E> implements PaginationService<GenericRepositoryImpl<Long, E>> {
 
     @Override
-    public Long getElementPosition(Long currentElementNumber, Long elementsAmountOnOnePage) {
+    public Long getStartEntityNumberOnCurrentPage(Long currentPageNumber, Long amountOfPages,Long EntityAmountOnPage) {
+        Long currentPage = getCurrentPageNumber(currentPageNumber, amountOfPages);
+        return getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
+    }
+
+    @Override
+    public Long getAmountOfPages(GenericRepositoryImpl<Long, E> repository) {
+        Long amountOfEntities = repository.getAmountOfEntities();
+        return getAmountOfPagesForElements(amountOfEntities, AMOUNT_ON_ONE_PAGE);
+    }
+
+    private Long getElementPosition(Long currentElementNumber, Long elementsAmountOnOnePage) {
         if (currentElementNumber == 0) {
             currentElementNumber++;
         }
         return elementsAmountOnOnePage * (currentElementNumber - 1);
     }
 
-    @Override
-    public Long getAmountOfPagesForElements(Long amountOfElements, Long elementsAmountOnOnePage) {
+    private Long getCurrentPageNumber(Long currentPageNumber, Long amountOfPages) {
+        if (currentPageNumber > amountOfPages) {
+            currentPageNumber = amountOfPages;
+        } else if (currentPageNumber < amountOfPages) {
+            currentPageNumber = 1L;
+        }
+        return currentPageNumber;
+    }
+
+    private Long getAmountOfPagesForElements(Long amountOfElements, Long elementsAmountOnOnePage) {
         long amountOfPages;
         if (amountOfElements % elementsAmountOnOnePage > 0) {
             amountOfPages = (amountOfElements / elementsAmountOnOnePage) + 1;
@@ -23,15 +45,5 @@ public class PaginationServiceImpl implements PaginationService {
             amountOfPages = amountOfElements / elementsAmountOnOnePage;
         }
         return amountOfPages;
-    }
-
-    @Override
-    public Long getCurrentPageNumber(Long currentPageNumber, Long amountOfPages) {
-        if (currentPageNumber > amountOfPages) {
-            currentPageNumber = amountOfPages;
-        } else if (currentPageNumber < amountOfPages) {
-            currentPageNumber = 1L;
-        }
-        return currentPageNumber;
     }
 }

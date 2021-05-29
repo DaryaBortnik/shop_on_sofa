@@ -1,13 +1,14 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ShopDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 
 import java.util.List;
 
 public interface ArticleService {
-    PageDTO<ArticleDTO> getArticlesOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin);
+    PageDTO<ArticleDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin);
 
     ArticleDTO findById(Long id);
 
@@ -21,7 +22,11 @@ public interface ArticleService {
 
     ArticleDTO updateArticle(ArticleDTO article);
 
-    List<ArticleDTO> findLatest();
+    List<ArticleDTO> findLatestFromEachSaleUser();
 
-    List<ArticleDTO> findAllByUserId(Long userId);
+    List<ArticleDTO> findLatestBySaleUserId(UserDTOLogin userDTOLogin);
+
+    PageDTO<ArticleDTO> getAllOnPage(Long currentPageNumber);
+
+    List<ArticleDTO> findByShop(ShopDTO shop);
 }

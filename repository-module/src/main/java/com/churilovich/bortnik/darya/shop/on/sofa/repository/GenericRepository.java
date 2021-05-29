@@ -1,5 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository;
 
+import org.springframework.context.annotation.Primary;
+
 import java.util.List;
 import java.util.Optional;
 

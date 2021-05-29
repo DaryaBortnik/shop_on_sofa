@@ -35,4 +35,24 @@ public class ItemRepositoryImpl extends GenericRepositoryImpl<Long, Item> implem
         query.setParameter("id", id);
         return query.getResultList();
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Item> findAllByUserIdOnPage(Long startNumberOnCurrentPage, long amountOnOnePage, Long id) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where user_id=:id order by name, price";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("id", id);
+        query.setMaxResults(Math.toIntExact(amountOnOnePage));
+        query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Item> getItemsBySaleId(Long userSaleId) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where user_id=:id order by name, price";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("id", userSaleId);
+        return query.getResultList();
+    }
 }

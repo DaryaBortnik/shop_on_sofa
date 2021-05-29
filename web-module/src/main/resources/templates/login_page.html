@@ -3,30 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form method="post" th:action="@{/login}">
-    <h2>Sign in</h2>
-    <div th:if="${param.error}">
-        <div class="alert alert-danger">
-            Invalid email or password.
+<main class="container container--narrow">
+    <form class="form" method="post" th:action="@{/login}">
+        <h1> Sign in </h1>
+        <div class="alert space--xs" th:if="${loginError}">
+            Invalid email or password
         </div>
-    </div>
-    <table>
-        <tr>
-            <td>Email</td>
-            <td><input type="email" name="email" placeholder="email" required></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="password" name="password" placeholder="password" required></td>
-        </tr>
-        <tr>
-            <td>
-                <button type="submit">Sign in</button>
-            </td>
-        </tr>
-    </table>
-</form>
+        <div class="space--xs">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="email" required>
+        </div>
+        <div class="space--s">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" placeholder="password" required>
+        </div>
+        <button type="submit">Sign in</button>
+    </form>
+</main>
 </body>
 </html>

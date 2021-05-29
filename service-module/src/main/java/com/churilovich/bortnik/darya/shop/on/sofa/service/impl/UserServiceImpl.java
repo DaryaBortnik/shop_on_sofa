@@ -25,6 +25,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
     private final ConversionService conversionService;
     private final GenerationPasswordService generationPasswordService;
     private final MailService mailService;
-    private final PaginationService paginationService;
+    private final PaginationService<UserRepository> paginationService;
 
     @Override
     @Transactional
@@ -113,8 +114,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public PageDTO<UserDTO> getUsersOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
         try {
-            Long amountOfUsers = userRepository.getAmountOfEntities();
-            Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfUsers, AMOUNT_ON_ONE_PAGE);
+            Long amountOfPages = paginationService.getAmountOfPages(userRepository);
             return buildPageWithUsers(currentPageNumber, userDTOLogin, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
@@ -144,15 +144,6 @@ public class UserServiceImpl implements UserService {
         return conversionService.convert(userProfileUpdate, UserProfileDTO.class);
     }
 
-
-    @Override
-    @Transactional
-    public UserDTO getByFirstAndLastNames(String firstName, String lastName) {
-        UserProfile userProfile = userProfileRepository.findByFirstAndLastNames(firstName, lastName);
-        Long id = userProfile.getId();
-        return findById(id);
-    }
-
     @Override
     @Transactional
     public void updateUserPassword(UserDTOLogin userDTOLog, String oldPassword, String newPassword) {
@@ -176,6 +167,7 @@ public class UserServiceImpl implements UserService {
     private void addUser(User user) {
         buildUser(user);
         userRepository.persist(user);
+        giveUserNewPassword(user);
     }
 
     private void buildUser(User user) {
@@ -186,13 +178,8 @@ public class UserServiceImpl implements UserService {
                 });
         user.setRole(role);
         user.getUserProfile().setUser(user);
-        user.setPassword(generateNewPassword());
+        user.setPassword(Strings.EMPTY);
         user.setIsDeleted(false);
-    }
-
-    private String generateNewPassword() {
-        String password = generationPasswordService.generate();
-        return generationPasswordService.encode(password);
     }
 
     private Role getRoleById(UserDTO userDTO) {
@@ -220,17 +207,25 @@ public class UserServiceImpl implements UserService {
     }
 
     private PageDTO<UserDTO> buildPageWithUsers(Long currentPageNumber, UserDTOLogin userDTOLogin, Long amountOfPages) {
-        PageDTO<UserDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
-        currentPageNumber = paginationService.getCurrentPageNumber(currentPageNumber, amountOfPages);
-        Long startNumberOnCurrentPage = paginationService.getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
+        PageDTO<UserDTO> page = getPageWithUsers(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
         List<User> users = userRepository.findAll(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
-        List<UserDTO> usersDTO = getUsersDTO(userDTOLogin, users);
-        page.setList(usersDTO);
+        addUsersToPage(page, users, userDTOLogin);
         return page;
     }
 
-    private List<UserDTO> getUsersDTO(UserDTOLogin userDTOLogin, List<User> users) {
+    private PageDTO<UserDTO> getPageWithUsers(Long amountOfPages) {
+        PageDTO<UserDTO> page = new PageDTO<>();
+        page.setPagesAmount(amountOfPages);
+        return page;
+    }
+
+    private void addUsersToPage(PageDTO<UserDTO> page, List<User> users, UserDTOLogin userDTOLogin) {
+        List<UserDTO> usersDTO = getUsers(userDTOLogin, users);
+        page.getList().addAll(usersDTO);
+    }
+
+    private List<UserDTO> getUsers(UserDTOLogin userDTOLogin, List<User> users) {
         return users.stream()
                 .map(user -> conversionService.convert(user, UserDTO.class))
                 .filter(Objects::nonNull)

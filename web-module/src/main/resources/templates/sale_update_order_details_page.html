@@ -3,32 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Order details</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form method="post" th:action="@{/user/sale/orders/description/update}" th:object="${order}">
-    <table>
-        <tr>
-            <td th:value="${order.id}" hidden></td>
-        </tr>
-        <tr>
-            <td th:value="${order.status}">status</td>
-            <td>
-                <select name="status" th:field="${order.status}">
-                    <option th:each="status : ${statuses}"
-                            th:value="${status}" name="status_name"
-                            th:text="${status}">status
-                    </option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button type="submit" name="update_order_id" th:value="${order.id}"> Update order details
-                </button>
-            </td>
-        </tr>
-    </table>
-    <br><br>
-</form>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form method="post" th:action="@{/user/sale/orders/description/update}" th:object="${order}">
+        <table>
+            <tr>
+                <td th:value="${order.id}" hidden></td>
+            </tr>
+            <tr>
+                <td th:value="${order.status}">status</td>
+                <td>
+                    <select name="status" th:field="${order.status}">
+                        <option th:each="status : ${statuses}"
+                                th:value="${status}" name="status_name"
+                                th:text="${status}">status
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit" name="update_order_id" th:value="${order.id}"> Update order details
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <br><br>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserProfileRepository;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByNamesRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.UserProfile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

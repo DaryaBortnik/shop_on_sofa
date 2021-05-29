@@ -6,11 +6,11 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceEx
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
@@ -59,14 +60,20 @@ public class AdminUserWebController {
         model.addAttribute("roles", roles);
         userDTO.setRoleDTO(new RoleDTO());
         userDTO.setUserProfileDTO(new UserProfileDTO());
+        if (!model.containsAttribute("userDTO")) {
+            model.addAttribute("userDTO", userDTO);
+        }
         return "admin_add_new_user_page";
     }
 
     @PostMapping("/users/new")
-    public String addNewUser(@Valid UserDTO userDTO, BindingResult result) {
+    public String addNewUser(@Valid UserDTO userDTO, BindingResult result, RedirectAttributes redirectAttributes) {
         try {
             if (result.hasErrors()) {
-                return "admin_add_new_user_page";
+                redirectAttributes.getFlashAttributes().clear();
+                redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDTO", result);
+                redirectAttributes.addFlashAttribute("userDTO", userDTO);
+                return "redirect:/admin/users/new";
             } else {
                 userService.add(userDTO);
                 return "redirect:/admin/users";

@@ -2,6 +2,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.OrderRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Order;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;

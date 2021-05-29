@@ -27,7 +27,7 @@ public class CustomerItemWebController {
     public String getAllItems(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                               Model model) {
         try {
-            PageDTO<ItemDTO> pageWithItems = itemService.getItemsOnPage(currentPageNumber);
+            PageDTO<ItemDTO> pageWithItems = itemService.getAllOnPage(currentPageNumber);
             model.addAttribute("items", pageWithItems.getList());
             model.addAttribute("page", pageWithItems);
             return "customer_get_all_items_page";

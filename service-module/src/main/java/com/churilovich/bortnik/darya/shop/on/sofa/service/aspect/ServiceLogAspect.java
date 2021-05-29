@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -27,6 +28,7 @@ public class ServiceLogAspect {
     @Before("callAtService()")
     public void beforeCallAtService(JoinPoint joinPoint) {
         List<String> args = Arrays.stream(joinPoint.getArgs())
+                .filter(Objects::nonNull)
                 .map(Object::toString)
                 .collect(Collectors.toList());
         logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on service level" +

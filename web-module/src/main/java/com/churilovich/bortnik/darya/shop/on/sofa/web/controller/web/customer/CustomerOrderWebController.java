@@ -44,9 +44,11 @@ public class CustomerOrderWebController {
 
     @PostMapping("/orders/create")
     public String createOrder(@RequestParam(required = false, name = "added_item") Long id,
+                              @RequestParam(required = false, name = "item_amount") Long amount,
                               @AuthenticationPrincipal UserDTOLogin userDTOLogin) {
         try {
             if (validationService.isUserHasPhoneNumberAndFirstName(userDTOLogin)) {
+                System.out.println(amount);
                 orderService.add(id, userDTOLogin);
                 return "redirect:/user/customer/orders";
             } else {

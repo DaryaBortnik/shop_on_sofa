@@ -1,0 +1,160 @@
+body {
+    background: #f1e4de;
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    color: #141a13;
+    line-height: 32px;
+    margin: 0;
+
+}
+
+h1 {
+    font-size: 48px;
+    line-height: 60px;
+    font-weight: 400;
+    margin: 0 0 30px;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 20px 40px;
+}
+
+.container--narrow {
+    max-width: 400px;
+}
+
+.container--wide {
+    max-width: 1200px;
+}
+
+.heading {
+    font-weight: 100;
+    font-size: 72px;
+    text-align: center;
+    line-height: 1.5;
+    padding: 20px 0 40px;
+}
+
+.form {
+    padding: 40px 40px 60px;
+    border: 1px solid #E9723D;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 30px;
+}
+
+button {
+    display: block;
+    padding: 10px 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    box-shadow: none;
+    border: none;
+    border-radius: 10px;
+    background: #0B7FAB;
+    transition: background-color 200ms;
+}
+
+button:hover {
+    background: #074e69;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid #E9723D;
+    font-size: inherit;
+    box-shadow: none;
+    transition: border-color 200ms;
+}
+
+input:focus {
+    border-color: #7C7B89;
+    outline: none;
+}
+
+.space--xs {
+    margin-bottom: 15px;
+}
+
+.space--s {
+    margin-bottom: 30px;
+}
+
+.alert {
+    color: tomato;
+}
+
+nav {
+    background-color: white;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    margin: 0;
+    padding: 0 10px;
+}
+
+nav a {
+    display: block;
+    color: #141a13;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 3px;
+    transition: border-color 200ms;
+}
+
+nav a:hover {
+    border-color: #E9723D;
+}
+
+.theme--reversed {
+    background-color: #141a13;
+    color: #f1e4de;
+}
+
+.theme--reversed button {
+    background-color: transparent;
+    padding: 0;
+    transition: color 200ms;
+}
+
+.theme--reversed button:hover {
+    color: #E9723D;
+}
+
+.top {
+    display: flex;
+    align-items: baseline;
+}
+
+.top .heading {
+    flex-grow: 1;
+    padding-left: 40px;
+}
+
+.top form {
+    margin-left: auto;
+    padding-left: 40px;
+}
+

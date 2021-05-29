@@ -36,7 +36,7 @@ public class CustomerCommentWebController {
                 } else {
                     comment.setArticleId(id);
                     commentService.add(comment, userDTOLogin);
-                    return "redirect:/user/customer/start";
+                    return String.format("redirect:/user/customer/articles/description?chosen_article=%d", id);
                 }
             } else {
                 return "redirect:/user/profile";

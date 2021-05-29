@@ -3,37 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Item</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
-<form id="update_item_info" th:action="@{/user/sale/items/description/update}" method="get"></form>
-<form method="get" th:action="@{/user/sale/items/description}" th:object="${item}">
-    <table border="1">
-        <tr>
-            <th>name</th>
-            <th>unique number</th>
-            <th>price</th>
-            <th>description</th>
-            <th>category</th>
-            <th>update item details</th>
-        </tr>
-        <tr>
-            <td th:text="${item.name}">name</td>
-            <td th:text="${item.getUniqueNumber}">unique number</td>
-            <td th:text="${item.price}">price</td>
-            <td th:text="${item.description}">description</td>
-            <td th:text="${item.itemCategoryDTO.name}">category</td>
-            <td>
-                <button type="submit" name="update_item_id"
-                        th:value="${item.id}"
-                        form="update_item_info"> Update item details
-                </button>
-            </td>
-        </tr>
-    </table>
-    <br><br>
-</form>
-<form action="/login" method="get">
-    <button type="submit">Back to login page</button>
-</form>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form id="update_item_info" th:action="@{/user/sale/items/description/update}" method="get"></form>
+    <form method="get" th:action="@{/user/sale/items/description}" th:object="${item}">
+        <table border="1">
+            <tr>
+                <th>name</th>
+                <th>unique number</th>
+                <th>price</th>
+                <th>description</th>
+                <th>category</th>
+                <th>update item details</th>
+            </tr>
+            <tr>
+                <td th:text="${item.name}">name</td>
+                <td th:text="${item.getUniqueNumber}">unique number</td>
+                <td th:text="${item.price}">price</td>
+                <td th:text="${item.description}">description</td>
+                <td th:text="${item.itemCategoryDTO.name}">category</td>
+                <td>
+                    <button type="submit" name="update_item_id"
+                            th:value="${item.id}"
+                            form="update_item_info"> Update item details
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <br><br>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>

@@ -16,7 +16,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-
 public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I, E> {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     protected Class<E> entityClass;

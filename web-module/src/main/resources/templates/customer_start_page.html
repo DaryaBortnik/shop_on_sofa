@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Start page</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
 </head>
 <body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
 <form method="get" th:action="@{/user/customer/start}">
     <table border="1">
         <tr>
@@ -26,7 +31,7 @@
             <td th:text="${sale.id}" hidden></td>
             <td th:name="chosen_sale" th:value="${sale.id}"><a
                     th:href="@{/user/customer/sales/description(chosen_sale=${sale.id})}"
-                    th:text="${sale.email}">sale</a></td>
+                    th:text="${sale.name}">sale</a></td>
         </tr>
     </table>
     <br><br>
@@ -42,5 +47,7 @@
         </tr>
     </table>
 </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
 </html>
