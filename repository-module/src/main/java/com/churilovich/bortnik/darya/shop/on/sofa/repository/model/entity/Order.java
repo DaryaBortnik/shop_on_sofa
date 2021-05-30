@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @Table(name = "orders")
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"item","user"})
+@EqualsAndHashCode(exclude = {"item", "user"})
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ public class Order {
     private Long id;
 
     @Column(name = "order_number")
-    private Long number;
+    private String number;
 
     @Column(name = "add_date")
     private LocalDate dateAdded;

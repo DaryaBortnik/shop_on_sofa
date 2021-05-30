@@ -13,7 +13,7 @@
     <h2>Latest article:</h2>
     <form th:action="@{/user/sale/start}" method="get" th:object="${articles}">
         <div th:if="${!#lists.isEmpty(articles)}">
-            <table border="1">
+            <table class="space--s">
                 <tr>
                     <th>date added</th>
                     <th>name</th>
@@ -35,26 +35,20 @@
                     </div>
                 </tr>
             </table>
-            <br><br>
         </div>
     </form>
-    <br><br>
     <form th:action="@{/user/sale/articles/add}" method="get">
         <button type="submit">Add new article</button>
     </form>
-    <br><br>
     <form th:action="@{/user/sale/items}" method="get">
         <button type="submit">Get catalog of items</button>
     </form>
-    <br><br>
     <form th:action="@{/user/sale/orders}" method="get">
         <button type="submit">Get order list</button>
     </form>
-    <br><br>
     <form th:action="@{/user/profile}" method="get">
         <button type="submit">User profile</button>
     </form>
-    <br><br>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>

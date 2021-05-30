@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Data
 public class OrderDTO {
     private Long id;
-    private Long number;
+    private String number;
     private String status;
     private ItemDTO item;
     private Long itemAmount;

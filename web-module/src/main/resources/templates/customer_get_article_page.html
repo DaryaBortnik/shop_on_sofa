@@ -5,13 +5,13 @@
     <title>Article</title>
     <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
     <form method="get" th:action="@{/user/customer/articles/description}" th:object="${article}">
-        <table border="1">
+        <table class="space--s">
             Article:
             <tr>
                 <th>date added</th>
@@ -28,10 +28,9 @@
                 <td th:text="${article.fullDescription}">full description</td>
             </tr>
         </table>
-        <br><br>
         <div th:if="${!#lists.isEmpty(article.comments)}">
-            <table border="1">
-                Comments:
+            <h2>Comments</h2>
+            <table class="space--s">
                 <tr>
                     <th>date added</th>
                     <th>author</th>
@@ -47,24 +46,13 @@
             </table>
         </div>
     </form>
-    <br><br>
-    <form th:action="@{/user/customer/comments/add}" method="post" th:object="${comment}">
-        <table>
-            <tr>
-                <td>Comment</td>
-                <td><input type="text" th:field="${comment.description}" maxlength="200"></td>
-                <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
-                    Comment Error
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <button name="chosen_article_id" th:value="${article.id}" type="submit">Add new comment</button>
-                </td>
-            </tr>
-        </table>
+    <form class="space--s" th:action="@{/user/customer/comments/add}" method="post" th:object="${comment}">
+        <h2>Leave your comment</h2>
+        <textarea class="space--s" type="text" th:field="${comment.description}" maxlength="200"></textarea>
+        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"> Comment Error</div>
+        <button class="space--s" name="chosen_article_id" th:value="${article.id}" type="submit">Add comment
+        </button>
     </form>
-    <br><br>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>

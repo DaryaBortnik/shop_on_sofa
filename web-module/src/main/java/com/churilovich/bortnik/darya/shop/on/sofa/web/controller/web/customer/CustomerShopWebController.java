@@ -1,6 +1,5 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.customer;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Item;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ArticleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ShopService;

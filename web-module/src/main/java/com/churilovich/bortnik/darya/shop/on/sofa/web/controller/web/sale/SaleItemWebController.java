@@ -3,9 +3,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.sale;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemCategoryService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReportService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemCategoryDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
@@ -40,15 +37,10 @@ public class SaleItemWebController {
     @GetMapping("/items")
     public String getAllItems(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                               @AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
-        try {
-            PageDTO<ItemDTO> pageWithItems = itemService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
-            model.addAttribute("items", pageWithItems.getList());
-            model.addAttribute("page", pageWithItems);
-            return "sale_get_all_items_page";
-        } catch (GetOnPageServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        PageDTO<ItemDTO> pageWithItems = itemService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
+        model.addAttribute("items", pageWithItems.getList());
+        model.addAttribute("page", pageWithItems);
+        return "sale_get_all_items_page";
     }
 
     @GetMapping("/items/description")
@@ -83,15 +75,10 @@ public class SaleItemWebController {
 
     @PostMapping("/items/delete")
     public String deleteItem(@RequestParam("deleting_item") List<Long> ids) {
-        try {
-            ids.stream()
-                    .filter(Objects::nonNull)
-                    .forEach(itemService::deleteById);
-            return "redirect:/user/sale/items";
-        } catch (DeleteByIdServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        ids.stream()
+                .filter(Objects::nonNull)
+                .forEach(itemService::deleteById);
+        return "redirect:/user/sale/items";
     }
 
     @PostMapping("/items/copy")
@@ -112,17 +99,12 @@ public class SaleItemWebController {
 
     @PostMapping("/items/add")
     public String addItem(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid ItemDTO item, BindingResult result) {
-        try {
-            if (result.hasErrors()) {
-                return "sale_add_new_item_page";
-            } else {
-                item.setUserId(userDTOLogin.getUserId());
-                itemService.add(item);
-                return "redirect:/user/sale/items";
-            }
-        } catch (AddServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
+        if (result.hasErrors()) {
+            return "sale_add_new_item_page";
+        } else {
+            item.setUserId(userDTOLogin.getUserId());
+            itemService.add(item);
+            return "redirect:/user/sale/items";
         }
     }
 

@@ -5,13 +5,13 @@
     <title>Shop</title>
     <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
     <form th:action="@{/user/customer/sales/description}">
-        <table border="1">
+        <table class="space--s">
             <tr>
                 <th>shop name</th>
                 <th>certificate</th>
@@ -41,7 +41,7 @@
                 </td>
             </tr>
         </table>
-        <table border="1">
+        <table class="space--s">
             <tr>
                 <th>chosen item</th>
                 <th>name</th>
@@ -62,7 +62,7 @@
                         th:text="${item.name}">description</a></td>
             </tr>
         </table>
-        <table border="1">
+        <table class="space--s">
             <tr>
                 <th>date added</th>
                 <th>name</th>

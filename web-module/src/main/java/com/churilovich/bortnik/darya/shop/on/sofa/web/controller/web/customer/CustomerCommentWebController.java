@@ -2,7 +2,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.customer;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.CommentService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ValidationService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.CommentDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +27,17 @@ public class CustomerCommentWebController {
 
     @PostMapping("/comments/add")
     public String addComment(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid CommentDTO comment, BindingResult result,
-                          @RequestParam(required = false, name = "chosen_article_id") Long id) {
-        try {
-            if (validationService.isUserHasFirstAndLastNames(userDTOLogin)) {
-                if (result.hasErrors()) {
-                    return "customer_get_article_page";
-                } else {
-                    comment.setArticleId(id);
-                    commentService.add(comment, userDTOLogin);
-                    return String.format("redirect:/user/customer/articles/description?chosen_article=%d", id);
-                }
+                             @RequestParam(required = false, name = "chosen_article_id") Long id) {
+        if (validationService.isUserHasFirstAndLastNames(userDTOLogin)) {
+            if (result.hasErrors()) {
+                return "customer_get_article_page";
             } else {
-                return "redirect:/user/profile";
+                comment.setArticleId(id);
+                commentService.add(comment, userDTOLogin);
+                return String.format("redirect:/user/customer/articles/description?chosen_article=%d", id);
             }
-        } catch (AddServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
+        } else {
+            return "redirect:/user/profile";
         }
     }
 

@@ -8,4 +8,10 @@ public interface ShopService {
     List<ShopDTO> findAllShops();
 
     ShopDTO findById(Long id);
+
+    ShopDTO findBySaleUserId(Long userId);
+
+    ShopDTO updateShopProfileParameters(Long userId, ShopDTO shop);
+
+    void add(ShopDTO shop);
 }

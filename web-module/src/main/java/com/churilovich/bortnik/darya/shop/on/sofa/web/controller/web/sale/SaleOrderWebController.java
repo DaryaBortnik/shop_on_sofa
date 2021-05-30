@@ -1,12 +1,14 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.sale;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.OrderService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.OrderDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.enums.StatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -28,16 +31,12 @@ public class SaleOrderWebController {
 
     @GetMapping("/orders")
     public String getAllOrders(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
+                               @AuthenticationPrincipal UserDTOLogin userDTOLogin,
                                Model model) {
-        try {
-            PageDTO<OrderDTO> pageWithItems = orderService.getOrdersOnPage(currentPageNumber);
-            model.addAttribute("orders", pageWithItems.getList());
-            model.addAttribute("page", pageWithItems);
-            return "sale_get_all_orders_page";
-        } catch (GetOnPageServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        PageDTO<OrderDTO> pageWithItems = orderService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
+        model.addAttribute("orders", pageWithItems.getList());
+        model.addAttribute("page", pageWithItems);
+        return "sale_get_all_orders_page";
     }
 
     @GetMapping("/orders/description")
@@ -52,12 +51,13 @@ public class SaleOrderWebController {
                                             Model model) {
         OrderDTO order = orderService.findById(id);
         model.addAttribute("order", order);
-        List<String> statuses = new ArrayList<>();
-        statuses.add("NEW");
-        statuses.add("IN_PROGRESS");
-        statuses.add("DELIVERED");
-        statuses.add("REJECTED");
-        model.addAttribute("statuses", statuses);
+//        List<String> statuses = new ArrayList<>();
+//        statuses.add("NEW");
+//        statuses.add("IN_PROGRESS");
+//        statuses.add("DELIVERED");
+//        statuses.add("REJECTED");
+
+        model.addAttribute("statuses", StatusEnum.values());
         return "sale_update_order_details_page";
     }
 

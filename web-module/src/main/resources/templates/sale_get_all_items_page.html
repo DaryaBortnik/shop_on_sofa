@@ -13,7 +13,7 @@
     <form id="copy" th:action="@{/user/sale/items/copy}" method="post"></form>
     <form id="delete" th:action="@{/user/sale/items/delete}" method="post">
         <form th:action="@{/user/sale/items}" method="get" th:object="${items}">
-            <table border="1">
+            <table class="space--s">
                 <tr>
                     <th></th>
                     <th>name</th>
@@ -40,23 +40,22 @@
                     </td>
                 </tr>
             </table>
-            <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
-                th:classappend="${page.pagesAmount}==${i}">
-                <a th:href="@{/user/sale/items(current_page=${i})}" th:text="${i}"> </a>
-            </li>
-            <br><br>
-            <button type="submit" name="deleting_item"
+            <ul class="pagination">
+                <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
+                    th:classappend="${page.currentPageNumber}==${i}">
+                    <a th:href="@{/user/sale/items(current_page=${i})}" th:text="${i}"> </a>
+                </li>
+            </ul>
+            <button class="space--s" type="submit" name="deleting_item"
                     form="delete">Delete selected items
             </button>
-            <br><br>
         </form>
     </form>
     <form th:action="@{/user/sale/items/add}" method="get">
-        <button type="submit">Add new item</button>
+        <button class="space--s" type="submit">Add new item</button>
     </form>
-    <br><br>
     <form th:action="@{/user/sale/items/report}" method="get">
-        <button type="submit">Get item report</button>
+        <button class="space--s" type="submit">Get item report</button>
     </form>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>

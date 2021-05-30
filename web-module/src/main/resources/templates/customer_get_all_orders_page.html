@@ -11,7 +11,7 @@
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
     <form th:action="@{/user/customer/orders}" method="get" th:object="${orders}">
-        <table border="1">
+        <table class="space--s">
             <tr>
                 <th>order number</th>
                 <th>status</th>
@@ -31,11 +31,12 @@
                         th:text="${order.item.name}">description</a></td>
             </tr>
         </table>
-        <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
-            th:classappend="${page.pagesAmount}==${i}?'active':''">
-            <a th:href="@{/user/customer/orders(current_page=${i})}" th:text="${i}"> </a>
-        </li>
-        <br><br>
+        <ul class="pagination">
+            <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
+                th:classappend="${page.currentPageNumber}==${i}?'pagination active':''">
+                <a th:href="@{/user/customer/orders(current_page=${i})}" th:text="${i}"> </a>
+            </li>
+        </ul>
     </form>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>

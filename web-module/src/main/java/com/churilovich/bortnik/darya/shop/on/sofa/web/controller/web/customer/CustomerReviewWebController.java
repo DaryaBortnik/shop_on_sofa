@@ -2,7 +2,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.customer;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ValidationService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import lombok.RequiredArgsConstructor;
@@ -35,20 +34,15 @@ public class CustomerReviewWebController {
 
     @PostMapping("reviews/add")
     public String addReview(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid ReviewDTO review, BindingResult result) {
-        try {
-            if (validationService.isUserHasFirstAndLastNames(userDTOLogin)) {
-                if (result.hasErrors()) {
-                    return "customer_add_new_review_page";
-                } else {
-                    reviewService.add(review, userDTOLogin);
-                    return "redirect:/user/customer/start";
-                }
+        if (validationService.isUserHasFirstAndLastNames(userDTOLogin)) {
+            if (result.hasErrors()) {
+                return "customer_add_new_review_page";
             } else {
-                return "redirect:/user/profile";
+                reviewService.add(review, userDTOLogin);
+                return "redirect:/user/customer/start";
             }
-        } catch (AddServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
+        } else {
+            return "redirect:/user/profile";
         }
     }
 }

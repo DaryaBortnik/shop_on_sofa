@@ -3,9 +3,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.sale;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ArticleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.CommentService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ValidationService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
@@ -39,15 +36,10 @@ public class SaleArticleWebController {
     public String getAllArticles(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                                  @AuthenticationPrincipal UserDTOLogin userDTOLogin,
                                  Model model) {
-        try {
-            PageDTO<ArticleDTO> pageWithArticles = articleService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
-            model.addAttribute("articles", pageWithArticles.getList());
-            model.addAttribute("page", pageWithArticles);
-            return "sale_all_articles_page";
-        } catch (GetOnPageServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        PageDTO<ArticleDTO> pageWithArticles = articleService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
+        model.addAttribute("articles", pageWithArticles.getList());
+        model.addAttribute("page", pageWithArticles);
+        return "sale_all_articles_page";
     }
 
     @GetMapping("/description")
@@ -59,28 +51,18 @@ public class SaleArticleWebController {
 
     @PostMapping("/description/comments/delete")
     public String deleteArticleComments(@RequestParam("delete_comment_id") List<Long> ids) {
-        try {
-            ids.stream()
-                    .filter(Objects::nonNull)
-                    .forEach(commentService::deleteById);
-            return "redirect:/user/sale/articles";
-        } catch (DeleteByIdServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        ids.stream()
+                .filter(Objects::nonNull)
+                .forEach(commentService::deleteById);
+        return "redirect:/user/sale/articles";
     }
 
     @PostMapping("/delete")
     public String deleteArticle(@RequestParam("delete_article_id") List<Long> ids) {
-        try {
-            ids.stream()
-                    .filter(Objects::nonNull)
-                    .forEach(articleService::deleteById);
-            return "redirect:/user/sale/articles";
-        } catch (DeleteByIdServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        ids.stream()
+                .filter(Objects::nonNull)
+                .forEach(articleService::deleteById);
+        return "redirect:/user/sale/articles";
     }
 
     @GetMapping("/add")
@@ -89,23 +71,17 @@ public class SaleArticleWebController {
         return "sale_add_new_article_page";
     }
 
-
     @PostMapping("/add")
     public String addArticle(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid ArticleDTO article, BindingResult result) {
-        try {
-            if (validationService.isUserHasFirstAndLastNames(userDTOLogin)) {
-                if (result.hasErrors()) {
-                    return "sale_add_new_article_page";
-                } else {
-                    articleService.add(article, userDTOLogin);
-                    return "redirect:/user/sale/articles";
-                }
+        if (validationService.isUserHasFirstAndLastNames(userDTOLogin)) {
+            if (result.hasErrors()) {
+                return "sale_add_new_article_page";
             } else {
-                return "redirect:/user/profile";
+                articleService.add(article, userDTOLogin);
+                return "redirect:/user/sale/articles";
             }
-        } catch (AddServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
+        } else {
+            return "redirect:/user/profile";
         }
     }
 

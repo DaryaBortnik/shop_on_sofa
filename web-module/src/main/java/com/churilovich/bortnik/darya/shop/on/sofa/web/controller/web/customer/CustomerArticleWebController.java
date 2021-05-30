@@ -1,7 +1,6 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.customer;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ArticleService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.CommentDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
@@ -27,15 +26,10 @@ public class CustomerArticleWebController {
     @GetMapping("/articles")
     public String getAllArticles(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                                  Model model) {
-        try {
-            PageDTO<ArticleDTO> pageWithArticles = articleService.getAllOnPage(currentPageNumber);
-            model.addAttribute("articles", pageWithArticles.getList());
-            model.addAttribute("page", pageWithArticles);
-            return "customer_get_all_articles_page";
-        } catch (GetOnPageServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        PageDTO<ArticleDTO> pageWithArticles = articleService.getAllOnPage(currentPageNumber);
+        model.addAttribute("articles", pageWithArticles.getList());
+        model.addAttribute("page", pageWithArticles);
+        return "customer_get_all_articles_page";
     }
 
     @GetMapping("/articles/description")

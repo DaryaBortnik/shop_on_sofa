@@ -12,12 +12,12 @@
 <main class="container container--wide">
     <form id="registration" th:action="@{/registration/new}" method="get"></form>
     <form method="get" th:action="@{/registration}" th:object="${roles}">
-        <tr th:each="role:${roles}">
-            <button type="submit" th:object="${role}" th:value="${role.id}" th:text="${role.name}"
+        <div th:each="role:${roles}">
+            <button class="space--s" type="submit" th:object="${role}" th:value="${role.id}" th:text="${role.name}"
                     th:name="chosen_role"
                     form="registration">
             </button>
-        </tr>
+        </div>
     </form>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>

@@ -5,13 +5,13 @@
     <title>Add article</title>
     <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
     <form method="post" th:action="@{/user/sale/articles/add}" th:object="${article}">
-        <table>
+        <table class="space--s">
             <tr>
                 <td>Name</td>
                 <td><input type="text" th:field="*{name}" required maxlength="40"></td>
@@ -28,7 +28,7 @@
             </tr>
             <tr>
                 <td>Full Description</td>
-                <td><input type="text" th:field="*{fullDescription}" maxlength="1000"></td>
+                <td><textarea type="text" th:field="*{fullDescription}" maxlength="1000"></textarea></td>
                 <td th:if="${#fields.hasErrors('fullDescription')}"
                     th:errors="*{fullDescription}">Full Description Error
                 </td>
@@ -39,10 +39,6 @@
                 </td>
             </tr>
         </table>
-    </form>
-    <br><br>
-    <form th:action="@{/user/sale/articles}" method="get">
-        <button type="submit">Back to articles page</button>
     </form>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>

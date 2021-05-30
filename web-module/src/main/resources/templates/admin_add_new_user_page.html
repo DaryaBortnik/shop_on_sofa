@@ -5,13 +5,13 @@
     <title>Add new user</title>
     <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
     <form method="post" th:action="@{/admin/users/new}" th:object="${userDTO}">
-        <table>
+        <table class="space--s">
             <tr>
                 <td>Last name</td>
                 <td><input type="text" th:field="*{userProfileDTO.lastName}" required pattern="^[a-zA-Z]{1,40}$"></td>

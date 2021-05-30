@@ -2,8 +2,10 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.exception.handler.web;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.ValidationServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,8 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.xml.bind.ValidationException;
 import java.lang.invoke.MethodHandles;
 
-@ControllerAdvice(basePackages = {"com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web",
-        "com.churilovich.bortnik.darya.shop.on.sofa.web.controller.service"})
+@ControllerAdvice(basePackages = {"com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web"})
 public class WebExceptionHandler {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -25,6 +26,12 @@ public class WebExceptionHandler {
 
     @ExceptionHandler(GetOnPageServiceException.class)
     public final String getOnPageExceptionHandling(Exception e) {
+        logger.error("Error :{}", e.getMessage());
+        return "redirect:/error/404";
+    }
+
+    @ExceptionHandler(GetByParameterServiceException.class)
+    public final String getByParameterExceptionHandling(Exception e) {
         logger.error("Error :{}", e.getMessage());
         return "redirect:/error/404";
     }
@@ -41,7 +48,7 @@ public class WebExceptionHandler {
         return "redirect:/error/409";
     }
 
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler(ValidationServiceException.class)
     public final String validationExceptionHandling(Exception e) {
         logger.error("Error :{}", e.getMessage());
         return "redirect:/user/profile";

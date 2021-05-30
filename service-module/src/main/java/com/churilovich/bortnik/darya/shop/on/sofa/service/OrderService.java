@@ -9,11 +9,13 @@ import java.util.List;
 public interface OrderService {
     PageDTO<OrderDTO> getOrdersOnPage(Long currentPageNumber);
 
+    PageDTO<OrderDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin);
+
     OrderDTO findById(Long id);
 
     OrderDTO updateOrderDetails(OrderDTO order);
 
     List<OrderDTO> findAll();
 
-    OrderDTO add(Long id, UserDTOLogin userDTOLogin);
+    OrderDTO add(Long id, Long amount, UserDTOLogin userDTOLogin);
 }

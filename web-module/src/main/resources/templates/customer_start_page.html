@@ -10,43 +10,35 @@
 <body>
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
-<form method="get" th:action="@{/user/customer/start}">
-    <table border="1">
-        <tr>
-            <th>categories</th>
-        </tr>
-        <tr th:each="category:${categories}">
-            <td th:text="${category.id}" hidden></td>
-            <td th:name="chosen_category" th:value="${category.id}"><a
-                    th:href="@{/user/customer/items/category(chosen_category=${category.id})}"
-                    th:text="${category.name}">category</a></td>
-        </tr>
-    </table>
-    <br><br>
-    <table border="1">
-        <tr>
-            <th>sales</th>
-        </tr>
-        <tr th:each="sale:${sales}">
-            <td th:text="${sale.id}" hidden></td>
-            <td th:name="chosen_sale" th:value="${sale.id}"><a
-                    th:href="@{/user/customer/sales/description(chosen_sale=${sale.id})}"
-                    th:text="${sale.name}">sale</a></td>
-        </tr>
-    </table>
-    <br><br>
-    <table border="1">
-        <tr>
-            <th>last articles</th>
-        </tr>
-        <tr th:each="article:${articles}">
-            <td th:text="${article.id}" hidden></td>
-            <td th:name="chosen_article" th:value="${article.id}"><a
-                    th:href="@{/user/customer/articles/description(chosen_article=${article.id})}"
-                    th:text="${article.name}">sale</a></td>
-        </tr>
-    </table>
-</form>
+    <form method="get" th:action="@{/user/customer/start}">
+        <h2>Categories</h2>
+        <ul class="menu">
+            <li th:each="category:${categories}">
+                <span th:text="${category.id}" hidden></span>
+                <span th:name="chosen_category" th:value="${category.id}">
+                    <a th:href="@{/user/customer/items/category(chosen_category=${category.id})}"
+                       th:text="${category.name}">category</a></span>
+            </li>
+        </ul>
+        <h2>Shops</h2>
+        <ul class="menu">
+            <li th:each="sale:${sales}">
+                <span th:text="${sale.id}" hidden></span>
+                <span th:name="chosen_sale" th:value="${sale.id}"><a
+                        th:href="@{/user/customer/sales/description(chosen_sale=${sale.id})}"
+                        th:text="${sale.name}">sale</a></span>
+            </li>
+        </ul>
+            <h2>Last Articles</h2>
+        <ul class="menu">
+            <li th:each="article:${articles}" th:if="${article != null}">
+                <span th:text="${article.id}" hidden></span>
+                <span th:name="chosen_article" th:value="${article.id}"><a
+                        th:href="@{/user/customer/articles/description(chosen_article=${article.id})}"
+                        th:text="${article.name}">sale</a></span>
+            </li>
+        </ul>
+    </form>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
-    <title>Order details</title>
+    <title>Shop profile</title>
     <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
@@ -10,25 +10,25 @@
 <body>
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
-    <form method="post" th:action="@{/user/sale/orders/description/update}" th:object="${order}">
+    <form id="update_profile" th:action="@{/user/sale/shop/update/parameters}" method="get"></form>
+    <form method="get" th:action="@{/user/sale/shop}" th:object="${shop}">
         <table class="space--s">
             <tr>
-                <td th:value="${order.id}" hidden></td>
+                <th>name</th>
+                <th>certificate</th>
+                <th>update shop profile</th>
             </tr>
             <tr>
-                <td th:value="${order.status}">status</td>
-                <td>
-                    <select name="status" th:field="${order.status}">
-                        <option th:each="status : ${statuses}"
-                                th:value="${status}" name="status_name"
-                                th:text="${status}">status
-                        </option>
-                    </select>
+                <td th:text="${shop != null} ? ${#strings.trim(shop.name)} : ' '">
+                    Shop name
                 </td>
-            </tr>
-            <tr>
+                <td th:text="${shop != null} ? ${#strings.trim(shop.certificate)} : ' '">
+                    Certificate
+                </td>
                 <td>
-                    <button type="submit" name="update_order_id" th:value="${order.id}"> Update order details
+                    <button type="submit" name="updateProfile"
+                            th:value="${shop.id}"
+                            form="update_profile"> Update profile
                     </button>
                 </td>
             </tr>

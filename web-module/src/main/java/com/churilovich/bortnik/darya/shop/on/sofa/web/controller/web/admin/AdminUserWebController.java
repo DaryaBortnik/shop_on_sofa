@@ -2,10 +2,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.admin;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.RoleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.AddServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
@@ -40,18 +36,13 @@ public class AdminUserWebController {
     @GetMapping("/users")
     public String getAllUsers(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                               UserDTO userDTO, @AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
-        try {
-            PageDTO<UserDTO> pageWithUsers = userService.getUsersOnPage(currentPageNumber, userDTOLogin);
-            model.addAttribute("users", pageWithUsers.getList());
-            model.addAttribute("page", pageWithUsers);
-            List<RoleDTO> roles = roleService.findAll();
-            model.addAttribute("roles", roles);
-            userDTO.setRoleDTO(new RoleDTO());
-            return "admin_get_all_users_page";
-        } catch (GetOnPageServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        PageDTO<UserDTO> pageWithUsers = userService.getUsersOnPage(currentPageNumber, userDTOLogin);
+        model.addAttribute("users", pageWithUsers.getList());
+        model.addAttribute("page", pageWithUsers);
+        List<RoleDTO> roles = roleService.findAll();
+        model.addAttribute("roles", roles);
+        userDTO.setRoleDTO(new RoleDTO());
+        return "admin_get_all_users_page";
     }
 
     @GetMapping("/users/new")
@@ -68,62 +59,43 @@ public class AdminUserWebController {
 
     @PostMapping("/users/new")
     public String addNewUser(@Valid UserDTO userDTO, BindingResult result, RedirectAttributes redirectAttributes) {
-        try {
-            if (result.hasErrors()) {
-                redirectAttributes.getFlashAttributes().clear();
-                redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDTO", result);
-                redirectAttributes.addFlashAttribute("userDTO", userDTO);
-                return "redirect:/admin/users/new";
-            } else {
-                userService.add(userDTO);
-                return "redirect:/admin/users";
-            }
-        } catch (AddServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
+        if (result.hasErrors()) {
+            redirectAttributes.getFlashAttributes().clear();
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userDTO", result);
+            redirectAttributes.addFlashAttribute("userDTO", userDTO);
+            return "redirect:/admin/users/new";
+        } else {
+            userService.add(userDTO);
+            return "redirect:/admin/users";
         }
     }
 
     @PostMapping("/users/update/role")
     public String updateRole(UserDTO userDTO, BindingResult result) {
-        try {
-            if (result.hasErrors()) {
-                return "admin_get_all_users_page";
-            } else {
-                userService.updateRole(userDTO);
-                return "redirect:/admin/users";
-            }
-        } catch (UpdateParameterServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
+        if (result.hasErrors()) {
+            return "admin_get_all_users_page";
+        } else {
+            userService.updateRole(userDTO);
+            return "redirect:/admin/users";
         }
     }
 
     @PostMapping("/users/delete")
     public String deleteUsers(@RequestParam("deleting_users_id") List<Long> ids) {
-        try {
-            ids.stream()
-                    .filter(Objects::nonNull)
-                    .forEach(userService::deleteById);
-            return "redirect:/admin/users";
-        } catch (DeleteByIdServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        ids.stream()
+                .filter(Objects::nonNull)
+                .forEach(userService::deleteById);
+        return "redirect:/admin/users";
     }
 
     @PostMapping("/users/update/password")
     public String updatePassword(UserDTO userDTO, BindingResult result) {
-        try {
-            if (result.hasErrors()) {
-                return "admin_get_all_users_page";
-            } else {
-                userService.generateNewPassword(userDTO);
-                return "redirect:/admin/users";
-            }
-        } catch (UpdateParameterServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
+
+        if (result.hasErrors()) {
+            return "admin_get_all_users_page";
+        } else {
+            userService.generateNewPassword(userDTO);
+            return "redirect:/admin/users";
         }
     }
 }

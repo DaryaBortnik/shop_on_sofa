@@ -2,7 +2,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.OrderRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Item;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Order;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.OrderStatusEnum;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
@@ -17,17 +16,20 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.OrderDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.enums.StatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
@@ -48,6 +50,18 @@ public class OrderServiceImpl implements OrderService {
         try {
             Long amountOfPages = paginationService.getAmountOfPages(orderRepository);
             return buildPageWithOrders(currentPageNumber, amountOfPages);
+        } catch (GetEntitiesAmountRepositoryException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetOnPageServiceException("Can't get all orders on current page on service level " +
+                    "due to impossibility to get total amount of orders", e);
+        }
+    }
+
+    @Override
+    public PageDTO<OrderDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
+        try {
+            Long amountOfPages = paginationService.getAmountOfPages(orderRepository);
+            return buildPageWithOrdersByUserId(currentPageNumber, amountOfPages, userDTOLogin);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new GetOnPageServiceException("Can't get all orders on current page on service level " +
@@ -87,18 +101,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderDTO add(Long id, UserDTOLogin userDTOLogin) {
+    public OrderDTO add(Long id, Long amount, UserDTOLogin userDTOLogin) {
         OrderDTO orderDTO = new OrderDTO();
         ItemDTO item = itemService.findById(id);
         orderDTO.setItem(item);
-        orderDTO.setItemAmount(1L);
-        orderDTO.setStatus("NEW");
-        orderDTO.setPrice(item.getPrice());
-        orderDTO.setNumber(id);
+        orderDTO.setItemAmount(amount);
+        orderDTO.setStatus(StatusEnum.NEW.name());
+        BigDecimal itemPrice = item.getPrice();
+        BigDecimal price = BigDecimal.valueOf(amount).multiply(itemPrice);
+        orderDTO.setPrice(price);
         Long userId = userDTOLogin.getUserId();
         UserDTO user = userService.findById(userId);
         orderDTO.setUser(user);
         orderDTO.setDateAdded(LocalDate.now());
+        orderDTO.setNumber(UUID.randomUUID().toString());
         Order order = conversionService.convert(orderDTO, Order.class);
         orderRepository.persist(order);
         return conversionService.convert(order, OrderDTO.class);
@@ -108,6 +124,14 @@ public class OrderServiceImpl implements OrderService {
         PageDTO<OrderDTO> page = getPageWithOrders(amountOfPages);
         Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
         List<Order> orders = orderRepository.findAllOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
+        addOrdersToPage(page, orders);
+        return page;
+    }
+
+    private PageDTO<OrderDTO> buildPageWithOrdersByUserId(Long currentPageNumber, Long amountOfPages, UserDTOLogin userDTOLogin) {
+        PageDTO<OrderDTO> page = getPageWithOrders(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
+        List<Order> orders = orderRepository.findAllByUserIdOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE, userDTOLogin.getUserId());
         addOrdersToPage(page, orders);
         return page;
     }

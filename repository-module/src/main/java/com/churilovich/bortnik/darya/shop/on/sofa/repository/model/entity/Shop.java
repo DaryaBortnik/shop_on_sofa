@@ -16,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import static java.lang.Boolean.FALSE;
+
 @Entity
 @Table(name = "shop")
 @SQLDelete(sql = "UPDATE shop SET is_deleted = 1 WHERE id =?")
@@ -32,7 +34,7 @@ public class Shop {
     @Column
     private String certificate;
     @Column(name = "is_deleted")
-    private Boolean isDeleted;
+    private Boolean isDeleted = FALSE;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;

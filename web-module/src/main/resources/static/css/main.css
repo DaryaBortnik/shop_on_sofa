@@ -1,3 +1,7 @@
+html, body {
+    height: 100%;
+}
+
 body {
     background: #f1e4de;
     font-family: 'Lato', sans-serif;
@@ -5,7 +9,12 @@ body {
     color: #141a13;
     line-height: 32px;
     margin: 0;
+    display: flex;
+    flex-direction: column;
+}
 
+footer {
+    margin-top: auto;
 }
 
 h1 {
@@ -15,9 +24,18 @@ h1 {
     margin: 0 0 30px;
 }
 
+h2 {
+    font-size: 32px;
+    line-height: 48px;
+    font-weight: 400;
+    margin: 15px 0;
+}
+
 .container {
     margin: 0 auto;
     padding: 20px 40px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .container--narrow {
@@ -72,7 +90,7 @@ label {
     margin-bottom: 5px;
 }
 
-input {
+input, select, textarea {
     display: block;
     padding: 10px 20px;
     border-radius: 10px;
@@ -82,9 +100,56 @@ input {
     transition: border-color 200ms;
 }
 
-input:focus {
+input:focus, select:focus, textarea:focus {
     border-color: #7C7B89;
     outline: none;
+}
+
+.hidden {
+    display: none;
+}
+
+textarea{
+    width: 100%;
+    font-family: inherit;
+    resize: vertical;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table, tbody, tr, td, th, thead {
+    box-shadow: none;
+}
+
+td, th {
+    border: 1px solid #7C7B89;
+    padding: 10px;
+}
+
+td button {
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid #0B7FAB;
+    transition: all 200ms;
+    color: #141a13;
+}
+
+td button:hover {
+    background: #074e69;
+    border-color: #074e69;
+    color: white;
+}
+
+td a {
+    color: #E9723D;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
 }
 
 .space--xs {
@@ -115,7 +180,7 @@ nav li {
     padding: 0 10px;
 }
 
-nav a {
+nav a, .link {
     display: block;
     color: #141a13;
     text-decoration: none;
@@ -124,7 +189,7 @@ nav a {
     transition: border-color 200ms;
 }
 
-nav a:hover {
+nav a:hover, .link:hover {
     border-color: #E9723D;
 }
 
@@ -157,4 +222,55 @@ nav a:hover {
     margin-left: auto;
     padding-left: 40px;
 }
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: flex-end;
+}
+
+.pagination li {
+    margin: 0;
+    padding: 0 5px;
+}
+
+.pagination a {
+    display: block;
+    color: #141a13;
+    font-size: 26px;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 3px;
+    transition: border-color 200ms;
+}
+
+.pagination a:hover {
+    border-color: #E9723D;
+}
+
+.menu {
+    display: flex;
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    margin-right: 10px;
+}
+
+.menu a {
+    display: block;
+    color: #141a13;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 3px;
+    transition: border-color 200ms;
+}
+
+.menu a:hover {
+    border-color: #E9723D;
+}
+
+
 

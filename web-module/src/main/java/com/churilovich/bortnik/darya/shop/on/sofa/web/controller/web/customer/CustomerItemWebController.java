@@ -1,8 +1,8 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.customer;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.OrderDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -26,15 +26,11 @@ public class CustomerItemWebController {
     @GetMapping("/items")
     public String getAllItems(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                               Model model) {
-        try {
-            PageDTO<ItemDTO> pageWithItems = itemService.getAllOnPage(currentPageNumber);
-            model.addAttribute("items", pageWithItems.getList());
-            model.addAttribute("page", pageWithItems);
-            return "customer_get_all_items_page";
-        } catch (GetOnPageServiceException e) {
-            logger.error(e.getMessage(), e);
-            return "error_page";
-        }
+        PageDTO<ItemDTO> pageWithItems = itemService.getAllOnPage(currentPageNumber);
+        model.addAttribute("items", pageWithItems.getList());
+        model.addAttribute("page", pageWithItems);
+        model.addAttribute("order", new OrderDTO());
+        return "customer_get_all_items_page";
     }
 
     @GetMapping("/items/description")

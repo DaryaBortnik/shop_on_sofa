@@ -51,13 +51,10 @@ public class ProfileWebController {
 
     @PostMapping("/profile/update/password")
     public String updatePassword(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @RequestParam("old_password") String oldPassword,
-                                 @RequestParam("new_password") String newPassword, BindingResult result) {
-        if (result.hasErrors()) {
-            return "common_update_user_profile_page";
-        } else {
-            userService.updateUserPassword(userDTOLogin, oldPassword, newPassword);
-            return "redirect:/user/profile";
-        }
+                                 @RequestParam("new_password") String newPassword) {
+        userService.updateUserPassword(userDTOLogin, oldPassword, newPassword);
+        return "redirect:/user/profile";
+
     }
 }
 

@@ -12,7 +12,7 @@
 <main class="container container--wide">
     <form id="delete_articles" th:action="@{/user/sale/articles/delete}" method="post">
         <form method="get" th:action="@{/user/sale/articles}" th:object="${articles}">
-            <table border="1">
+            <table class="space--s">
                 <tr>
                     <th></th>
                     <th>date added</th>
@@ -35,24 +35,19 @@
                 </tr>
             </table>
         </form>
-        <br><br>
-        <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
-            th:classappend="${page.pagesAmount}==${i}">
-            <a th:href="@{/user/customer/articles(current_page=${i})}" th:text="${i}"> </a>
-        </li>
+        <ul class="pagination">
+            <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
+                th:classappend="${page.currentPageNumber}==${i}">
+                <a th:href="@{/user/sale/articles(current_page=${i})}" th:text="${i}"> </a>
+            </li>
+        </ul>
         <button type="submit" name="delete_article_id"
                 form="delete_articles">Delete articles
         </button>
     </form>
-    <br><br>
     <form th:action="@{/user/sale/articles/add}" method="get">
         <button type="submit">Add new article</button>
     </form>
-    <br><br>
-    <form th:action="@{/user/sale/start}" method="get">
-        <button type="submit">Back to start page</button>
-    </form>
-    <br><br>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>
