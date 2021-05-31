@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -74,7 +74,7 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public PageDTO<ArticleDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
         try {
-            Long amountOfPages = paginationService.getAmountOfPages(articleRepository);
+            Long amountOfPages = paginationService.getAmountOfPagesByUserId(articleRepository, userDTOLogin.getUserId());
             Long userId = userDTOLogin.getUserId();
             return buildPageWithArticlesByUserId(currentPageNumber, amountOfPages, userId);
         } catch (GetEntitiesAmountRepositoryException e) {
@@ -108,7 +108,7 @@ public class ArticleServiceImpl implements ArticleService {
         Long userId = userDTOLogin.getUserId();
         UserDTO user = userService.findById(userId);
         article.setUser(user);
-        article.setDateAdded(LocalDate.now());
+        article.setDateAdded(LocalDateTime.now());
         return addWithUser(article);
     }
 
@@ -220,7 +220,7 @@ public class ArticleServiceImpl implements ArticleService {
         article.setName(articleDTO.getName());
         article.setShortDescription(articleDTO.getShortDescription());
         article.setFullDescription(articleDTO.getFullDescription());
-        article.setDateAdded(LocalDate.now());
+        article.setDateAdded(LocalDateTime.now());
         return article;
     }
 }

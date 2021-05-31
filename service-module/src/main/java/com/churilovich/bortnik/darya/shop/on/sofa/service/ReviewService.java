@@ -12,4 +12,6 @@ public interface ReviewService {
     PageDTO<ReviewDTO> getReviewsOnPage(Long currentPageNumber);
 
     ReviewDTO add(ReviewDTO review, UserDTOLogin userDTOLogin);
+
+    PageDTO<ReviewDTO> getAllOnPageForUsers(Long currentPageNumber);
 }

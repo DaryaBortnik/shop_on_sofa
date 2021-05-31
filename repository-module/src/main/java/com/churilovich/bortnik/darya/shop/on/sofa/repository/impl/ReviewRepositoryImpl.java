@@ -13,8 +13,18 @@ public class ReviewRepositoryImpl extends GenericRepositoryImpl<Long, Review> im
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Review> findAll(Long startNumberOnCurrentPage, long amountOnOnePage) {
+    public List<Review> findAllOnPage(Long startNumberOnCurrentPage, long amountOnOnePage) {
         String queryInStringFormat = "from " + entityClass.getName();
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setMaxResults(Math.toIntExact(amountOnOnePage));
+        query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Review> findAllOnPageForUsers(Long startNumberOnCurrentPage, long amountOnOnePage) {
+        String queryInStringFormat = "from " + entityClass.getName() + "  where is_shown=true";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setMaxResults(Math.toIntExact(amountOnOnePage));
         query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));

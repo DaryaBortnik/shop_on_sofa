@@ -10,10 +10,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @Aspect
@@ -37,41 +33,33 @@ public class WebLogAspect {
     public void callAtSaleWebController() {
     }
 
+    @Pointcut("execution(public * com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.common.*.*(..))")
+    public void callAtCommonWebController() {
+    }
+
+
     @Before("callAtApiController()")
     public void beforeCallAtApiController(JoinPoint joinPoint) {
-        List<String> args = Arrays.stream(joinPoint.getArgs())
-                .map(Object::toString)
-                .collect(Collectors.toList());
-        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on api controller level" +
-                " with parameters: " + args);
+        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on api controller level");
     }
 
     @Before("callAtAdminWebController()")
     public void beforeCallAtAdminWebController(JoinPoint joinPoint) {
-        List<String> args = Arrays.stream(joinPoint.getArgs())
-                .map(Object::toString)
-                .collect(Collectors.toList());
-        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level" +
-                " with parameters: " + args);
+        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level");
     }
 
     @Before("callAtCustomerWebController()")
     public void beforeCallAtCustomerWebController(JoinPoint joinPoint) {
-        List<String> args = Arrays.stream(joinPoint.getArgs())
-                .filter(Objects::nonNull)
-                .map(Object::toString)
-                .collect(Collectors.toList());
-        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level" +
-                " with parameters: " + args);
+        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level");
     }
 
     @Before("callAtSaleWebController()")
     public void beforeCallAtSaleWebController(JoinPoint joinPoint) {
-        List<String> args = Arrays.stream(joinPoint.getArgs())
-                .filter(Objects::nonNull)
-                .map(Objects::toString)
-                .collect(Collectors.toList());
-        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level" +
-                " with parameters: " + args);
+        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level");
+    }
+
+    @Before("callAtCommonWebController()")
+    public void beforeCallAtCommonWebController(JoinPoint joinPoint) {
+        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on web controller level");
     }
 }

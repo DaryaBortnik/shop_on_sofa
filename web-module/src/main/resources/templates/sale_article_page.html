@@ -23,7 +23,7 @@
                 </tr>
                 <tr>
                     <td th:text="${article.id}" hidden>id</td>
-                    <td th:text="${article.dateAdded}">date added</td>
+                    <td th:text="${{article.dateAdded}}">date added</td>
                     <td th:text="${article.name}">name</td>
                     <td th:text="${article.user.userProfileDTO.firstName} + ' ' + ${article.user.userProfileDTO.lastName}">
                         author
@@ -40,14 +40,14 @@
             Comments
             <table class="space--s">
                 <tr>
-                    <th></th>
+                    <th>choose it</th>
                     <th>date added</th>
                     <th>user</th>
                     <th>description</th>
                 </tr>
                 <tr th:each="comment:${article.comments}">
                     <th><input type="checkbox" name="delete_comment_id" th:value="${comment.id}"/></th>
-                    <td th:text="${comment.dateAdded}">date</td>
+                    <td th:text="${{comment.dateAdded}}">date</td>
                     <td th:text="${comment.userLastName} + ' ' + ${comment.userFirstName}">user</td>
                     <td th:text="${comment.description}">description</td>
                 </tr>

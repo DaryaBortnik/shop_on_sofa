@@ -35,7 +35,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     @Override
     @SuppressWarnings("unchecked")
     public List<User> findAll(Long startNumberOnCurrentPage, Long amountOnOnePage) {
-        String queryInStringFormat = "from " + entityClass.getName() + " order by email";
+        String queryInStringFormat = "from " + entityClass.getName() + " order by email, role";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setMaxResults(Math.toIntExact(amountOnOnePage));
         query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));

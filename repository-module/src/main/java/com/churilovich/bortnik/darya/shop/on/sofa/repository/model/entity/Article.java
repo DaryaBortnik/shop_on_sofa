@@ -3,6 +3,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OrderBy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "article")
@@ -26,7 +27,7 @@ public class Article {
     private Long id;
 
     @Column(name = "add_date")
-    private LocalDate dateAdded;
+    private LocalDateTime dateAdded;
 
     @Column
     private String name;

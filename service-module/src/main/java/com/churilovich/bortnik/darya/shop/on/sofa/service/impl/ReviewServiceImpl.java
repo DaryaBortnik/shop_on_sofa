@@ -2,6 +2,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.ReviewRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Item;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Review;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
@@ -9,7 +10,7 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.OrderDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public PageDTO<ReviewDTO> getReviewsOnPage(Long currentPageNumber) {
         try {
-            Long amountOfPages = paginationService.getAmountOfPages(reviewRepository);
+            Long amountOfPages = paginationService.getAmountOfPagesForUsersReviews(reviewRepository);
             return buildPageWithReviews(currentPageNumber, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
@@ -73,12 +74,33 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public ReviewDTO add(ReviewDTO reviewDTO, UserDTOLogin userDTOLogin) {
         UserDTO user = userService.findById(userDTOLogin.getUserId());
-        reviewDTO.setDate(LocalDate.now());
+        reviewDTO.setDate(LocalDateTime.now());
         reviewDTO.setUserProfileDTO(user.getUserProfileDTO());
         reviewDTO.setIsShown(false);
         Review review = conversionService.convert(reviewDTO, Review.class);
         reviewRepository.persist(review);
         return conversionService.convert(review, ReviewDTO.class);
+    }
+
+    @Override
+    public PageDTO<ReviewDTO> getAllOnPageForUsers(Long currentPageNumber) {
+        try {
+            Long amountOfPages = paginationService.getAmountOfPagesForUsersReviews(reviewRepository);
+            return buildPageWithReviewsForUsers(currentPageNumber, amountOfPages);
+        } catch (GetEntitiesAmountRepositoryException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
+                    "due to impossibility to get total amount of reviews", e);
+        }
+    }
+
+    private PageDTO<ReviewDTO> buildPageWithReviewsForUsers(Long currentPageNumber, Long amountOfPages) {
+        PageDTO<ReviewDTO> page = getPageWithReviews(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
+        List<Review> reviews = reviewRepository.findAllOnPageForUsers(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
+        addReviewsToPage(page, reviews);
+        return page;
+
     }
 
     private void updateStatus(Review review) {
@@ -90,7 +112,7 @@ public class ReviewServiceImpl implements ReviewService {
     private PageDTO<ReviewDTO> buildPageWithReviews(Long currentPageNumber, Long amountOfPages) {
         PageDTO<ReviewDTO> page = getPageWithReviews(amountOfPages);
         Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
-        List<Review> reviews = reviewRepository.findAll(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
+        List<Review> reviews = reviewRepository.findAllOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
         addReviewsToPage(page, reviews);
         return page;
     }

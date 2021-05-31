@@ -164,6 +164,14 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<UserDTO> findAll() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> conversionService.convert(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
     private void addUser(User user) {
         buildUser(user);
         userRepository.persist(user);

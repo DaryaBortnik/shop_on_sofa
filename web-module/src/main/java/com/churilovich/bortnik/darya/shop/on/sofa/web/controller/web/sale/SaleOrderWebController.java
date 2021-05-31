@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("/user/sale")
@@ -51,12 +48,6 @@ public class SaleOrderWebController {
                                             Model model) {
         OrderDTO order = orderService.findById(id);
         model.addAttribute("order", order);
-//        List<String> statuses = new ArrayList<>();
-//        statuses.add("NEW");
-//        statuses.add("IN_PROGRESS");
-//        statuses.add("DELIVERED");
-//        statuses.add("REJECTED");
-
         model.addAttribute("statuses", StatusEnum.values());
         return "sale_update_order_details_page";
     }

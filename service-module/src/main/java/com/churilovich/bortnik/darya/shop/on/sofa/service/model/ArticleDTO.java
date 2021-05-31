@@ -4,14 +4,14 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class ArticleDTO {
     private Long id;
-    private LocalDate dateAdded;
+    private LocalDateTime dateAdded;
     @NotBlank(message = "This field must be filled")
     @Size(max = 40, message = "Invalid size: max size = 40")
     private String name;

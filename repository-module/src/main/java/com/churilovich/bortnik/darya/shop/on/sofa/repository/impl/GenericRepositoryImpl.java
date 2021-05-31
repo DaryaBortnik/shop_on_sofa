@@ -76,5 +76,34 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
                     "elements in " + entityClass.getSimpleName(), e);
         }
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public I getAmountOfEntitiesSelectedByUserId(Long userId) {
+        try {
+            String queryInStringFormat = "select count(*) from " + entityClass.getName() + " where user_id=:id";
+            Query query = entityManager.createQuery(queryInStringFormat);
+            query.setParameter("id", userId);
+            return (I) query.getSingleResult();
+        } catch (NoResultException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetEntitiesAmountRepositoryException("Can't get amount of elements on repository level : " +
+                    "elements in " + entityClass.getSimpleName(), e);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public I getAmountOfEntityForUsers() {
+        try {
+            String queryInStringFormat = "select count(*) from " + entityClass.getName() + " where is_shown=true";
+            Query query = entityManager.createQuery(queryInStringFormat);
+            return (I) query.getSingleResult();
+        } catch (NoResultException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetEntitiesAmountRepositoryException("Can't get amount of elements on repository level : " +
+                    "elements in " + entityClass.getSimpleName(), e);
+        }
+    }
 }
 

@@ -16,7 +16,7 @@
         <form method="get" th:action="@{/reviews}" th:object="${reviews}">
             <table class="space--s">
                 <tr>
-                    <th></th>
+                    <th>choose it</th>
                     <th>User name</th>
                     <th>User phoneNumber</th>
                     <th>review</th>
@@ -31,7 +31,7 @@
                     </td>
                     <td th:text=" ${review.userProfileDTO.phoneNumber}">User phoneNumber</td>
                     <td th:text=" ${review.description}">review</td>
-                    <td th:text="${review.date}">date</td>
+                    <td th:text="${{review.date}}">date</td>
                     <td th:text="${review.isShown}">shown</td>
                     <td>
                         <button type="submit" name="deleting_review_id"

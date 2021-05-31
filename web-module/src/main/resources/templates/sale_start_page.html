@@ -23,7 +23,7 @@
                 </tr>
                 <tr th:each="article:${articles}">
                     <div th:if="${article != null}">
-                        <td th:text="${article.dateAdded}">date added</td>
+                        <td th:text="${{article.dateAdded}}">date added</td>
                         <td th:text="${article.name}">name</td>
                         <td th:text="${article.user.userProfileDTO.lastName} + ' ' + ${article.user.userProfileDTO.firstName}">
                             author
@@ -37,17 +37,11 @@
             </table>
         </div>
     </form>
-    <form th:action="@{/user/sale/articles/add}" method="get">
+    <form class="space--s" th:action="@{/user/sale/articles/add}" method="get">
         <button type="submit">Add new article</button>
     </form>
-    <form th:action="@{/user/sale/items}" method="get">
-        <button type="submit">Get catalog of items</button>
-    </form>
-    <form th:action="@{/user/sale/orders}" method="get">
+    <form class="space--s" th:action="@{/user/sale/orders}" method="get">
         <button type="submit">Get order list</button>
-    </form>
-    <form th:action="@{/user/profile}" method="get">
-        <button type="submit">User profile</button>
     </form>
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>

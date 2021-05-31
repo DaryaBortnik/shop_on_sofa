@@ -3,7 +3,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.api;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ArticleService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ValidationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ResponseDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.ResponseDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

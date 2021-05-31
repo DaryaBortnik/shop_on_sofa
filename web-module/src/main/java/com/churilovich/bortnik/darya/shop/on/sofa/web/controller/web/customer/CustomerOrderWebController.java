@@ -29,9 +29,9 @@ public class CustomerOrderWebController {
     @GetMapping("/orders")
     public String getAllOrders(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                                Model model) {
-        PageDTO<OrderDTO> pageWithItems = orderService.getOrdersOnPage(currentPageNumber);
-        model.addAttribute("orders", pageWithItems.getList());
-        model.addAttribute("page", pageWithItems);
+        PageDTO<OrderDTO> pageWithOrders = orderService.getOrdersOnPage(currentPageNumber);
+        model.addAttribute("orders", pageWithOrders.getList());
+        model.addAttribute("page", pageWithOrders);
         return "customer_get_all_orders_page";
     }
 

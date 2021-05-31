@@ -26,7 +26,9 @@ public class UserProfileDTO {
     @Size(min = 1, max = 40, message = INVALID_LAST_NAME_SIZE)
     @Pattern(regexp = LAST_NAME_REGEX_VALUE)
     private String lastName;
+    @Pattern(regexp = "^([A-z]*\\s)?([A-z]+,)\\s([A-z]+,)\\s([A-z]+)\\s([A-z]+,)\\s([0-9]+/[0-9]*/*[0-9]+)$")
     private String address;
+    @Pattern(regexp = "^\\+?(\\d{1,3})?[- .]?\\(?(?:\\d{2,3})\\)?[- .]?\\d\\d\\d[- .]?\\d\\d\\d\\d$")
     private String phoneNumber;
 
     public UserProfileDTO(Long id) {

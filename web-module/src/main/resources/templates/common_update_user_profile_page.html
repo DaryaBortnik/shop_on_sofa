@@ -39,7 +39,8 @@
             <tr>
                 <td th:value="${userProfileDTO.address}">Address</td>
                 <td><input type="text" th:field="*{address}"
-                           pattern="^[a-zA-Z]{1,20}$"></td>
+                           placeholder="country, city, street, building/block/apartment">
+                </td>
                 <td th:if="${#fields.hasErrors('address')}"
                     th:errors="*{address}">Address Error
                 </td>
@@ -47,7 +48,8 @@
             <tr>
                 <td th:value="${userProfileDTO.phoneNumber}">Phone number</td>
                 <td><input type="text" th:field="*{phoneNumber}"
-                           pattern="^[0-9]{1,20}$"></td>
+                           pattern="^\+?(\d{1,3})?[- .]?\(?(?:\d{2,3})\)?[- .]?\d\d\d[- .]?\d\d\d\d$"
+                           placeholder="+xxxxxxxxxxxx"></td>
                 <td th:if="${#fields.hasErrors('phoneNumber')}"
                     th:errors="*{phoneNumber}">Phone number Error
                 </td>

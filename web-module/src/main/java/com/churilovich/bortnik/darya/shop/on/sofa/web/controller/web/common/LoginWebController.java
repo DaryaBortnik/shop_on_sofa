@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web;
+package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.common;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

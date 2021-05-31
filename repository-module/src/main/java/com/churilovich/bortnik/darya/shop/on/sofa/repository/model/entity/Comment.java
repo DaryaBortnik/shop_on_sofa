@@ -13,13 +13,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comment")
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"user","article","dateAdded"})
+@EqualsAndHashCode(exclude = {"user", "article", "dateAdded"})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class Comment {
     private String description;
 
     @Column(name = "add_date")
-    private LocalDate dateAdded;
+    private LocalDateTime dateAdded;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)

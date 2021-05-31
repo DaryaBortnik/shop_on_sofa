@@ -10,14 +10,26 @@ import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.Pagin
 public class PaginationServiceImpl<E> implements PaginationService<GenericRepositoryImpl<Long, E>> {
 
     @Override
-    public Long getStartEntityNumberOnCurrentPage(Long currentPageNumber, Long amountOfPages,Long EntityAmountOnPage) {
+    public Long getStartEntityNumberOnCurrentPage(Long currentPageNumber, Long amountOfPages, Long EntityAmountOnPage) {
         Long currentPage = getCurrentPageNumber(currentPageNumber, amountOfPages);
-        return getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
+        return getElementPosition(currentPage, AMOUNT_ON_ONE_PAGE);
     }
 
     @Override
     public Long getAmountOfPages(GenericRepositoryImpl<Long, E> repository) {
         Long amountOfEntities = repository.getAmountOfEntities();
+        return getAmountOfPagesForElements(amountOfEntities, AMOUNT_ON_ONE_PAGE);
+    }
+
+    @Override
+    public Long getAmountOfPagesByUserId(GenericRepositoryImpl<Long, E> repository,Long userId) {
+        Long amountOfEntities = repository.getAmountOfEntitiesSelectedByUserId(userId);
+        return getAmountOfPagesForElements(amountOfEntities, AMOUNT_ON_ONE_PAGE);
+    }
+
+    @Override
+    public Long getAmountOfPagesForUsersReviews(GenericRepositoryImpl<Long, E> repository) {
+        Long amountOfEntities = repository.getAmountOfEntityForUsers();
         return getAmountOfPagesForElements(amountOfEntities, AMOUNT_ON_ONE_PAGE);
     }
 

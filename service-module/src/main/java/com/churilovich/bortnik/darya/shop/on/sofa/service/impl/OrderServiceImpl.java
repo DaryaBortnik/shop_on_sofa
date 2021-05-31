@@ -20,14 +20,13 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.enums.StatusEnum
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,7 +59,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public PageDTO<OrderDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
         try {
-            Long amountOfPages = paginationService.getAmountOfPages(orderRepository);
+            Long amountOfPages = paginationService.getAmountOfPagesByUserId(orderRepository, userDTOLogin.getUserId());
             return buildPageWithOrdersByUserId(currentPageNumber, amountOfPages, userDTOLogin);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
@@ -113,7 +112,7 @@ public class OrderServiceImpl implements OrderService {
         Long userId = userDTOLogin.getUserId();
         UserDTO user = userService.findById(userId);
         orderDTO.setUser(user);
-        orderDTO.setDateAdded(LocalDate.now());
+        orderDTO.setDateAdded(LocalDateTime.now());
         orderDTO.setNumber(UUID.randomUUID().toString());
         Order order = conversionService.convert(orderDTO, Order.class);
         orderRepository.persist(order);

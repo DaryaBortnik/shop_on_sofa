@@ -10,5 +10,7 @@ public interface ShopRepository extends GenericRepository<Long, Shop> {
     List<Shop> findByRoleId(Long roleId);
 
     Optional<Shop> findByUserId(Long userId);
+
+    List<Shop> findOnPage(Long startNumberOnCurrentPage, long amountOnOnePage);
 }
 

@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @Repository
 public class ShopRepositoryImpl extends GenericRepositoryImpl<Long, Shop> implements ShopRepository {
-    private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
 
     @Override
     @SuppressWarnings("unchecked")
@@ -36,5 +35,15 @@ public class ShopRepositoryImpl extends GenericRepositoryImpl<Long, Shop> implem
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Shop> findOnPage(Long startNumberOnCurrentPage, long amountOnOnePage) {
+        String queryInStringFormat = "from " + entityClass.getName();
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setMaxResults(Math.toIntExact(amountOnOnePage));
+        query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
+        return query.getResultList();
     }
 }

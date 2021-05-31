@@ -7,14 +7,14 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.CommentDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 public class CommentDTOToEntity implements Converter<CommentDTO, Comment> {
     @Override
     public Comment convert(CommentDTO commentDTO) {
         Comment comment = new Comment();
-        LocalDate dateAdded = commentDTO.getDateAdded();
+        LocalDateTime dateAdded = commentDTO.getDateAdded();
         comment.setDateAdded(dateAdded);
         Article article = new Article();
         Long articleId = commentDTO.getArticleId();

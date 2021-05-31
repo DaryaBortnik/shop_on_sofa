@@ -17,4 +17,8 @@ public interface GenericRepository<I, E> {
     void remove(E entity);
 
     I getAmountOfEntities();
+
+    I getAmountOfEntitiesSelectedByUserId(Long userId);
+
+    I getAmountOfEntityForUsers();
 }

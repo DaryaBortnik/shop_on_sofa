@@ -17,7 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
@@ -34,7 +34,7 @@ public class Order {
     private String number;
 
     @Column(name = "add_date")
-    private LocalDate dateAdded;
+    private LocalDateTime dateAdded;
 
     @Column
     @Enumerated(EnumType.STRING)

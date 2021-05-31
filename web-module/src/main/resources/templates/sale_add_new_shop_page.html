@@ -12,7 +12,7 @@
 <main class="container container--wide">
     <form method="post" th:action="@{/user/sale/shop/add}" th:object="${shop}">
         <div class="space--s">
-            <label for="name" th:value="${shop.name}">name</label>
+            <label for="name" th:value="${shop.name}">Name</label>
             <input id="name" type="text" th:field="*{name}" pattern="^[a-zA-Z]{1,40}$">
             <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"> Name Error </span>
         </div>

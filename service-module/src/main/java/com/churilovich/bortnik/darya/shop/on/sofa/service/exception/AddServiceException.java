@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.CONFLICT)
-public class AddServiceException extends RuntimeException {
+public class AddServiceException extends ServiceException {
     public AddServiceException(String message) {
         super(message);
     }

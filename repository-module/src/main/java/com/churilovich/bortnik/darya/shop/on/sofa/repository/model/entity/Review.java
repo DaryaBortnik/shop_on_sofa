@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "review")
@@ -29,7 +29,7 @@ public class Review {
     private String description;
 
     @Column(name = "add_date")
-    private LocalDate addDate;
+    private LocalDateTime addDate;
 
     @Column(name = "is_shown")
     private Boolean isShown;

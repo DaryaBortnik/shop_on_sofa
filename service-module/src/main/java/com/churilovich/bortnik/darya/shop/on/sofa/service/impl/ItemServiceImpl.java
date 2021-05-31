@@ -116,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public PageDTO<ItemDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
         try {
-            Long amountOfPages = paginationService.getAmountOfPages(itemRepository);
+            Long amountOfPages = paginationService.getAmountOfPagesByUserId(itemRepository, userDTOLogin.getUserId());
             return buildPageWithItemsByUserId(currentPageNumber, amountOfPages, userDTOLogin);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);

@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.convert.ConversionService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -153,7 +154,7 @@ class ArticleServiceImplTest {
         articleFromDB.setName(articleDTO.getName());
         articleFromDB.setShortDescription(articleDTO.getShortDescription());
         articleFromDB.setFullDescription(articleDTO.getFullDescription());
-        articleFromDB.setDateAdded(LocalDate.now());
+        articleFromDB.setDateAdded(LocalDateTime.now());
 
         articleRepository.merge(articleFromDB);
 

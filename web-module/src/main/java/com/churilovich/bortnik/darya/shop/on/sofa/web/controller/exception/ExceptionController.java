@@ -1,4 +1,4 @@
-package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web;
+package com.churilovich.bortnik.darya.shop.on.sofa.web.controller.exception;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

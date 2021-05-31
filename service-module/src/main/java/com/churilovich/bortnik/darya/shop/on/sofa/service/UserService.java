@@ -28,4 +28,7 @@ public interface UserService {
     void updateUserPassword(UserDTOLogin userDTOLogin, String oldPassword, String newPassword);
 
     List<UserDTO> findAllSales();
+
+
+    List<UserDTO> findAll();
 }

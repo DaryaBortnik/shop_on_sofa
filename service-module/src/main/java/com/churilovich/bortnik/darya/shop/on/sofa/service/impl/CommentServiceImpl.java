@@ -14,7 +14,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
         commentDTO.setUserFirstName(userProfile.getFirstName());
         commentDTO.setUserLastName(userProfile.getLastName());
         commentDTO.setUserId(userDTOLogin.getUserId());
-        commentDTO.setDateAdded(LocalDate.now());
+        commentDTO.setDateAdded(LocalDateTime.now());
         Comment comment = conversionService.convert(commentDTO, Comment.class);
         comment.getUser().setUserProfile(conversionService.convert(userProfile, UserProfile.class));
         commentRepository.persist(comment);

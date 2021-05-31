@@ -1,7 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.web.exception.handler.web;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.LoginWebController;
+import com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web.common.LoginWebController;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
