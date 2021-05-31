@@ -588,4 +588,73 @@
         </insert>
     </changeSet>
 
+    <changeSet id="INSERT_ITEM_2_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="Rain shower"/>
+            <column name="price" value="100"/>
+            <column name="unique_number" value="hh21hg213vjgjgj213"/>
+            <column name="description" value="cool rain shower for ur bathroom"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'HOUSE AND LIVING')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'jusk@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_3_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="Electrocar"/>
+            <column name="price" value="10000"/>
+            <column name="unique_number" value="h2321jhhfdfkjh2343"/>
+            <column name="description" value="new electrocar"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'AUTOMOBILES')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'hyundai@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_4_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="ball"/>
+            <column name="price" value="50"/>
+            <column name="unique_number" value="hh2eeeeegjgj213"/>
+            <column name="description" value="blue ball for football"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'SPORT')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'sportmaster@ad.com')"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="INSERT_ITEM_5_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="robot"/>
+            <column name="price" value="1000"/>
+            <column name="unique_number" value="heeeeee3vjgjgj213"/>
+            <column name="description" value="cool robot"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'ELECTRONICS')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'hyundai@ad.com')"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="INSERT_ITEM_6_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="doll"/>
+            <column name="price" value="100"/>
+            <column name="unique_number" value="hkmkmijmgjgj213"/>
+            <column name="description" value="doll for girl"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'KIDS')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'kraft@ad.com')"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="INSERT_ITEM_7_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="Face cream"/>
+            <column name="price" value="1000"/>
+            <column name="unique_number" value="2334g213vjgjgj213"/>
+            <column name="description" value="night face cream"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'WOMEN')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'kraft@ad.com')"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

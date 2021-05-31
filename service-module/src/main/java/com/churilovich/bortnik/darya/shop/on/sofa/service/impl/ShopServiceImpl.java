@@ -117,7 +117,11 @@ public class ShopServiceImpl implements ShopService {
 
     private PageDTO<ShopDTO> getPageWithShops(Long amountOfPages) {
         PageDTO<ShopDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
+        if (amountOfPages == 0) {
+            page.setPagesAmount(1L);
+        } else {
+            page.setPagesAmount(amountOfPages);
+        }
         return page;
     }
 

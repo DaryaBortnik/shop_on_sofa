@@ -185,7 +185,11 @@ public class ArticleServiceImpl implements ArticleService {
 
     private PageDTO<ArticleDTO> getPageWithArticles(Long amountOfPages) {
         PageDTO<ArticleDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
+        if (amountOfPages == 0) {
+            page.setPagesAmount(1L);
+        } else {
+            page.setPagesAmount(amountOfPages);
+        }
         return page;
     }
 

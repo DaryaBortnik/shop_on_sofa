@@ -154,7 +154,11 @@ public class ItemServiceImpl implements ItemService {
 
     private PageDTO<ItemDTO> getPageWithItems(Long amountOfPages) {
         PageDTO<ItemDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
+        if (amountOfPages == 0) {
+            page.setPagesAmount(1L);
+        } else {
+            page.setPagesAmount(amountOfPages);
+        }
         return page;
     }
 

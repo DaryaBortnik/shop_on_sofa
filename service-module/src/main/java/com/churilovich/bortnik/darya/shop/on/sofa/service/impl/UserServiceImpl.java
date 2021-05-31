@@ -224,7 +224,11 @@ public class UserServiceImpl implements UserService {
 
     private PageDTO<UserDTO> getPageWithUsers(Long amountOfPages) {
         PageDTO<UserDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
+        if (amountOfPages == 0) {
+            page.setPagesAmount(1L);
+        } else {
+            page.setPagesAmount(amountOfPages);
+        }
         return page;
     }
 

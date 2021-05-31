@@ -137,7 +137,11 @@ public class OrderServiceImpl implements OrderService {
 
     private PageDTO<OrderDTO> getPageWithOrders(Long amountOfPages) {
         PageDTO<OrderDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
+        if (amountOfPages == 0) {
+            page.setPagesAmount(1L);
+        } else {
+            page.setPagesAmount(amountOfPages);
+        }
         return page;
     }
 

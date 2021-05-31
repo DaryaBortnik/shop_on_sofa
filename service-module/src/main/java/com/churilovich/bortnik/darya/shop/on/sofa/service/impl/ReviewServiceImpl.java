@@ -119,7 +119,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     private PageDTO<ReviewDTO> getPageWithReviews(Long amountOfPages) {
         PageDTO<ReviewDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
+        if (amountOfPages == 0) {
+            page.setPagesAmount(1L);
+        } else {
+            page.setPagesAmount(amountOfPages);
+        }
         return page;
     }
 
