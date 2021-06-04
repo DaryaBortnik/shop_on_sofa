@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new user</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form method="post" th:action="@{/admin/users/new}" th:object="${userDTO}">
+        <table class="space--s">
+            <tr>
+                <td>Last name</td>
+                <td><input type="text" th:field="*{userProfileDTO.lastName}" required pattern="^[a-zA-Z]{1,40}$"></td>
+                <td th:if="${#fields.hasErrors('userProfileDTO.lastName')}" th:errors="*{userProfileDTO.lastName}">
+                    Last name Error
+                </td>
+            </tr>
+            <tr>
+                <td>Middle name</td>
+                <td><input type="text" th:field="*{userProfileDTO.middleName}" pattern="^[a-zA-Z]{0,40}$"></td>
+                <td th:if="${#fields.hasErrors('userProfileDTO.middleName')}"
+                    th:errors="*{userProfileDTO.middleName}">Middle name Error
+                </td>
+            </tr>
+            <tr>
+                <td>First name</td>
+                <td><input type="text" th:field="*{userProfileDTO.firstName}" required pattern="^[a-zA-Z]{1,20}$"></td>
+                <td th:if="${#fields.hasErrors('userProfileDTO.firstName')}"
+                    th:errors="*{userProfileDTO.firstName}">First name Error
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="email" th:field="*{email}" required
+                           pattern="^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$"></td>
+                <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</td>
+            </tr>
+            <tr>
+                <td>Role</td>
+                <td>
+                    <select name="role" th:field="*{roleDTO.id}">
+                        <option th:each="role : ${roles}"
+                                th:value="${role.id}"
+                                th:text="${role.name}">role
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit">Add new user</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -16,7 +16,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-
 public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I, E> {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     protected Class<E> entityClass;
@@ -51,7 +50,7 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
 
     @Override
     public Optional<E> findById(I id) {
-        return Optional.of(entityManager.find(entityClass, id));
+        return Optional.ofNullable(entityManager.find(entityClass, id));
     }
 
     @Override
@@ -69,6 +68,35 @@ public abstract class GenericRepositoryImpl<I, E> implements GenericRepository<I
     public I getAmountOfEntities() {
         try {
             String queryInStringFormat = "select count(*) from " + entityClass.getName();
+            Query query = entityManager.createQuery(queryInStringFormat);
+            return (I) query.getSingleResult();
+        } catch (NoResultException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetEntitiesAmountRepositoryException("Can't get amount of elements on repository level : " +
+                    "elements in " + entityClass.getSimpleName(), e);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public I getAmountOfEntitiesSelectedByUserId(Long userId) {
+        try {
+            String queryInStringFormat = "select count(*) from " + entityClass.getName() + " where user_id=:id";
+            Query query = entityManager.createQuery(queryInStringFormat);
+            query.setParameter("id", userId);
+            return (I) query.getSingleResult();
+        } catch (NoResultException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetEntitiesAmountRepositoryException("Can't get amount of elements on repository level : " +
+                    "elements in " + entityClass.getSimpleName(), e);
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public I getAmountOfEntityForUsers() {
+        try {
+            String queryInStringFormat = "select count(*) from " + entityClass.getName() + " where is_shown=true";
             Query query = entityManager.createQuery(queryInStringFormat);
             return (I) query.getSingleResult();
         } catch (NoResultException e) {

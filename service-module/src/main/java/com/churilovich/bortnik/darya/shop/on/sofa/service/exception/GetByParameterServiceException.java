@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class GetByParameterServiceException extends RuntimeException {
+public class GetByParameterServiceException extends ServiceException {
     public GetByParameterServiceException(String message) {
         super(message);
     }

@@ -56,4 +56,8 @@ public class UserDTOLogin implements UserDetails {
     public Long getUserId() {
         return user.getId();
     }
+
+    public UserDTO getUser() {
+        return user;
+    }
 }

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Article</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form id="update" th:action="@{/user/sale/articles/description/update}" method="get"></form>
+    <form id="delete_comments" th:action="@{/user/sale/articles/description/comments/delete}" method="post">
+        <form method="get" th:action="@{/user/sale/articles/description}" th:object="${article}">
+            <table class="space--s">
+                <tr>
+                    <th>date added</th>
+                    <th>name</th>
+                    <th>author</th>
+                    <th>full description</th>
+                    <th>update</th>
+                </tr>
+                <tr>
+                    <td th:text="${article.id}" hidden>id</td>
+                    <td th:text="${{article.dateAdded}}">date added</td>
+                    <td th:text="${article.name}">name</td>
+                    <td th:text="${article.user.userProfileDTO.firstName} + ' ' + ${article.user.userProfileDTO.lastName}">
+                        author
+                    </td>
+                    <td th:text="${article.fullDescription}">full description</td>
+                    <td>
+                        <button type="submit" name="update_article_id"
+                                th:value="${article.id}"
+                                form="update">Update
+                        </button>
+                    </td>
+                </tr>
+            </table>
+            Comments
+            <table class="space--s">
+                <tr>
+                    <th>choose it</th>
+                    <th>date added</th>
+                    <th>user</th>
+                    <th>description</th>
+                </tr>
+                <tr th:each="comment:${article.comments}">
+                    <th><input type="checkbox" name="delete_comment_id" th:value="${comment.id}"/></th>
+                    <td th:text="${{comment.dateAdded}}">date</td>
+                    <td th:text="${comment.userLastName} + ' ' + ${comment.userFirstName}">user</td>
+                    <td th:text="${comment.description}">description</td>
+                </tr>
+            </table>
+        </form>
+        <button type="submit" name="delete_comment_id"
+                form="delete_comments">Delete comments
+        </button>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
+</body>
+</html>

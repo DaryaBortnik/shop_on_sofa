@@ -32,10 +32,10 @@ public class SuccessLoginHandler implements AuthenticationSuccessHandler {
                     httpServletResponse.sendRedirect("/admin/users");
                     break;
                 case CUSTOMER_USER:
-                    httpServletResponse.sendRedirect("/user/customer/profile");
+                    httpServletResponse.sendRedirect("/user/customer/start");
                     break;
                 case SALE_USER:
-                    httpServletResponse.sendRedirect("/user/sale");
+                    httpServletResponse.sendRedirect("/user/sale/start");
                     break;
                 default:
                     httpServletResponse.sendRedirect("/login");

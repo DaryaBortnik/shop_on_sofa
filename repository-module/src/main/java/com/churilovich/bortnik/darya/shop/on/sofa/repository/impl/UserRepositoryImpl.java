@@ -2,7 +2,7 @@ package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByUsernameRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -20,7 +20,7 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
 
     @Override
     public User getByUsername(String email) {
-        String queryInStringFormat = "from " + entityClass.getName() + " where email =:email and is_deleted = 0";
+        String queryInStringFormat = "from " + entityClass.getName() + " where email =:email";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setParameter(EMAIL_QUERY_PARAMETER, email);
         try {
@@ -35,10 +35,19 @@ public class UserRepositoryImpl extends GenericRepositoryImpl<Long, User> implem
     @Override
     @SuppressWarnings("unchecked")
     public List<User> findAll(Long startNumberOnCurrentPage, Long amountOnOnePage) {
-        String queryInStringFormat = "from " + entityClass.getName() + " where is_deleted = 0 order by email";
+        String queryInStringFormat = "from " + entityClass.getName() + " order by email, role";
         Query query = entityManager.createQuery(queryInStringFormat);
         query.setMaxResults(Math.toIntExact(amountOnOnePage));
         query.setFirstResult(Math.toIntExact(startNumberOnCurrentPage));
+        return query.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<User> findByRoleId(Long roleId) {
+        String queryInStringFormat = "from " + entityClass.getName() + " where role_id=:roleId";
+        Query query = entityManager.createQuery(queryInStringFormat);
+        query.setParameter("roleId", roleId);
         return query.getResultList();
     }
 }

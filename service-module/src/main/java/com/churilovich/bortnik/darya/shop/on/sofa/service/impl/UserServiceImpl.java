@@ -6,9 +6,9 @@ import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetUserByUsernameRepositoryException;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.PersistEntityRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Role;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.UserProfile;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Role;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.UserProfile;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.GenerationPasswordService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.MailService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
@@ -18,13 +18,14 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdSe
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetByParameterServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +36,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.churilovich.bortnik.darya.shop.on.sofa.repository.model.enums.RoleEnum.SALE_USER;
 import static com.churilovich.bortnik.darya.shop.on.sofa.service.constants.PaginationValueConstants.AMOUNT_ON_ONE_PAGE;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
@@ -46,24 +49,7 @@ public class UserServiceImpl implements UserService {
     private final ConversionService conversionService;
     private final GenerationPasswordService generationPasswordService;
     private final MailService mailService;
-    private final PaginationService paginationService;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           UserProfileRepository userProfileRepository,
-                           ConversionService conversionService,
-                           GenerationPasswordService generationPasswordService,
-                           MailService mailService,
-                           PaginationService paginationService) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.userProfileRepository = userProfileRepository;
-        this.conversionService = conversionService;
-        this.generationPasswordService = generationPasswordService;
-        this.mailService = mailService;
-        this.paginationService = paginationService;
-    }
+    private final PaginationService<UserRepository> paginationService;
 
     @Override
     @Transactional
@@ -80,13 +66,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void add(UserDTO userDTO) {
+    public UserDTO add(UserDTO userDTO) {
         try {
             User user = conversionService.convert(userDTO, User.class);
             Optional.ofNullable(user)
                     .ifPresentOrElse(this::addUser, () -> {
                         throw new AddServiceException("Can't add new user on service level because it's null");
                     });
+            return conversionService.convert(user, UserDTO.class);
         } catch (PersistEntityRepositoryException e) {
             logger.error(e.getMessage(), e);
             throw new AddServiceException("Can't add new user on service level because its existing", e);
@@ -108,12 +95,13 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         userRepository.findById(id)
                 .ifPresentOrElse(userRepository::remove, () -> {
-                    throw new DeleteByIdServiceException("Can't deleteById user by id on service level because can't found user : " +
+                    throw new DeleteByIdServiceException("Can't delete user by id on service level because can't found user : " +
                             "id = " + id);
                 });
     }
 
     @Override
+    @Transactional
     public void generateNewPassword(UserDTO userDTO) {
         userRepository.findById(userDTO.getId())
                 .ifPresentOrElse(this::giveUserNewPassword, () -> {
@@ -126,8 +114,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public PageDTO<UserDTO> getUsersOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
         try {
-            Long amountOfUsers = userRepository.getAmountOfEntities();
-            Long amountOfPages = paginationService.getAmountOfPagesForElements(amountOfUsers, AMOUNT_ON_ONE_PAGE);
+            Long amountOfPages = paginationService.getAmountOfPages(userRepository);
             return buildPageWithUsers(currentPageNumber, userDTOLogin, amountOfPages);
         } catch (GetEntitiesAmountRepositoryException e) {
             logger.error(e.getMessage(), e);
@@ -145,20 +132,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserProfileParameters(UserDTOLogin userDTOLogin, UserProfileDTO userProfileDTO) {
+    public UserProfileDTO updateUserProfileParameters(UserDTOLogin userDTOLogin, UserProfileDTO userProfileDTO) {
         Long id = userDTOLogin.getUserId();
-        UserProfile userProfileUpdate = userProfileRepository.findById(id)
-                .map(userProfile -> updateProfile(userProfileDTO, userProfile))
-                .orElseGet(() -> getUpdatedUserProfile(userProfileDTO));
+        userProfileDTO.setId(id);
+        UserProfile userProfileUpdate = userRepository.findById(id)
+                .map(user -> getUpdatedUserProfile(userProfileDTO, user))
+                .orElseGet(() -> {
+                    throw new UpdateParameterServiceException("Can't update user profile because user doesn't exist");
+                });
         userProfileRepository.merge(userProfileUpdate);
-    }
-
-    @Override
-    @Transactional
-    public UserDTO getByFirstAndLastNames(String firstName, String lastName) {
-        UserProfile userProfile = userProfileRepository.findByFirstAndLastNames(firstName, lastName);
-        Long id = userProfile.getId();
-        return findById(id);
+        return conversionService.convert(userProfileUpdate, UserProfileDTO.class);
     }
 
     @Override
@@ -171,9 +154,28 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    @Override
+    public List<UserDTO> findAllSales() {
+        Role role = roleRepository.findByName(SALE_USER);
+        Long roleId = role.getId();
+        List<User> users = userRepository.findByRoleId(roleId);
+        return users.stream()
+                .map(user -> conversionService.convert(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> findAll() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> conversionService.convert(user, UserDTO.class))
+                .collect(Collectors.toList());
+    }
+
     private void addUser(User user) {
         buildUser(user);
         userRepository.persist(user);
+        giveUserNewPassword(user);
     }
 
     private void buildUser(User user) {
@@ -184,13 +186,8 @@ public class UserServiceImpl implements UserService {
                 });
         user.setRole(role);
         user.getUserProfile().setUser(user);
-        user.setPassword(generateNewPassword());
+        user.setPassword(Strings.EMPTY);
         user.setIsDeleted(false);
-    }
-
-    private String generateNewPassword() {
-        String password = generationPasswordService.generate();
-        return generationPasswordService.encode(password);
     }
 
     private Role getRoleById(UserDTO userDTO) {
@@ -210,24 +207,37 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     String generatePassword(User user) {
-        String newPassword = generateNewPassword();
-        user.setPassword(newPassword);
+        String newPassword = generationPasswordService.generate();
+        String encodedPassword = generationPasswordService.encode(newPassword);
+        user.setPassword(encodedPassword);
         userRepository.merge(user);
         return newPassword;
     }
 
     private PageDTO<UserDTO> buildPageWithUsers(Long currentPageNumber, UserDTOLogin userDTOLogin, Long amountOfPages) {
-        PageDTO<UserDTO> page = new PageDTO<>();
-        page.setPagesAmount(amountOfPages);
-        currentPageNumber = paginationService.getCurrentPageNumber(currentPageNumber, amountOfPages);
-        Long startNumberOnCurrentPage = paginationService.getElementPosition(currentPageNumber, AMOUNT_ON_ONE_PAGE);
+        PageDTO<UserDTO> page = getPageWithUsers(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
         List<User> users = userRepository.findAll(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE);
-        List<UserDTO> usersDTO = getUsersDTO(userDTOLogin, users);
-        page.setList(usersDTO);
+        addUsersToPage(page, users, userDTOLogin);
         return page;
     }
 
-    private List<UserDTO> getUsersDTO(UserDTOLogin userDTOLogin, List<User> users) {
+    private PageDTO<UserDTO> getPageWithUsers(Long amountOfPages) {
+        PageDTO<UserDTO> page = new PageDTO<>();
+        if (amountOfPages == 0) {
+            page.setPagesAmount(1L);
+        } else {
+            page.setPagesAmount(amountOfPages);
+        }
+        return page;
+    }
+
+    private void addUsersToPage(PageDTO<UserDTO> page, List<User> users, UserDTOLogin userDTOLogin) {
+        List<UserDTO> usersDTO = getUsers(userDTOLogin, users);
+        page.getList().addAll(usersDTO);
+    }
+
+    private List<UserDTO> getUsers(UserDTOLogin userDTOLogin, List<User> users) {
         return users.stream()
                 .map(user -> conversionService.convert(user, UserDTO.class))
                 .filter(Objects::nonNull)
@@ -242,7 +252,14 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    private UserProfile getUpdatedUserProfile(UserProfileDTO userProfileDTO, User user) {
+        return userProfileRepository.findByIdIfExist(user.getId())
+                .map(userProfile -> updateProfile(userProfileDTO, userProfile))
+                .orElseGet(() -> fillInUserProfile(userProfileDTO, user));
+    }
+
     private UserProfile updateProfile(UserProfileDTO userProfileDTO, UserProfile userProfile) {
+        userProfile.setId(userProfileDTO.getId());
         userProfile.setPhoneNumber(userProfileDTO.getPhoneNumber());
         userProfile.setAddress(userProfileDTO.getAddress());
         userProfile.setFirstName(userProfileDTO.getFirstName());
@@ -251,10 +268,8 @@ public class UserServiceImpl implements UserService {
         return userProfile;
     }
 
-
-    private UserProfile getUpdatedUserProfile(UserProfileDTO userProfileDTO) {
-        User user = getUser(userProfileDTO.getId());
-        UserProfile userProfile = new UserProfile(userProfileDTO.getId(), user);
+    private UserProfile fillInUserProfile(UserProfileDTO userProfileDTO, User user) {
+        UserProfile userProfile = new UserProfile(user);
         return updateProfile(userProfileDTO, userProfile);
     }
 

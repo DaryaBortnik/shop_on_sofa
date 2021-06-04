@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>User profile</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form id="update_profile" th:action="@{/user/profile/update/parameters}" method="get"></form>
+    <form method="get" th:action="@{/user/profile}" th:object="${userProfileDTO}">
+        <table class="space--s">
+            <tr>
+                <th>first name</th>
+                <th>middle name</th>
+                <th>last name</th>
+                <th>address</th>
+                <th>phone number</th>
+                <td>change profile</td>
+            </tr>
+            <tr>
+                <td th:text="${userProfileDTO != null} ? ${#strings.trim(userProfileDTO.firstName)} : ' '">
+                    First name
+                </td>
+                <td th:text="${userProfileDTO != null} ? ${#strings.trim(userProfileDTO.middleName)} : ' '">
+                    Middle name
+                </td>
+                <td th:text="${userProfileDTO != null} ? ${#strings.trim(userProfileDTO.lastName)} : ' '">
+                    Last name
+                </td>
+                <td th:text="${userProfileDTO != null} ? ${#strings.trim(userProfileDTO.address)} : ' '">
+                    Address
+                </td>
+                <td th:text="${userProfileDTO != null} ? ${#strings.trim(userProfileDTO.phoneNumber)} : ' '">
+                    Phone Number
+                </td>
+                <td>
+                    <button type="submit" name="updateProfile"
+                            th:value="${userProfileDTO.id}"
+                            form="update_profile"> Change profile
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
+</body>
+</html>

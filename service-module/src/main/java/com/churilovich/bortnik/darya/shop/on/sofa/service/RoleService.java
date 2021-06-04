@@ -6,4 +6,8 @@ import java.util.List;
 
 public interface RoleService {
     List<RoleDTO> findAll();
+
+    List<RoleDTO> findForRegistration();
+
+    RoleDTO findById(Long id);
 }

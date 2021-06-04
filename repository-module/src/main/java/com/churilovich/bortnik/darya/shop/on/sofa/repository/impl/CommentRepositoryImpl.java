@@ -1,7 +1,7 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.CommentRepository;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Comment;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Comment;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.Query;

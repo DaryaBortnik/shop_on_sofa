@@ -10,9 +10,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Aspect
@@ -26,11 +23,6 @@ public class RepositoryLogAspect {
 
     @Before("callAtRepository()")
     public void beforeCallAtRepository(JoinPoint joinPoint) {
-        List<String> args = Arrays.stream(joinPoint.getArgs())
-                .map(Object::toString)
-                .collect(Collectors.toList());
-        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on repository level" +
-                " with parameters: " + args);
+        logger.info("Start operation [ " + joinPoint.getSignature().getName() + " ] on repository level");
     }
-
 }

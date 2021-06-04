@@ -1,26 +1,22 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service.converter.user;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.Role;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.User;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.UserProfile;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Role;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
+import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.UserProfile;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.RoleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class UserEntityToDTOConverter implements Converter<User, UserDTO> {
     private final Converter<Role, RoleDTO> roleConverter;
     private final Converter<UserProfile, UserProfileDTO> userProfileConverter;
-
-    public UserEntityToDTOConverter(Converter<Role, RoleDTO> roleConverter,
-                                    Converter<UserProfile, UserProfileDTO> userProfileConverter) {
-        this.roleConverter = roleConverter;
-        this.userProfileConverter = userProfileConverter;
-    }
 
     @Override
     public UserDTO convert(User user) {

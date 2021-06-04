@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>All article</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form id="delete_articles" th:action="@{/user/sale/articles/delete}" method="post">
+        <form method="get" th:action="@{/user/sale/articles}" th:object="${articles}">
+            <table class="space--s">
+                <tr>
+                    <th>choose it</th>
+                    <th>date added</th>
+                    <th>name</th>
+                    <th>author</th>
+                    <th>short description</th>
+                    <th>link to full description</th>
+                </tr>
+                <tr th:each="article:${articles}">
+                    <td><input type="checkbox" name="delete_article_id" th:value="${article.id}"/></td>
+                    <td th:text="${{article.dateAdded}}">date added
+                    </td>
+                    <td th:text="${article.name}">name</td>
+                    <td th:text="${article.user.userProfileDTO.lastName} + ' ' + ${article.user.userProfileDTO.firstName}">
+                        author
+                    </td>
+                    <td th:text="${article.shortDescription}">short description</td>
+                    <td th:name="chosen_article" th:value="${article.id}"><a
+                            th:href="@{/user/sale/articles/description(chosen_article=${article.id})}"
+                            th:text="${article.name}">full description</a></td>
+                </tr>
+            </table>
+        </form>
+        <ul class="pagination">
+            <li th:each="i : ${#numbers.sequence(1,page.pagesAmount)}"
+                th:classappend="${page.currentPageNumber}==${i}?'pagination active':''">
+                <a th:href="@{/user/sale/articles(current_page=${i})}" th:text="${i}"> </a>
+            </li>
+        </ul>
+        <button class="space--s" type="submit" name="delete_article_id"
+                form="delete_articles">Delete articles
+        </button>
+    </form>
+    <form th:action="@{/user/sale/articles/add}" method="get">
+        <button type="submit">Add new article</button>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
+</body>
+</html>
