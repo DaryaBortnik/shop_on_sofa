@@ -38,7 +38,7 @@ import java.math.BigDecimal;
 @NamedNativeQuery(
         name = "getReport",
         query = "SELECT i.name, i.price, count(*) AS amount, ic.name AS category" +
-                " FROM item AS i JOIN item_category AS ic ON ic.id = i.item_category_id" +
+                " FROM item AS i JOIN item_category AS ic ON ic.id = i.item_category_id where i.user_id=:id" +
                 " GROUP BY i.name, i.price , ic.name ORDER BY i.name, i.price",
         resultSetMapping = "reportMapping")
 

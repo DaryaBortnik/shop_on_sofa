@@ -46,46 +46,6 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public PageDTO<ArticleDTO> getAllOnPage(Long currentPageNumber) {
-        try {
-            Long amountOfPages = paginationService.getAmountOfPages(articleRepository);
-            return buildPageWithArticles(currentPageNumber, amountOfPages);
-        } catch (GetEntitiesAmountRepositoryException e) {
-            logger.error(e.getMessage(), e);
-            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
-                    "due to impossibility to get total amount of reviews", e);
-        }
-    }
-
-    @Override
-    public List<ArticleDTO> findByShop(ShopDTO shop) {
-        Long userSaleId = shop.getUserDTO().getId();
-        return getArticlesByUserSaleId(userSaleId);
-    }
-
-    private List<ArticleDTO> getArticlesByUserSaleId(Long userSaleId) {
-        List<Article> articles = articleRepository.getByUserSaleId(userSaleId);
-        return articles.stream()
-                .map(article -> conversionService.convert(article, ArticleDTO.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional
-    public PageDTO<ArticleDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
-        try {
-            Long amountOfPages = paginationService.getAmountOfPagesByUserId(articleRepository, userDTOLogin.getUserId());
-            Long userId = userDTOLogin.getUserId();
-            return buildPageWithArticlesByUserId(currentPageNumber, amountOfPages, userId);
-        } catch (GetEntitiesAmountRepositoryException e) {
-            logger.error(e.getMessage(), e);
-            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
-                    "due to impossibility to get total amount of reviews", e);
-        }
-    }
-
-    @Override
-    @Transactional
     public List<ArticleDTO> findAll() {
         List<Article> articles = articleRepository.findAll();
         return articles.stream()
@@ -125,11 +85,15 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public ArticleDTO getWithComments(Long id) {
-        ArticleDTO article = findById(id);
-        List<CommentDTO> comments = commentService.findAllByArticleId(id);
-        article.getComments().addAll(comments);
-        return article;
+    public PageDTO<ArticleDTO> getAllOnPage(Long currentPageNumber) {
+        try {
+            Long amountOfPages = paginationService.getAmountOfPages(articleRepository);
+            return buildPageWithArticles(currentPageNumber, amountOfPages);
+        } catch (GetEntitiesAmountRepositoryException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
+                    "due to impossibility to get total amount of reviews", e);
+        }
     }
 
     @Override
@@ -144,6 +108,35 @@ public class ArticleServiceImpl implements ArticleService {
                 })
                 .orElseThrow(() -> new UpdateParameterServiceException("Can't update article because can't find it by id"));
         return conversionService.convert(updatedMergedArticle, ArticleDTO.class);
+    }
+
+    @Override
+    public List<ArticleDTO> findByShop(ShopDTO shop) {
+        Long userSaleId = shop.getUserDTO().getId();
+        return getArticlesByUserSaleId(userSaleId);
+    }
+
+    @Override
+    @Transactional
+    public PageDTO<ArticleDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
+        try {
+            Long userId = userDTOLogin.getUserId();
+            Long amountOfPages = paginationService.getAmountOfPagesByUserId(articleRepository, userId);
+            return buildPageWithArticlesByUserId(currentPageNumber, amountOfPages, userId);
+        } catch (GetEntitiesAmountRepositoryException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetOnPageServiceException("Can't get all reviews on current page on service level " +
+                    "due to impossibility to get total amount of reviews", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public ArticleDTO getWithComments(Long id) {
+        ArticleDTO article = findById(id);
+        List<CommentDTO> comments = commentService.findAllByArticleId(id);
+        article.getComments().addAll(comments);
+        return article;
     }
 
     @Override
@@ -191,6 +184,13 @@ public class ArticleServiceImpl implements ArticleService {
             page.setPagesAmount(amountOfPages);
         }
         return page;
+    }
+
+    private List<ArticleDTO> getArticlesByUserSaleId(Long userSaleId) {
+        List<Article> articles = articleRepository.getByUserSaleId(userSaleId);
+        return articles.stream()
+                .map(article -> conversionService.convert(article, ArticleDTO.class))
+                .collect(Collectors.toList());
     }
 
     private void addArticlesToPage(PageDTO<ArticleDTO> page, List<Article> articles) {

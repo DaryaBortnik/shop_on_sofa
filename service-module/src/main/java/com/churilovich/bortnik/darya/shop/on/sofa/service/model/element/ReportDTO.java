@@ -2,7 +2,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.model.element;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 import java.math.BigDecimal;
 

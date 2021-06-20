@@ -30,7 +30,7 @@ public class SaleOrderWebController {
     public String getAllOrders(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
                                @AuthenticationPrincipal UserDTOLogin userDTOLogin,
                                Model model) {
-        PageDTO<OrderDTO> pageWithItems = orderService.getBySaleUserIdOnPage(currentPageNumber, userDTOLogin);
+        PageDTO<OrderDTO> pageWithItems = orderService.getForUserOnPage(currentPageNumber, userDTOLogin);
         model.addAttribute("orders", pageWithItems.getList());
         model.addAttribute("page", pageWithItems);
         return "sale_get_all_orders_page";

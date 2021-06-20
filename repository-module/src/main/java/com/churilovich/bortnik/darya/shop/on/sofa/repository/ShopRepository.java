@@ -1,7 +1,6 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.repository;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Shop;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
 
 import java.util.List;
 import java.util.Optional;

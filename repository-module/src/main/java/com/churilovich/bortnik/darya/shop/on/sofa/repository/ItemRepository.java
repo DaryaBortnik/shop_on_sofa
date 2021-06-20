@@ -8,7 +8,7 @@ import java.util.List;
 public interface ItemRepository extends GenericRepository<Long, Item> {
     List<Item> findAllOnPage(Long startNumberOnCurrentPage, long amountOnOnePage);
 
-    List<Report> findAllReportGroupByNameAndPrice();
+    List<Report> findAllReportGroupByNameAndPrice(Long userId);
 
     List<Item> findByCategoryId(Long id);
 

@@ -1,6 +1,5 @@
 package com.churilovich.bortnik.darya.shop.on.sofa.service;
 
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ShopDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserProfileDTO;
