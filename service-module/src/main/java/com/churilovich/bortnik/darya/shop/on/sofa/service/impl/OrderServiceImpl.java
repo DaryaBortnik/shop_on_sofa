@@ -44,20 +44,7 @@ public class OrderServiceImpl implements OrderService {
     private final PaginationService<OrderRepository> paginationService;
 
     @Override
-    @Transactional
-    public PageDTO<OrderDTO> getOrdersOnPage(Long currentPageNumber) {
-        try {
-            Long amountOfPages = paginationService.getAmountOfPages(orderRepository);
-            return buildPageWithOrders(currentPageNumber, amountOfPages);
-        } catch (GetEntitiesAmountRepositoryException e) {
-            logger.error(e.getMessage(), e);
-            throw new GetOnPageServiceException("Can't get all orders on current page on service level " +
-                    "due to impossibility to get total amount of orders", e);
-        }
-    }
-
-    @Override
-    public PageDTO<OrderDTO> getBySaleUserIdOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
+    public PageDTO<OrderDTO> getForUserOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
         try {
             Long amountOfPages = paginationService.getAmountOfPagesByUserId(orderRepository, userDTOLogin.getUserId());
             return buildPageWithOrdersByUserId(currentPageNumber, amountOfPages, userDTOLogin);
@@ -117,6 +104,26 @@ public class OrderServiceImpl implements OrderService {
         Order order = conversionService.convert(orderDTO, Order.class);
         orderRepository.persist(order);
         return conversionService.convert(order, OrderDTO.class);
+    }
+
+    @Override
+    public PageDTO<OrderDTO> getUserOrdersOnPage(Long currentPageNumber, UserDTOLogin userDTOLogin) {
+        try {
+            Long amountOfPages = paginationService.getAmountOfPagesByUserId(orderRepository, userDTOLogin.getUserId());
+            return buildPageWithOrdersForUser(currentPageNumber, amountOfPages, userDTOLogin);
+        } catch (GetEntitiesAmountRepositoryException e) {
+            logger.error(e.getMessage(), e);
+            throw new GetOnPageServiceException("Can't get all orders on current page on service level " +
+                    "due to impossibility to get total amount of orders", e);
+        }
+    }
+
+    private PageDTO<OrderDTO> buildPageWithOrdersForUser(Long currentPageNumber, Long amountOfPages, UserDTOLogin userDTOLogin) {
+        PageDTO<OrderDTO> page = getPageWithOrders(amountOfPages);
+        Long startNumberOnCurrentPage = paginationService.getStartEntityNumberOnCurrentPage(currentPageNumber, amountOfPages, AMOUNT_ON_ONE_PAGE);
+        List<Order> orders = orderRepository.findForUserOnPage(startNumberOnCurrentPage, AMOUNT_ON_ONE_PAGE, userDTOLogin.getUserId());
+        addOrdersToPage(page, orders);
+        return page;
     }
 
     private PageDTO<OrderDTO> buildPageWithOrders(Long currentPageNumber, Long amountOfPages) {

@@ -22,8 +22,9 @@ public class ItemRepositoryImpl extends GenericRepositoryImpl<Long, Item> implem
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Report> findAllReportGroupByNameAndPrice() {
+    public List<Report> findAllReportGroupByNameAndPrice(Long userId) {
         Query getReportQuery = entityManager.createNamedQuery("getReport");
+        getReportQuery.setParameter("id", userId);
         return getReportQuery.getResultList();
     }
 

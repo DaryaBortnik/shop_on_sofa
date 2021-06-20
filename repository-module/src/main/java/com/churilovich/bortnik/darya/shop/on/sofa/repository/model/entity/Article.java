@@ -3,7 +3,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.OrderBy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

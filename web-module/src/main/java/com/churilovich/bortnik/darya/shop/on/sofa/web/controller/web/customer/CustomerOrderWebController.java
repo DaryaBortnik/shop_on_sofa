@@ -6,8 +6,6 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.OrderDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,20 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.lang.invoke.MethodHandles;
-
 @Controller
 @RequestMapping("/user/customer")
 @RequiredArgsConstructor
 public class CustomerOrderWebController {
-    private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final OrderService orderService;
     private final ValidationService validationService;
 
     @GetMapping("/orders")
     public String getAllOrders(@RequestParam(defaultValue = "1", value = "current_page") Long currentPageNumber,
+                               @AuthenticationPrincipal UserDTOLogin userDTOLogin,
                                Model model) {
-        PageDTO<OrderDTO> pageWithOrders = orderService.getOrdersOnPage(currentPageNumber);
+        PageDTO<OrderDTO> pageWithOrders = orderService.getUserOrdersOnPage(currentPageNumber, userDTOLogin);
         model.addAttribute("orders", pageWithOrders.getList());
         model.addAttribute("page", pageWithOrders);
         return "customer_get_all_orders_page";

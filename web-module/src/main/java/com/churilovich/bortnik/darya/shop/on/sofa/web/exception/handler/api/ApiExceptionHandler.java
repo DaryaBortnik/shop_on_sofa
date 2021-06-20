@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -33,6 +34,12 @@ public class ApiExceptionHandler extends DefaultErrorAttributes {
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public final void validationExceptionHandling(Exception e) {
+        logger.error("Error :{}", e.getMessage());
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public final void usernameNotFoundExceptionHandling(Exception e) {
         logger.error("Error :{}", e.getMessage());
     }
 }

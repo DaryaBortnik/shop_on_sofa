@@ -28,7 +28,7 @@
                 <td th:text="${order.status}">status</td>
                 <td th:text="${order.item.name}">item</td>
                 <td th:text="${order.itemAmount}">item amount</td>
-                <td th:text="${order.user.email}">user</td>
+                <td th:text="${order.user.userProfileDTO.firstName}">user name</td>
                 <td th:text="${order.user.userProfileDTO.phoneNumber}">user phone</td>
                 <td th:text="${order.price}">final price</td>
                 <td>

@@ -5,7 +5,6 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.ItemService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ShopService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ArticleDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.OrderDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ShopDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import lombok.RequiredArgsConstructor;

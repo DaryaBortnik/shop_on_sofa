@@ -18,8 +18,8 @@ public class ReportServiceImpl implements ReportService {
     private final ItemRepository itemRepository;
 
     @Override
-    public List<ReportDTO> get() {
-        List<Report> reports = itemRepository.findAllReportGroupByNameAndPrice();
+    public List<ReportDTO> get(Long userId) {
+        List<Report> reports = itemRepository.findAllReportGroupByNameAndPrice(userId);
         return reports.stream()
                 .map(report -> conversionService.convert(report, ReportDTO.class))
                 .collect(Collectors.toList());

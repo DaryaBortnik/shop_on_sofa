@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.xml.bind.ValidationException;
 import java.lang.invoke.MethodHandles;
 
 @ControllerAdvice(basePackages = {"com.churilovich.bortnik.darya.shop.on.sofa.web.controller.web"})

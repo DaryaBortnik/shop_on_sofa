@@ -18,7 +18,7 @@ public class ArticleDTO {
     @Size(max = 200, message = "Invalid size: max size = 200")
     private String shortDescription;
     @NotBlank(message = "This field must be filled")
-    @Size(max = 1000,  message = "Invalid size: max size = 1000")
+    @Size(max = 1000, message = "Invalid size: max size = 1000")
     private String fullDescription;
     private UserDTO user;
     private List<CommentDTO> comments = new ArrayList<>();

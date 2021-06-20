@@ -115,6 +115,12 @@ textarea{
     resize: vertical;
 }
 
+.smaller{
+    width: 70%;
+    font-family: inherit;
+    resize: vertical;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;

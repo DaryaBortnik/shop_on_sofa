@@ -4,7 +4,6 @@ import com.churilovich.bortnik.darya.shop.on.sofa.repository.RoleRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.ShopRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.UserRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Article;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Role;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Shop;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;

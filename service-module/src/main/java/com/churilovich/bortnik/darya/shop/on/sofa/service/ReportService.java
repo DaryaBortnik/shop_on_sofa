@@ -5,5 +5,5 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.ReportDT
 import java.util.List;
 
 public interface ReportService {
-    List<ReportDTO> get();
+    List<ReportDTO> get(Long userId);
 }

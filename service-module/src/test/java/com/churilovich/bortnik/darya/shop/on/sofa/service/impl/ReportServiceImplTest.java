@@ -33,7 +33,7 @@ class ReportServiceImplTest {
         report.setName("name");
         report.setAmount(1L);
         reports.add(report);
-        when(itemRepository.findAllReportGroupByNameAndPrice()).thenReturn(reports);
+        when(itemRepository.findAllReportGroupByNameAndPrice(1L)).thenReturn(reports);
         ReportDTO reportDTO = ReportDTO.builder()
                 .name("name")
                 .amount(1L)
@@ -42,13 +42,13 @@ class ReportServiceImplTest {
         List<ReportDTO> expectedReports = new ArrayList<>();
         expectedReports.add(reportDTO);
 
-        List<ReportDTO> actualReports = reportService.get();
+        List<ReportDTO> actualReports = reportService.get(1L);
         assertEquals(expectedReports.size(),actualReports.size());
     }
 
     @Test
     public void shouldReturnEmptyListIfCantGetReport(){
-        List<ReportDTO> actualReports = reportService.get();
+        List<ReportDTO> actualReports = reportService.get(1L);
         assertTrue(actualReports.isEmpty());
     }
 }

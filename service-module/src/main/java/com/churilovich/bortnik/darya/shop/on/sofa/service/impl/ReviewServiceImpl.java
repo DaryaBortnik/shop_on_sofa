@@ -2,7 +2,6 @@ package com.churilovich.bortnik.darya.shop.on.sofa.service.impl;
 
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.ReviewRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.exception.GetEntitiesAmountRepositoryException;
-import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Item;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Review;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.PaginationService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.ReviewService;
@@ -10,7 +9,6 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.UserService;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.DeleteByIdServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.GetOnPageServiceException;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.exception.UpdateParameterServiceException;
-import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ItemDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.ReviewDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;

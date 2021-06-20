@@ -10,31 +10,34 @@
 <body>
 <header th:include="~{/fragments/header :: header}"></header>
 <main class="container container--wide">
-    <table class="space--s">
-        <tr>
-            <th>item</th>
-            <th>price</th>
-            <th>category</th>
-            <th>link to description</th>
-            <th>add to order</th>
-        </tr>
-        <tr th:each="item:${items}">
-            <td th:text="${item.userId}" hidden></td>
-            <td th:text="${item.name}">item</td>
-            <td th:text="${item.price}">price</td>
-            <td th:text="${item.itemCategoryDTO.name}">category</td>
-            <td th:name="chosen_item" th:value="${item.id}"><a
-                    th:href="@{/user/customer/items/description(chosen_item=${item.id})}"
-                    th:text="${item.name}">description</a></td>
-            <td>
-                <form id="add_item" th:action="@{/user/customer/orders/create}" method="post">
-                    <input type="number" th:name="quantity" min="1" max="60" value="1"
-                           placeholder="Quantity" required>
-                    <button  type="submit" th:value="${item.id}" name="added_item">Add to order</button>
-                </form>
-            </td>
-        </tr>
-    </table>
+    <form id="add_item" th:action="@{/user/customer/orders/create}" method="post"></form>
+<!--    <form th:action="@{/user/customer/items/category}" method="get">-->
+        <table class="space--s">
+            <tr>
+                <th>item</th>
+                <th>price</th>
+                <th>category</th>
+                <th>link to description</th>
+                <th>add to order</th>
+            </tr>
+            <tr th:each="item:${items}">
+                <td th:text="${item.userId}" hidden></td>
+                <td th:text="${item.name}">item</td>
+                <td th:text="${item.price}">price</td>
+                <td th:text="${item.itemCategoryDTO.name}">category</td>
+                <td th:name="chosen_item" th:value="${item.id}"><a
+                        th:href="@{/user/customer/items/description(chosen_item=${item.id})}"
+                        th:text="${item.name}">description</a></td>
+                <td>
+
+                    <input form="add_item" type="number" th:name="amount" min="1" max="60" value="1"
+                           placeholder="amount" required>
+                    <button form="add_item" type="submit" th:value="${item.id}" name="added_item">Add to order</button>
+
+                </td>
+            </tr>
+        </table>
+<!--    </form>-->
 </main>
 <footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
 </body>

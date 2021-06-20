@@ -14,7 +14,7 @@
         <table class="space--s">
             <tr>
                 <th>order number</th>
-                <th>user name</th>
+                <th>user email</th>
                 <th>status</th>
                 <th>item</th>
                 <th>amount</th>
@@ -23,7 +23,7 @@
             </tr>
             <tr th:each="order:${orders}">
                 <td th:text="${order.number}">order number</td>
-                <td th:text="${order.user.userProfileDTO.firstName}">user name</td>
+                <td th:text="${order.user.email}">user email</td>
                 <td th:text="${order.status}">status</td>
                 <td th:text="${order.item.name}">item</td>
                 <td th:text="${order.itemAmount}">amount</td>

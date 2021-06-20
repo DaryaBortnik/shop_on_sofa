@@ -9,8 +9,6 @@ import com.churilovich.bortnik.darya.shop.on.sofa.service.model.UserDTOLogin;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.PageDTO;
 import com.churilovich.bortnik.darya.shop.on.sofa.service.model.element.ReportDTO;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,7 +26,6 @@ import java.util.Objects;
 @RequestMapping("/user/sale")
 @RequiredArgsConstructor
 public class SaleItemWebController {
-    private static final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final ItemService itemService;
     private final ItemCategoryService categoryService;
     private final ReportService reportService;
@@ -96,7 +92,6 @@ public class SaleItemWebController {
         return "sale_add_new_item_page";
     }
 
-
     @PostMapping("/items/add")
     public String addItem(@AuthenticationPrincipal UserDTOLogin userDTOLogin, @Valid ItemDTO item, BindingResult result) {
         if (result.hasErrors()) {
@@ -109,8 +104,8 @@ public class SaleItemWebController {
     }
 
     @GetMapping("/items/report")
-    public String getReport(Model model) {
-        List<ReportDTO> reports = reportService.get();
+    public String getReport(@AuthenticationPrincipal UserDTOLogin userDTOLogin, Model model) {
+        List<ReportDTO> reports = reportService.get(userDTOLogin.getUserId());
         model.addAttribute("reports", reports);
         return "sale_get_item_report_page";
     }

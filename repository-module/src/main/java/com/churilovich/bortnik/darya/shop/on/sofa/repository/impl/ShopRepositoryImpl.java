@@ -3,13 +3,10 @@ package com.churilovich.bortnik.darya.shop.on.sofa.repository.impl;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.ShopRepository;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.Shop;
 import com.churilovich.bortnik.darya.shop.on.sofa.repository.model.entity.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Optional;
 
