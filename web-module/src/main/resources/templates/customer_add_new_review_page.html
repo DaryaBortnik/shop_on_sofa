@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Send review</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form method="post" th:action="@{/user/customer/reviews/add}" th:object="${review}">
+        <h1>Review</h1>
+        <div class="space--xs">
+            <textarea type="text" th:field="${review.description}" required maxlength="1000"></textarea></div>
+        <div class="space--xs" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+            Description Error
+        </div>
+        <button type="submit">Send review</button>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
+</body>
+</html>

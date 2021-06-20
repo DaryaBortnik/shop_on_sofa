@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/main.css">
+</head>
+<body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form th:action="@{/user/sale/orders}" method="get" th:object="${orders}">
+        <table class="space--s">
+            <tr>
+                <th>order number</th>
+                <th>user email</th>
+                <th>status</th>
+                <th>item</th>
+                <th>amount</th>
+                <th>final price</th>
+                <th>link to description</th>
+            </tr>
+            <tr th:each="order:${orders}">
+                <td th:text="${order.number}">order number</td>
+                <td th:text="${order.user.email}">user email</td>
+                <td th:text="${order.status}">status</td>
+                <td th:text="${order.item.name}">item</td>
+                <td th:text="${order.itemAmount}">amount</td>
+                <td th:text="${order.price}">final price</td>
+                <td th:name="chosen_order" th:value="${order.id}"><a
+                        th:href="@{/user/sale/orders/description(chosen_order=${order.id})}"
+                        th:text="${order.number}">description</a></td>
+            </tr>
+        </table>
+        <ul class="pagination">
+            <li th:each="i : ${#numbers.sequence( 1,page.pagesAmount)}"
+                th:classappend="${page.currentPageNumber}==${i}?'pagination active':''">
+                <a th:href="@{/user/sale/orders(current_page=${i})}" th:text="${i}"> </a>
+            </li>
+        </ul>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
+</body>
+</html>

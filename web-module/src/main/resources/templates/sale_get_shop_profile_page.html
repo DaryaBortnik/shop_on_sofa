@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop profile</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/%22%3E"/>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header th:include="~{/fragments/header :: header}"></header>
+<main class="container container--wide">
+    <form id="update_profile" th:action="@{/user/sale/shop/update/parameters}" method="get"></form>
+    <form method="get" th:action="@{/user/sale/shop}" th:object="${shop}">
+        <table class="space--s">
+            <tr>
+                <th>Name</th>
+                <th>Certificate</th>
+                <th>update shop profile</th>
+            </tr>
+            <tr>
+                <td th:text="${shop != null} ? ${#strings.trim(shop.name)} : ' '">
+                    Shop name
+                </td>
+                <td th:text="${shop != null} ? ${#strings.trim(shop.certificate)} : ' '">
+                    Certificate
+                </td>
+                <td>
+                    <button type="submit" name="updateProfile"
+                            th:value="${shop.id}"
+                            form="update_profile"> Update profile
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</main>
+<footer class="theme--reversed" th:include="~{/fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,660 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="CREATE_TABLE_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="role">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_USER" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="user">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_role_id" references="role(id)"/>
+            </column>
+            <column name="is_deleted" type="Boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_USER_PROFILE" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="user_profile">
+            <column name="user_id" type="BIGINT">
+                <constraints primaryKey="true"
+                             foreignKeyName="f_user_id_profile" references="user(id)" deleteCascade="true"
+                             nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(20)">
+            </column>
+            <column name="middle_name" type="varchar(40)">
+            </column>
+            <column name="last_name" type="varchar(40)">
+            </column>
+            <column name="address" type="varchar(400)">
+            </column>
+            <column name="phone_number" type="varchar(40)">
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="shop">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="certificate" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_shop_user_id" references="user(id)"/>
+            </column>
+            <column name="is_deleted" type="Boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_REVIEW" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="review">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="add_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_shown" type="Boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_user_id" references="user(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_ARTICLE" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="article">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="short_description" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="add_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_article_user_id" references="user(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_COMMENT" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="comment">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="description" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="add_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_comment_user_id" references="user(id)" deleteCascade="true"/>
+            </column>
+            <column name="article_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_comment_article_id" references="article(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_ITEM_CATEGORY" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="item_category">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_ITEM" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="item">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="unique_number" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_category_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_item_category_id" references="item_category(id)" deleteCascade="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_item_user_id" references="user(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="CREATE_TABLE_ORDERS" author="darya.bortnik.churilovich@gmail.com">
+        <createTable tableName="orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="order_number" type="varchar(200)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="add_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_amount" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="item_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_order_item_id" references="item(id)" deleteCascade="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable=" false"
+                             foreignKeyName="f_order_user_id" references="user(id)" deleteCascade="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_BEAUTY" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="BEAUTY"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_MEN" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="MEN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_WOMEN" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="WOMEN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_KIDS" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="KIDS"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_HOUSE_AND_LIVING" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="HOUSE AND LIVING"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_ELECTRONICS" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="ELECTRONICS"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_SPORT" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="SPORT"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_CATEGORY_AUTOMOBILES" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item_category">
+            <column name="name" value="AUTOMOBILES"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ROLE_ADMINISTRATOR" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="role">
+            <column name="name" value="ADMINISTRATOR"/>
+            <column name="description"
+                    value="The Administrator can add and delete new users, changes their roles, see all reviews and
+                    choose reviews, that would be hidden from other users."/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ROLE_SALE_USER" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="role">
+            <column name="name" value="SALE_USER"/>
+            <column name="description"
+                    value="The Sale user can add a new article and update it. These actions can be done for items
+                    as well. The Sale users can see all orders and change their status."/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ROLE_CUSTOMER_USER" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="role">
+            <column name="name" value="CUSTOMER_USER"/>
+            <column name="description"
+                    value="The Customer can see all sale user articles and can leave comments to them.
+                    Customers can see all sale user items and choose them for order. Also, they are able to update
+                    their own profile data."/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ROLE_SECURE_API_USER" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="role">
+            <column name="name" value="SECURE_API_USER"/>
+            <column name="description"
+                    value="The Secure Api User have access to the all functionality, mentioned above, but with some
+                    limitations."/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_WITH_ADMIN_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="admin@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'ADMINISTRATOR')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_1_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="jusk@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_1_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'jusk@ad.com')"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Lepter"/>
+            <column name="phone_number" value="+325687452"/>
+            <column name="address" value="Mexico"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_SHOP_1_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="shop">
+            <column name="name" value="jusk"/>
+            <column name="certificate" value="343243hghg324324"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'jusk@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_1_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="Rain shower"/>
+            <column name="price" value="100"/>
+            <column name="unique_number" value="hh21hg213vjgjgj213"/>
+            <column name="description" value="cool rain shower for ur bathroom"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'HOUSE AND LIVING')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'jusk@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_2_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="zira@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_2_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'zira@ad.com')"/>
+            <column name="first_name" value="Zira"/>
+            <column name="last_name" value="Midown"/>
+            <column name="phone_number" value="+8759052"/>
+            <column name="address" value="Tokio"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_SHOP_2_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="shop">
+            <column name="name" value="Zira"/>
+            <column name="certificate" value="343123323324324"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'zira@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_3_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="miyla@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_SHOP_3_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="shop">
+            <column name="name" value="miyla"/>
+            <column name="certificate" value="343sdsdsd4324"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'miyla@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_3_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'miyla@ad.com')"/>
+            <column name="first_name" value="David"/>
+            <column name="last_name" value="Copperfield"/>
+            <column name="phone_number" value="+55559052"/>
+            <column name="address" value="Warsaw"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_4_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="hyundai@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_SHOP_4_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="shop">
+            <column name="name" value="hyundai"/>
+            <column name="certificate" value="1111114324"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'hyundai@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_4_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'hyundai@ad.com')"/>
+            <column name="first_name" value="Shimoto"/>
+            <column name="last_name" value="Tarakata"/>
+            <column name="phone_number" value="+222229052"/>
+            <column name="address" value="Korea"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_5_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="horsemotors@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_5_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'horsemotors@ad.com')"/>
+            <column name="first_name" value="Vasiliy"/>
+            <column name="middle_name" value="Dmitrievich"/>
+            <column name="last_name" value="Terkin"/>
+            <column name="phone_number" value="+375259559052"/>
+            <column name="address" value="Russia"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_SHOP_5_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="shop">
+            <column name="name" value="horsemotors"/>
+            <column name="certificate" value="11555554324"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'horsemotors@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_6_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="sportmaster@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_6_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'sportmaster@ad.com')"/>
+            <column name="first_name" value="Ivan"/>
+            <column name="middle_name" value="Aleksandrovich"/>
+            <column name="last_name" value="Karpovich"/>
+            <column name="phone_number" value="+7373939559052"/>
+            <column name="address" value="Russia"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_SHOP_6_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="shop">
+            <column name="name" value="sportmaster"/>
+            <column name="certificate" value="756544535"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'sportmaster@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_7_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="kraft@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SALE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_7_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'kraft@ad.com')"/>
+            <column name="first_name" value="Olga"/>
+            <column name="middle_name" value="Gennadievna"/>
+            <column name="last_name" value="Gorina"/>
+            <column name="phone_number" value="+7737239559052"/>
+            <column name="address" value="Russia"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_SHOP_7_WITH_SALE_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="shop">
+            <column name="name" value="kraft"/>
+            <column name="certificate" value="79999935"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'kraft@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_1_WITH_CUSTOMER_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="brcooper@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'CUSTOMER_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_1_WITH_CUSTOMER_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'brcooper@ad.com')"/>
+            <column name="first_name" value="Bradley"/>
+            <column name="last_name" value="Cooper"/>
+            <column name="phone_number" value="+232239559052"/>
+            <column name="address" value="USA"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_2_WITH_CUSTOMER_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="johnbowly@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'CUSTOMER_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_2_WITH_CUSTOMER_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'johnbowly@ad.com')"/>
+            <column name="first_name" value="John"/>
+            <column name="last_name" value="Bowly"/>
+            <column name="phone_number" value="+22222559052"/>
+            <column name="address" value="USA"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_3_WITH_CUSTOMER_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="elizaherb@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'CUSTOMER_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_3_WITH_CUSTOMER_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'elizaherb@ad.com')"/>
+            <column name="first_name" value="Elizabeth"/>
+            <column name="last_name" value="Herb"/>
+            <column name="phone_number" value="+22222559052"/>
+            <column name="address" value="USA"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_WITH_SECURE_API_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user">
+            <column name="email" value="secureapi@ad.com"/>
+            <column name="password" value="$2y$12$4wENuTsw.DyvCk7EF2m90.xU4eDLxEdud15XsKyMfzdx7T5JQsq7e"/>
+            <column name="role_id" valueComputed="(SELECT id FROM role WHERE name = 'SECURE_API_USER')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_PROFILE_WITH_SECURE_API_USER_ROLE" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'secureapi@ad.com')"/>
+            <column name="first_name" value="Victor"/>
+            <column name="last_name" value="Unknown"/>
+            <column name="phone_number" value="+221232132352"/>
+            <column name="address" value="USA"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_USER_INFO_FOR_USER_ADMIN" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="user_profile">
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'admin@ad.com')"/>
+            <column name="first_name" value="test_first_name"/>
+            <column name="middle_name" value="test_middle_name"/>
+            <column name="last_name" value="test_last_name"/>
+            <column name="address" value="test_address"/>
+            <column name="phone_number" value="541258855"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_2_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="Rain shower"/>
+            <column name="price" value="100"/>
+            <column name="unique_number" value="hh21hg213vjgjgj213"/>
+            <column name="description" value="cool rain shower for ur bathroom"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'HOUSE AND LIVING')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'jusk@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_3_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="Electrocar"/>
+            <column name="price" value="10000"/>
+            <column name="unique_number" value="h2321jhhfdfkjh2343"/>
+            <column name="description" value="new electrocar"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'AUTOMOBILES')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'hyundai@ad.com')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="INSERT_ITEM_4_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="ball"/>
+            <column name="price" value="50"/>
+            <column name="unique_number" value="hh2eeeeegjgj213"/>
+            <column name="description" value="blue ball for football"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'SPORT')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'sportmaster@ad.com')"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="INSERT_ITEM_5_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="robot"/>
+            <column name="price" value="1000"/>
+            <column name="unique_number" value="heeeeee3vjgjgj213"/>
+            <column name="description" value="cool robot"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'ELECTRONICS')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'hyundai@ad.com')"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="INSERT_ITEM_6_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="doll"/>
+            <column name="price" value="100"/>
+            <column name="unique_number" value="hkmkmijmgjgj213"/>
+            <column name="description" value="doll for girl"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'KIDS')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'kraft@ad.com')"/>
+        </insert>
+    </changeSet>
+
+
+    <changeSet id="INSERT_ITEM_7_TO_SHOP" author="darya.bortnik.churilovich@gmail.com">
+        <insert tableName="item">
+            <column name="name" value="Face cream"/>
+            <column name="price" value="1000"/>
+            <column name="unique_number" value="2334g213vjgjgj213"/>
+            <column name="description" value="night face cream"/>
+            <column name="item_category_id" valueComputed="(SELECT id FROM item_category WHERE name = 'WOMEN')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM user WHERE email = 'kraft@ad.com')"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
